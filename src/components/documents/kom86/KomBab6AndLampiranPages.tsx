@@ -10,111 +10,103 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
   return (
     <>
       {/* =========================================================================
-          PAGE 71 (Hal. 63) - BAB VI PENUTUP (KESIMPULAN & SARAN)
+          PAGE 1 (Hal. 46) - BAB VI PENUTUP (KESIMPULAN, SARAN & TANDA TANGAN LENGKAP)
           ========================================================================= */}
-      <KomPageContainer id="kom-cinta-bab6" pageNumber="63" pageIndex={71}>
-        <div className="text-center pb-4 border-b border-slate-300">
+      <KomPageContainer id="kom-cinta-bab6" pageNumber="46" pageIndex={46}>
+        <div className="text-center pb-2 border-b border-slate-300">
           <h2 className="font-bold text-base sm:text-lg uppercase tracking-wide text-slate-950 font-serif">
             BAB VI<br />PENUTUP
           </h2>
         </div>
 
-        <div className="pt-4 space-y-3 text-[12px] leading-relaxed text-justify">
-          <h3 className="font-bold text-slate-950 text-sm">
+        <div className="pt-2 space-y-2 text-[11px] leading-relaxed text-justify">
+          <h3 className="font-bold text-slate-950 text-xs sm:text-[12px]">
             A. Kesimpulan
           </h3>
           <p className="indent-8">
-            Kurikulum Operasional Madrasah (KOM) Berbasis Cinta di {data.namaMadrasah} Tahun Pelajaran {data.tahunAjaran} disusun sebagai kompas moral dan pedoman operasional seluruh sivitas akademika madrasah. Berdasarkan seluruh penjabaran bab-bab terdahulu, dapat ditarik beberapa kesimpulan pokok:
+            Kurikulum Operasional Madrasah (KOM) Berbasis Cinta di {data.namaMadrasah} Tahun Pelajaran {data.tahunAjaran} disusun sebagai kompas moral dan pedoman operasional seluruh sivitas akademika. Berdasarkan penjabaran bab-bab terdahulu, dapat ditarik beberapa kesimpulan pokok:
           </p>
 
-          <ol className="list-decimal pl-5 space-y-1.5 text-slate-800 text-[11.5px]">
+          <ol className="list-decimal pl-5 space-y-1 text-slate-800">
             <li>
-              <strong>Pondasi Kurikulum Berbasis Cinta:</strong> Kurikulum ini meletakkan cinta sebagai ruh dan paradigma utama pendidikan madrasah, yang diwujudkan melalui Panca Cinta (Cinta Allah dan Rasul, Cinta Ilmu, Cinta Sesama, Cinta Lingkungan, dan Cinta Tanah Air), menjamin lingkungan belajar yang aman, nyaman, dan ramah anak.
+              <strong>Pondasi Kurikulum Berbasis Cinta:</strong> Meletakkan cinta sebagai ruh dan paradigma utama pendidikan melalui Panca Cinta (Cinta Allah & Rasul, Cinta Ilmu, Cinta Sesama, Cinta Lingkungan, dan Cinta Tanah Air) demi mewujudkan lingkungan madrasah ramah anak yang aman dan menyenangkan.
             </li>
             <li>
-              <strong>Pembelajaran Mendalam (Deep Learning):</strong> Pendekatan <em>Mindful, Meaningful</em>, dan <em>Joyful Learning</em> membebaskan anak dari tekanan hafalan semata, menghidupkan nalar kritis, serta menumbuhkan kesadaran spiritual dan kecakapan hidup abad 21.
+              <strong>Pembelajaran Mendalam (Deep Learning):</strong> Pendekatan <em>Mindful, Meaningful</em>, dan <em>Joyful Learning</em> membebaskan anak dari tekanan hafalan semata, menumbuhkan nalar kritis, kesadaran spiritual, dan kecakapan hidup abad 21.
             </li>
             <li>
-              <strong>Delapan Dimensi Profil Lulusan:</strong> Menjadi tolok ukur pembinaan karakter santri yang berakar kuat pada nilai Ahlussunnah wal Jama'ah An-Nahdliyyah, unggul prestasi, dan melek literasi teknologi digital.
+              <strong>Delapan Dimensi Profil Lulusan:</strong> Menjadi tolok ukur pembinaan karakter santri yang berakar kuat pada tradisi Ahlussunnah wal Jama'ah An-Nahdliyyah, berakhlak mulia, unggul prestasi, dan adaptif terhadap teknologi digital.
             </li>
           </ol>
 
-          <div className="pt-2 space-y-1.5">
-            <h3 className="font-bold text-slate-950 text-sm">
+          <div className="pt-1 space-y-1">
+            <h3 className="font-bold text-slate-950 text-xs sm:text-[12px]">
               B. Saran dan Rekomendasi
             </h3>
-            <p className="text-[11.5px]">
-              1. <strong>Kepada Dewan Pendidik:</strong> Diharapkan senantiasa memelihara keikhlasan, kesabaran, dan keteladanan akhlak (<em>qudwah hasanah</em>) dalam mendidik santri dengan penuh kelembutan.
-            </p>
-            <p className="text-[11.5px]">
-              2. <strong>Kepada Komite dan Wali Murid:</strong> Diharapkan terus mempererat kemitraan segitiga emas (madrasah, orang tua, masyarakat) dalam mendukung program pembiasaan ibadah anak di rumah.
-            </p>
-          </div>
-        </div>
-      </KomPageContainer>
-
-      {/* =========================================================================
-          PAGE 72 (Hal. 64) - SARAN LANJUTAN & LEMBAR TANDA TANGAN TPKM
-          ========================================================================= */}
-      <KomPageContainer pageNumber="64" pageIndex={72}>
-        <div className="space-y-3 text-[12px] leading-relaxed text-justify">
-          <div className="space-y-1.5 text-[11.5px]">
-            <p>
-              3. <strong>Kepada Kantor Kementerian Agama & LP Ma'arif NU:</strong> Diharapkan senantiasa memberikan arahan, supervisi, serta dukungan pembinaan berkelanjutan bagi peningkatan mutu pendidik di {data.namaMadrasah}.
-            </p>
-            <p>
-              4. <strong>Kepada Tokoh Masyarakat & Ulama:</strong> Kami memohon doa restu dan bimbingan agar madrasah ini senantiasa istiqamah mencetak generasi saleh dan salehah yang berbakti kepada agama, nusa, dan bangsa.
-            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10.5px]">
+              <div className="p-1.5 bg-slate-50 border border-slate-300 rounded">
+                <p><strong>1. Pendidik & Tendik:</strong> Senantiasa menjaga keikhlasan, kesabaran, dan keteladanan akhlak (<em>qudwah hasanah</em>) dalam membimbing santri dengan kelembutan.</p>
+              </div>
+              <div className="p-1.5 bg-slate-50 border border-slate-300 rounded">
+                <p><strong>2. Komite & Wali Murid:</strong> Mempererat kemitraan segitiga emas (madrasah, keluarga, masyarakat) dalam mendukung pembiasaan ibadah anak di rumah.</p>
+              </div>
+              <div className="p-1.5 bg-slate-50 border border-slate-300 rounded">
+                <p><strong>3. Kemenag & LP Ma'arif:</strong> Diharapkan senantiasa memberikan supervisi, arahan, dan dukungan pembinaan mutu bagi pendidik madrasah secara berkelanjutan.</p>
+              </div>
+              <div className="p-1.5 bg-slate-50 border border-slate-300 rounded">
+                <p><strong>4. Tokoh Masyarakat:</strong> Mohon doa restu dan sinergi menjaga lingkungan desa yang kondusif, religius, dan ramah terhadap tumbuh kembang anak.</p>
+              </div>
+            </div>
           </div>
 
-          <p className="indent-8 text-[11.5px] pt-1">
-            Semoga Allah Subhanahu wa Ta'ala senantiasa melimpahkan taufiq, hidayah, inayah, serta keberkahan-Nya kepada segenap pengelola, guru, santri, dan seluruh keluarga besar {data.namaMadrasah}. Aamiin Yaa Rabbal 'Aalamiin.
+          <p className="indent-8 text-[10.5px] italic text-slate-700">
+            Semoga Allah SWT senantiasa melimpahkan taufiq, inayah, dan keberkahan-Nya kepada segenap pengelola, guru, santri, dan keluarga besar {data.namaMadrasah}. Aamiin Yaa Rabbal 'Aalamiin.
           </p>
 
-          <div className="pt-8 grid grid-cols-2 gap-4 text-center text-xs">
-            <div className="space-y-1">
+          <div className="pt-2 grid grid-cols-2 gap-4 text-center text-[10.5px]">
+            <div className="space-y-0.5">
               <p className="text-slate-700">Mengetahui,</p>
               <p className="font-bold text-slate-900">Ketua Tim Pengembang Kurikulum,</p>
-              <div className="h-20 flex items-center justify-center">
-                <span className="text-[11px] text-slate-400 italic">(Tanda Tangan)</span>
+              <div className="h-12 flex items-center justify-center">
+                <span className="text-[10px] text-slate-400 italic">(Tanda Tangan)</span>
               </div>
               <p className="font-bold text-slate-900 underline">USTADZ AHMAD MA'RUF, S.Pd.I.</p>
-              <p className="text-[11px] text-slate-700">NIP. -</p>
+              <p className="text-[10px] text-slate-700">NIP. -</p>
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               <p className="text-slate-700">Ditetapkan di: {data.desa}</p>
               <p className="font-bold text-slate-900">Kepala {data.namaMadrasah},</p>
-              <div className="h-20 flex items-center justify-center">
-                <span className="text-[11px] text-slate-400 italic">(Tanda Tangan & Cap Madrasah)</span>
+              <div className="h-12 flex items-center justify-center">
+                <span className="text-[10px] text-slate-400 italic">(Tanda Tangan & Cap Madrasah)</span>
               </div>
               <p className="font-bold text-slate-900 underline">{(data as any).namaKepalaMadrasah || data.namaKepala}</p>
-              <p className="text-[11px] text-slate-700">NIP. {(data as any).nipKepalaMadrasah || data.nipKepala}</p>
+              <p className="text-[10px] text-slate-700">NIP. {(data as any).nipKepalaMadrasah || data.nipKepala}</p>
             </div>
           </div>
         </div>
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 73 (Hal. 65) - LAMPIRAN I: SK TPKM MADRASAH
+          PAGE 2 (Hal. 47) - LAMPIRAN I: SK TPKM MADRASAH
           ========================================================================= */}
-      <KomPageContainer id="kom-cinta-lampiran" pageNumber="65" pageIndex={73}>
-        <div className="space-y-3 text-[12px] leading-relaxed">
+      <KomPageContainer id="kom-cinta-lampiran" pageNumber="47" pageIndex={47}>
+        <div className="space-y-3 text-[11.5px] leading-relaxed">
           <div className="text-center pb-2 border-b-2 border-slate-900">
-            <h3 className="font-bold text-sm uppercase text-slate-950 font-serif">
+            <h3 className="font-bold text-xs sm:text-sm uppercase text-slate-950 font-serif">
               LEMBAGA PENDIDIKAN MA'ARIF NU KABUPATEN BANYUMAS<br />
               {data.namaMadrasah.toUpperCase()}
             </h3>
-            <p className="text-[10.5px] text-slate-700">
+            <p className="text-[10px] text-slate-700">
               Alamat: {data.alamat}, Desa {data.desa}, Kec. {data.kecamatan}, Kab. {data.kabupaten} - Jawa Tengah
             </p>
           </div>
 
-          <div className="text-center pt-2 pb-1">
+          <div className="text-center pt-1 pb-1">
             <h4 className="font-bold text-xs uppercase underline text-slate-950">
               SURAT KEPUTUSAN KEPALA {data.namaMadrasah.toUpperCase()}
             </h4>
-            <p className="text-[11px] text-slate-800">
+            <p className="text-[10.5px] text-slate-800">
               Nomor: 045/MI.M-2/SK-TPKM/VII/{data.tahunAjaran.split('/')[0]}
             </p>
             <p className="font-semibold text-xs text-slate-900 mt-1">
@@ -124,7 +116,7 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
             </p>
           </div>
 
-          <div className="space-y-1.5 text-[11px] text-justify text-slate-800">
+          <div className="space-y-2 text-[11px] text-justify text-slate-800">
             <div className="flex">
               <span className="w-24 font-semibold">Menimbang:</span>
               <span className="flex-1">
@@ -148,17 +140,17 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 74 (Hal. 66) - LAMPIRAN I LANJUTAN: SUSUNAN PERSONALIA TPKM
+          PAGE 3 (Hal. 48) - LAMPIRAN I LANJUTAN: SUSUNAN PERSONALIA TPKM
           ========================================================================= */}
-      <KomPageContainer pageNumber="66" pageIndex={74}>
-        <div className="space-y-3 text-[12px] leading-relaxed">
-          <p className="font-bold text-[11px] text-slate-900">
+      <KomPageContainer pageNumber="48" pageIndex={48}>
+        <div className="space-y-3 text-[11.5px] leading-relaxed">
+          <p className="font-bold text-[10.5px] text-slate-900">
             Lampiran Surat Keputusan Kepala {data.namaMadrasah}<br />
             Nomor: 045/MI.M-2/SK-TPKM/VII/{data.tahunAjaran.split('/')[0]}<br />
             Tentang: Susunan Tim Pengembang Kurikulum Madrasah (TPKM) Tahun Pelajaran {data.tahunAjaran}
           </p>
 
-          <table className="w-full border-collapse border border-slate-400 text-[10.5px]">
+          <table className="w-full border-collapse border border-slate-400 text-[10px]">
             <thead>
               <tr className="bg-slate-100">
                 <th className="border border-slate-400 p-1.5 w-8 text-center">No</th>
@@ -228,18 +220,18 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 75 (Hal. 67) - LAMPIRAN II: KALENDER PENDIDIKAN MATRIKS
+          PAGE 4 (Hal. 49) - LAMPIRAN II: KALENDER PENDIDIKAN MATRIKS
           ========================================================================= */}
-      <KomPageContainer pageNumber="67" pageIndex={75}>
-        <div className="space-y-3 text-[12px] leading-relaxed">
-          <div className="text-center pb-2">
+      <KomPageContainer pageNumber="49" pageIndex={49}>
+        <div className="space-y-3 text-[11.5px] leading-relaxed">
+          <div className="text-center pb-1">
             <h3 className="font-bold text-xs sm:text-sm uppercase text-slate-950 font-serif">
               LAMPIRAN II: MATRIKS KALENDER PENDIDIKAN MADRASAH<br />
               TAHUN PELAJARAN {data.tahunAjaran}
             </h3>
           </div>
 
-          <table className="w-full border-collapse border border-slate-400 text-[10px]">
+          <table className="w-full border-collapse border border-slate-400 text-[9.5px]">
             <thead>
               <tr className="bg-slate-100">
                 <th className="border border-slate-400 p-1 w-20 text-center">Bulan</th>
@@ -286,7 +278,7 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
               <tr>
                 <td className="border border-slate-400 p-1 font-semibold text-center">Maret 2027</td>
                 <td className="border border-slate-400 p-1 text-center">10 - 24 Maret 2027</td>
-                <td className="border border-slate-400 p-1">Libur Awal Ramadhan 1448 H & Kegiatan Pesantren Kilat Ramadhan</td>
+                <td className="border border-slate-400 p-1">Libur Awal Ramadhan 1448 H & Kegiatan Pesantren Kilat</td>
               </tr>
               <tr>
                 <td className="border border-slate-400 p-1 font-semibold text-center">April 2027</td>
@@ -301,7 +293,7 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
               <tr>
                 <td className="border border-slate-400 p-1 font-semibold text-center">Juni 2027</td>
                 <td className="border border-slate-400 p-1 text-center">07 - 16 Juni 2027<br />25 Juni 2027</td>
-                <td className="border border-slate-400 p-1">Sumatif Akhir Tahun (SAT) Kenaikan Kelas<br />Penyerahan Buku Raport Semester Genap & Wisuda Tahfidz</td>
+                <td className="border border-slate-400 p-1">Sumatif Akhir Tahun (SAT) Kenaikan Kelas<br />Penyerahan RDM Semester Genap & Wisuda Tahfidz</td>
               </tr>
             </tbody>
           </table>
@@ -309,18 +301,18 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 76 (Hal. 68) - LAMPIRAN III: PEMETAAN CP DAN ATP
+          PAGE 5 (Hal. 50) - LAMPIRAN III: PEMETAAN CP DAN CONTOH ATP
           ========================================================================= */}
-      <KomPageContainer pageNumber="68" pageIndex={76}>
-        <div className="space-y-3 text-[12px] leading-relaxed">
-          <div className="text-center pb-2">
+      <KomPageContainer pageNumber="50" pageIndex={50}>
+        <div className="space-y-3 text-[11.5px] leading-relaxed">
+          <div className="text-center pb-1">
             <h3 className="font-bold text-xs sm:text-sm uppercase text-slate-950 font-serif">
               LAMPIRAN III: CONTOH ALUR TUJUAN PEMBELAJARAN (ATP)<br />
               MATA PELAJARAN FIKIH - FASE A (KELAS I DAN II)
             </h3>
           </div>
 
-          <table className="w-full border-collapse border border-slate-400 text-[10px]">
+          <table className="w-full border-collapse border border-slate-400 text-[9.5px]">
             <thead>
               <tr className="bg-slate-100">
                 <th className="border border-slate-400 p-1 w-16 text-center">Elemen</th>
@@ -349,7 +341,7 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
             </tbody>
           </table>
 
-          <div className="pt-2 text-[11px] text-justify space-y-1 text-slate-800">
+          <div className="pt-2 text-[10.5px] text-justify space-y-1 text-slate-800">
             <p className="font-semibold">Prinsip Penyusunan ATP:</p>
             <p className="indent-6">
               1. Disusun dari materi konkret menuju abstrak, disesuaikan dengan kemampuan motorik halus dan kognitif santri Fase A.
@@ -362,23 +354,23 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 77 (Hal. 69) - LAMPIRAN IV: INSTRUMEN OBSERVASI KBC
+          PAGE 6 (Hal. 51) - LAMPIRAN IV: INSTRUMEN OBSERVASI KBC
           ========================================================================= */}
-      <KomPageContainer pageNumber="69" pageIndex={77}>
-        <div className="space-y-3 text-[12px] leading-relaxed">
-          <div className="text-center pb-2">
+      <KomPageContainer pageNumber="51" pageIndex={51}>
+        <div className="space-y-3 text-[11.5px] leading-relaxed">
+          <div className="text-center pb-1">
             <h3 className="font-bold text-xs sm:text-sm uppercase text-slate-950 font-serif">
               LAMPIRAN IV: LEMBAR OBSERVASI IKLIM KELAS BERBASIS CINTA<br />
               (SUPERVISI IMPLEMENTASI KBC DI MADRASAH)
             </h3>
           </div>
 
-          <table className="w-full border-collapse border border-slate-400 text-[10px]">
+          <table className="w-full border-collapse border border-slate-400 text-[9.5px]">
             <thead>
               <tr className="bg-slate-100">
                 <th className="border border-slate-400 p-1 w-8 text-center">No</th>
                 <th className="border border-slate-400 p-1 text-left">Indikator Iklim Kelas Berbasis Cinta</th>
-                <th className="border border-slate-400 p-1 text-center w-20">Teramati (Ya/Tidak)</th>
+                <th className="border border-slate-400 p-1 text-center w-20">Teramati</th>
                 <th className="border border-slate-400 p-1 text-left">Catatan Praktik Baik</th>
               </tr>
             </thead>
@@ -391,35 +383,35 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
               </tr>
               <tr>
                 <td className="border border-slate-400 p-1 text-center">2</td>
-                <td className="border border-slate-400 p-1">Kelas bebas dari teriakan kemarahan guru atau cemoohan fisik/verbal.</td>
+                <td className="border border-slate-400 p-1">Kelas bebas dari teriakan kemarahan guru atau cemoohan verbal.</td>
                 <td className="border border-slate-400 p-1 text-center font-bold text-emerald-800">Ya</td>
                 <td className="border border-slate-400 p-1">Suasana dialogis dan santun.</td>
               </tr>
               <tr>
                 <td className="border border-slate-400 p-1 text-center">3</td>
-                <td className="border border-slate-400 p-1">Guru memberikan perhatian ekstra kepada siswa yang lambat memahami materi.</td>
+                <td className="border border-slate-400 p-1">Guru memberikan perhatian ekstra kepada siswa yang butuh bimbingan.</td>
                 <td className="border border-slate-400 p-1 text-center font-bold text-emerald-800">Ya</td>
                 <td className="border border-slate-400 p-1">Diferensiasi bimbingan individual berjalan baik.</td>
               </tr>
               <tr>
                 <td className="border border-slate-400 p-1 text-center">4</td>
-                <td className="border border-slate-400 p-1">Siswa saling membantu kawan kelompoknya tanpa membedakan status sosial.</td>
+                <td className="border border-slate-400 p-1">Siswa saling membantu kawan kelompok tanpa membedakan latar belakang.</td>
                 <td className="border border-slate-400 p-1 text-center font-bold text-emerald-800">Ya</td>
                 <td className="border border-slate-400 p-1">Budaya gotong royong terwujud nyata.</td>
               </tr>
               <tr>
                 <td className="border border-slate-400 p-1 text-center">5</td>
-                <td className="border border-slate-400 p-1">Tersedia sudut baca (pojok literasi) dan tempat sampah pilah di dalam kelas.</td>
+                <td className="border border-slate-400 p-1">Tersedia sudut baca (pojok literasi) dan tempat sampah pilah di kelas.</td>
                 <td className="border border-slate-400 p-1 text-center font-bold text-emerald-800">Ya</td>
-                <td className="border border-slate-400 p-1">Lingkungan kelas bersih dan mendukung Adiwiyata.</td>
+                <td className="border border-slate-400 p-1">Lingkungan kelas bersih dan asri adiwiyata.</td>
               </tr>
             </tbody>
           </table>
 
-          <div className="pt-4 flex justify-between text-xs">
+          <div className="pt-3 flex justify-between text-xs">
             <div className="text-center w-48 space-y-1">
               <p>Guru Kelas yang Disupervisi,</p>
-              <div className="h-14 flex items-center justify-center">
+              <div className="h-12 flex items-center justify-center">
                 <span className="text-[10px] text-slate-400 italic">(Tanda Tangan)</span>
               </div>
               <p className="font-bold underline">Ustadzah Siti Fatimah, S.Pd.</p>
@@ -427,7 +419,7 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
 
             <div className="text-center w-48 space-y-1">
               <p>Supervisor / Kepala Madrasah,</p>
-              <div className="h-14 flex items-center justify-center">
+              <div className="h-12 flex items-center justify-center">
                 <span className="text-[10px] text-slate-400 italic">(Tanda Tangan)</span>
               </div>
               <p className="font-bold underline">{(data as any).namaKepalaMadrasah || data.namaKepala}</p>
@@ -437,10 +429,10 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 78 (Hal. 70) - LAMPIRAN V: BERITA ACARA RAPAT KERJA TPKM
+          PAGE 7 (Hal. 52) - LAMPIRAN V: BERITA ACARA RAPAT KERJA TPKM
           ========================================================================= */}
-      <KomPageContainer pageNumber="70" pageIndex={78}>
-        <div className="space-y-3 text-[12px] leading-relaxed">
+      <KomPageContainer pageNumber="52" pageIndex={52}>
+        <div className="space-y-3 text-[11.5px] leading-relaxed">
           <div className="text-center pb-2 border-b-2 border-slate-900">
             <h3 className="font-bold text-xs sm:text-sm uppercase text-slate-950 font-serif">
               BERITA ACARA RAPAT KERJA PENYUSUNAN DAN REVIEW DOKUMEN<br />
@@ -450,7 +442,7 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
             </h3>
           </div>
 
-          <div className="pt-2 text-[11px] text-justify space-y-2 text-slate-800">
+          <div className="pt-1 text-[10.5px] text-justify space-y-1.5 text-slate-800">
             <p className="indent-8">
               Pada hari ini, <strong>Sabtu</strong> tanggal <strong>Empat</strong> bulan <strong>Juli</strong> tahun <strong>Dua Ribu Dua Puluh Enam</strong> bertempat di Ruang Guru {data.namaMadrasah}, telah diselenggarakan Rapat Kerja Review dan Finalisasi Dokumen Kurikulum Operasional Madrasah (KOM) Berbasis Cinta Tahun Pelajaran {data.tahunAjaran}.
             </p>
@@ -465,32 +457,32 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
             </p>
           </div>
 
-          <div className="pt-6 grid grid-cols-2 gap-4 text-center text-xs">
-            <div className="space-y-1">
+          <div className="pt-3 grid grid-cols-2 gap-4 text-center text-xs">
+            <div className="space-y-0.5">
               <p className="font-bold text-slate-900">Perwakilan Dewan Guru,</p>
-              <div className="h-16 flex items-center justify-center">
+              <div className="h-12 flex items-center justify-center">
                 <span className="text-[10px] text-slate-400 italic">(Tanda Tangan)</span>
               </div>
               <p className="font-bold underline">Ustadzah Siti Fatimah, S.Pd.</p>
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               <p className="font-bold text-slate-900">Ketua Komite Madrasah,</p>
-              <div className="h-16 flex items-center justify-center">
+              <div className="h-12 flex items-center justify-center">
                 <span className="text-[10px] text-slate-400 italic">(Tanda Tangan)</span>
               </div>
               <p className="font-bold underline">{(data as any).namaKomite || data.namaKetuaKomite}</p>
             </div>
           </div>
 
-          <div className="pt-4 text-center text-xs">
+          <div className="pt-2 text-center text-xs">
             <p className="font-bold text-slate-900">Mengetahui & Menyetujui,</p>
             <p className="font-bold text-slate-900">Kepala {data.namaMadrasah},</p>
-            <div className="h-16 flex items-center justify-center">
+            <div className="h-12 flex items-center justify-center">
               <span className="text-[10px] text-slate-400 italic">(Tanda Tangan & Cap Madrasah)</span>
             </div>
             <p className="font-bold underline">{(data as any).namaKepalaMadrasah || data.namaKepala}</p>
-            <p className="text-[11px]">NIP. {(data as any).nipKepalaMadrasah || data.nipKepala}</p>
+            <p className="text-[10px]">NIP. {(data as any).nipKepalaMadrasah || data.nipKepala}</p>
           </div>
         </div>
       </KomPageContainer>

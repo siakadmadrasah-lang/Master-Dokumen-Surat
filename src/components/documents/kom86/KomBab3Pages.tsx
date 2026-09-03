@@ -380,7 +380,7 @@ export const KomBab3Pages: React.FC<Props> = ({ data }) => {
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 30 (Hal. 22) - KOKURIKULER (P5-RA)
+          PAGE 30 (Hal. 22) - KOKURIKULER (P5-RA) & GAMBAR 3.1 DIMENSI PROFIL LULUSAN
           ========================================================================= */}
       <KomPageContainer pageNumber="22" pageIndex={30}>
         <div className="space-y-3 text-[12px] leading-relaxed text-justify">
@@ -388,64 +388,57 @@ export const KomBab3Pages: React.FC<Props> = ({ data }) => {
             B. Kokurikuler (Penguatan Profil Pelajar Pancasila dan Profil Pelajar Rahmatan lil 'Alamin)
           </h3>
 
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <h4 className="font-bold text-slate-950 text-xs sm:text-[12.5px]">
               1. Pengertian Kokurikuler
             </h4>
-            <p className="indent-8">
+            <p className="indent-8 text-[11.5px]">
               Kegiatan kokurikuler merupakan pembelajaran lintas disiplin ilmu yang dirancang untuk mengamati, mengeksplorasi, dan mencari solusi terhadap persoalan di lingkungan sekitar madrasah. Melalui Projek Penguatan Profil Pelajar Pancasila dan Rahmatan lil 'Alamin (P5-RA), peserta didik mempraktikkan langsung nilai-nilai luhur Pancasila dan Islam moderat dalam aksi nyata.
             </p>
           </div>
 
-          <div className="space-y-1.5 pt-1">
+          <div className="space-y-1">
             <h4 className="font-bold text-slate-950 text-xs sm:text-[12.5px]">
               2. Pentingnya Kokurikuler
             </h4>
-            <p className="indent-8">
-              Kokurikuler memiliki urgensi fundamental dalam kurikulum merdeka karena memberikan ruang yang fleksibel di luar struktur ketat mata pelajaran reguler. Melalui projek nyata:
+            <p className="indent-8 text-[11.5px]">
+              Kokurikuler memiliki urgensi fundamental dalam kurikulum merdeka karena memberikan ruang yang fleksibel di luar struktur ketat mata pelajaran reguler:
             </p>
-            <ul className="list-disc pl-5 space-y-1 text-slate-800 text-[11.5px]">
+            <ul className="list-disc pl-5 space-y-0.5 text-slate-800 text-[11px]">
               <li>Siswa mengasah kepekaan sosial terhadap kondisi tetangga, kawan dhuafa, dan kelestarian alam sekitar desa Sanggreman.</li>
-              <li>Siswa mengembangkan karakter kepemimpinan, daya tahan mental, dan kemampuan bekerjasama tanpa membeda-bedakan status sosial ekonomi.</li>
-              <li>Pembelajaran menjadi kontekstual dan menjawab tantangan global terkait krisis lingkungan, perubahan iklim, dan degradasi moral generasi muda.</li>
+              <li>Siswa mengembangkan karakter kepemimpinan, daya tahan mental, dan kemampuan bekerjasama tanpa membedakan status sosial.</li>
+              <li>Pembelajaran menjadi kontekstual dan menjawab tantangan global terkait krisis lingkungan dan degradasi moral generasi muda.</li>
             </ul>
           </div>
-        </div>
-      </KomPageContainer>
 
-      {/* =========================================================================
-          PAGE 31 (Hal. 23) - TUJUAN KOKURIKULER & GAMBAR 3.1 DIMENSI PROFIL LULUSAN
-          ========================================================================= */}
-      <KomPageContainer pageNumber="23" pageIndex={31}>
-        <div className="space-y-3 text-[12px] leading-relaxed text-justify">
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <h4 className="font-bold text-slate-950 text-xs sm:text-[12.5px]">
               3. Tujuan Kokurikuler
             </h4>
-            <p className="indent-8">
+            <p className="indent-8 text-[11.5px]">
               Tujuan kokurikuler adalah memperkuat pencapaian 8 dimensi profil lulusan {data.namaMadrasah} yang selaras dengan nilai-nilai Rahmatan lil 'Alamin (Tawassuth, I'tidal, Tasamuh, Syura, Qudwah, dan Ishlah).
             </p>
           </div>
 
-          <div className="text-center py-4">
-            <div className="border border-slate-300 rounded-lg p-4 bg-slate-50 flex flex-col items-center justify-center">
-              <div className="w-full max-w-md bg-white border border-emerald-400 rounded-lg p-3 shadow-sm">
-                <p className="font-bold text-emerald-950 text-xs uppercase mb-2">
+          <div className="text-center pt-2">
+            <div className="border border-slate-300 rounded-lg p-3 bg-slate-50 flex flex-col items-center justify-center">
+              <div className="w-full max-w-md bg-white border border-emerald-400 rounded-lg p-2.5 shadow-sm">
+                <p className="font-bold text-emerald-950 text-[11px] uppercase mb-1.5">
                   DELAPAN DIMENSI PROFIL LULUSAN MADRASAH
                 </p>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-[10px] text-slate-800">
-                  <span className="p-1.5 bg-emerald-50 border border-emerald-200 rounded font-semibold">1. Keimanan</span>
-                  <span className="p-1.5 bg-blue-50 border border-blue-200 rounded font-semibold">2. Kewargaan</span>
-                  <span className="p-1.5 bg-amber-50 border border-amber-200 rounded font-semibold">3. Nalar Kritis</span>
-                  <span className="p-1.5 bg-purple-50 border border-purple-200 rounded font-semibold">4. Kreativitas</span>
-                  <span className="p-1.5 bg-rose-50 border border-rose-200 rounded font-semibold">5. Kolaborasi</span>
-                  <span className="p-1.5 bg-teal-50 border border-teal-200 rounded font-semibold">6. Kemandirian</span>
-                  <span className="p-1.5 bg-indigo-50 border border-indigo-200 rounded font-semibold">7. Kesehatan</span>
-                  <span className="p-1.5 bg-cyan-50 border border-cyan-200 rounded font-semibold">8. Komunikasi</span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-[9.5px] text-slate-800">
+                  <span className="p-1 bg-emerald-50 border border-emerald-200 rounded font-semibold">1. Keimanan</span>
+                  <span className="p-1 bg-blue-50 border border-blue-200 rounded font-semibold">2. Kewargaan</span>
+                  <span className="p-1 bg-amber-50 border border-amber-200 rounded font-semibold">3. Nalar Kritis</span>
+                  <span className="p-1 bg-purple-50 border border-purple-200 rounded font-semibold">4. Kreativitas</span>
+                  <span className="p-1 bg-rose-50 border border-rose-200 rounded font-semibold">5. Kolaborasi</span>
+                  <span className="p-1 bg-teal-50 border border-teal-200 rounded font-semibold">6. Kemandirian</span>
+                  <span className="p-1 bg-indigo-50 border border-indigo-200 rounded font-semibold">7. Kesehatan</span>
+                  <span className="p-1 bg-cyan-50 border border-cyan-200 rounded font-semibold">8. Komunikasi</span>
                 </div>
               </div>
             </div>
-            <p className="font-bold text-slate-800 text-[11px] pt-1.5">
+            <p className="font-bold text-slate-800 text-[10.5px] pt-1">
               Gambar 3.1 Delapan Dimensi Profil Lulusan {data.namaMadrasah}
             </p>
           </div>
@@ -937,10 +930,10 @@ export const KomBab3Pages: React.FC<Props> = ({ data }) => {
             </p>
 
             <p className="font-bold text-[10.5px] text-slate-900">
-              Tabel 3.7. Analisis Pekan Belajar Efektif Semester I (Ganjil)
+              Tabel 3.7. Analisis Pekan Belajar Efektif Semester I (Ganjil) & Ringkasan Tahunan
             </p>
 
-            <table className="w-full border-collapse border border-slate-400 text-[10.5px]">
+            <table className="w-full border-collapse border border-slate-400 text-[10px]">
               <thead>
                 <tr className="bg-slate-100">
                   <th className="border border-slate-400 p-1 w-8 text-center">No</th>
@@ -965,6 +958,46 @@ export const KomBab3Pages: React.FC<Props> = ({ data }) => {
                   <td className="border border-slate-400 p-1 text-center">4</td>
                   <td className="border border-slate-400 p-1">HUT Kemerdekaan RI Ke-81</td>
                 </tr>
+                <tr>
+                  <td className="border border-slate-400 p-1 text-center">3</td>
+                  <td className="border border-slate-400 p-1 font-semibold">September 2026</td>
+                  <td className="border border-slate-400 p-1 text-center">4</td>
+                  <td className="border border-slate-400 p-1 text-center">4</td>
+                  <td className="border border-slate-400 p-1">Pekan Penilaian Formatif</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-1 text-center">4</td>
+                  <td className="border border-slate-400 p-1 font-semibold">Oktober 2026</td>
+                  <td className="border border-slate-400 p-1 text-center">5</td>
+                  <td className="border border-slate-400 p-1 text-center">4</td>
+                  <td className="border border-slate-400 p-1">Hari Santri Nasional</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-1 text-center">5</td>
+                  <td className="border border-slate-400 p-1 font-semibold">November 2026</td>
+                  <td className="border border-slate-400 p-1 text-center">4</td>
+                  <td className="border border-slate-400 p-1 text-center">4</td>
+                  <td className="border border-slate-400 p-1">Pelaksanaan Projek P5-RA</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-1 text-center">6</td>
+                  <td className="border border-slate-400 p-1 font-semibold">Desember 2026</td>
+                  <td className="border border-slate-400 p-1 text-center">5</td>
+                  <td className="border border-slate-400 p-1 text-center">2</td>
+                  <td className="border border-slate-400 p-1">SAS & Pembagian Raport</td>
+                </tr>
+                <tr className="bg-slate-50 font-bold">
+                  <td className="border border-slate-400 p-1 text-center" colSpan={2}>TOTAL SEMESTER I</td>
+                  <td className="border border-slate-400 p-1 text-center">27</td>
+                  <td className="border border-slate-400 p-1 text-center">21</td>
+                  <td className="border border-slate-400 p-1">Pekan Efektif Belajar (PBE)</td>
+                </tr>
+                <tr className="bg-slate-50 font-bold">
+                  <td className="border border-slate-400 p-1 text-center" colSpan={2}>TOTAL SEMESTER II</td>
+                  <td className="border border-slate-400 p-1 text-center">25</td>
+                  <td className="border border-slate-400 p-1 text-center">19</td>
+                  <td className="border border-slate-400 p-1">Pekan Efektif Belajar (PBE)</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -972,83 +1005,25 @@ export const KomBab3Pages: React.FC<Props> = ({ data }) => {
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 39 (Hal. 31) - TABEL 3.7 LANJUTAN & TABEL 3.8 WAKTU EFEKTIF
+          PAGE 39 (Hal. 31) - WAKTU BELAJAR EFEKTIF & TABEL 3.8 ALOKASI LIBUR
           ========================================================================= */}
       <KomPageContainer pageNumber="31" pageIndex={39}>
-        <div className="space-y-3 text-[12px] leading-relaxed">
-          <p className="font-bold text-[10.5px] text-slate-800">
-            Lanjutan Tabel 3.7 Analisis Pekan Belajar Efektif (September - Desember 2026 & Semester II)
-          </p>
-
-          <table className="w-full border-collapse border border-slate-400 text-[10px]">
-            <thead>
-              <tr className="bg-slate-100">
-                <th className="border border-slate-400 p-1 w-8 text-center">No</th>
-                <th className="border border-slate-400 p-1 text-left">Bulan</th>
-                <th className="border border-slate-400 p-1 text-center w-24">Jumlah Minggu</th>
-                <th className="border border-slate-400 p-1 text-center w-24">Minggu Efektif</th>
-                <th className="border border-slate-400 p-1 text-left">Keterangan / Kegiatan Khusus</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">3</td>
-                <td className="border border-slate-400 p-1 font-semibold">September 2026</td>
-                <td className="border border-slate-400 p-1 text-center">4</td>
-                <td className="border border-slate-400 p-1 text-center">4</td>
-                <td className="border border-slate-400 p-1">Pekan Penilaian Formatif</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">4</td>
-                <td className="border border-slate-400 p-1 font-semibold">Oktober 2026</td>
-                <td className="border border-slate-400 p-1 text-center">5</td>
-                <td className="border border-slate-400 p-1 text-center">4</td>
-                <td className="border border-slate-400 p-1">Hari Santri Nasional</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">5</td>
-                <td className="border border-slate-400 p-1 font-semibold">November 2026</td>
-                <td className="border border-slate-400 p-1 text-center">4</td>
-                <td className="border border-slate-400 p-1 text-center">4</td>
-                <td className="border border-slate-400 p-1">Pelaksanaan Projek P5-RA</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">6</td>
-                <td className="border border-slate-400 p-1 font-semibold">Desember 2026</td>
-                <td className="border border-slate-400 p-1 text-center">5</td>
-                <td className="border border-slate-400 p-1 text-center">2</td>
-                <td className="border border-slate-400 p-1">SAS & Pembagian Raport</td>
-              </tr>
-              <tr className="bg-slate-50 font-bold">
-                <td className="border border-slate-400 p-1 text-center" colSpan={2}>TOTAL SEMESTER I</td>
-                <td className="border border-slate-400 p-1 text-center">27</td>
-                <td className="border border-slate-400 p-1 text-center">21</td>
-                <td className="border border-slate-400 p-1">Pekan Efektif Belajar</td>
-              </tr>
-              <tr className="bg-slate-50 font-bold">
-                <td className="border border-slate-400 p-1 text-center" colSpan={2}>TOTAL SEMESTER II</td>
-                <td className="border border-slate-400 p-1 text-center">25</td>
-                <td className="border border-slate-400 p-1 text-center">19</td>
-                <td className="border border-slate-400 p-1">Pekan Efektif Belajar</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div className="pt-2 space-y-2">
+        <div className="space-y-2.5 text-[12px] leading-relaxed">
+          <div className="space-y-1.5">
             <h4 className="font-bold text-slate-950 text-xs sm:text-[12.5px]">
               3. Waktu Belajar Efektif dan Tidak Efektif
             </h4>
-            <p className="text-[11px]">
+            <p className="text-[10.5px]">
               Tabel 3.8. Analisis Waktu Belajar Efektif dan Tidak Efektif Semester I dan II
             </p>
 
-            <table className="w-full border-collapse border border-slate-400 text-[10.5px]">
+            <table className="w-full border-collapse border border-slate-400 text-[10px]">
               <thead>
                 <tr className="bg-slate-100">
-                  <th className="border border-slate-400 p-1.5 text-left">Kategori Waktu Belajar</th>
-                  <th className="border border-slate-400 p-1.5 text-center w-28">Semester I</th>
-                  <th className="border border-slate-400 p-1.5 text-center w-28">Semester II</th>
-                  <th className="border border-slate-400 p-1.5 text-center w-28">Total 1 Tahun</th>
+                  <th className="border border-slate-400 p-1 text-left">Kategori Waktu Belajar</th>
+                  <th className="border border-slate-400 p-1 text-center w-24">Semester I</th>
+                  <th className="border border-slate-400 p-1 text-center w-24">Semester II</th>
+                  <th className="border border-slate-400 p-1 text-center w-24">Total 1 Tahun</th>
                 </tr>
               </thead>
               <tbody>
@@ -1073,202 +1048,106 @@ export const KomBab3Pages: React.FC<Props> = ({ data }) => {
               </tbody>
             </table>
           </div>
-        </div>
-      </KomPageContainer>
 
-      {/* =========================================================================
-          PAGE 40 (Hal. 32) - PENGATURAN WAKTU LIBUR & TABEL 3.8 ALOKASI
-          ========================================================================= */}
-      <KomPageContainer pageNumber="32" pageIndex={40}>
-        <div className="space-y-3 text-[12px] leading-relaxed">
-          <h4 className="font-bold text-slate-950 text-xs sm:text-[12.5px]">
-            4. Pengaturan Waktu Libur
-          </h4>
-          <p className="indent-8 text-justify text-[11.5px]">
-            Penetapan waktu libur madrasah berpedoman pada Keputusan Menteri Agama, kalender pendidikan Kanwil Kemenag Provinsi Jawa Tengah, dan kalender LP Ma'arif NU.
-          </p>
-
-          <p className="font-bold text-[10.5px] text-slate-900">
-            Tabel 3.8. Acuan Alokasi Waktu Minggu Efektif Belajar, Waktu Libur, dan Kegiatan
-          </p>
-
-          <table className="w-full border-collapse border border-slate-400 text-[10px]">
-            <thead>
-              <tr className="bg-slate-100">
-                <th className="border border-slate-400 p-1 w-6 text-center">No</th>
-                <th className="border border-slate-400 p-1 text-left">Kegiatan / Peristiwa</th>
-                <th className="border border-slate-400 p-1 text-center w-28">Alokasi Waktu</th>
-                <th className="border border-slate-400 p-1 text-left">Keterangan</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">1</td>
-                <td className="border border-slate-400 p-1 font-semibold">Minggu Efektif Belajar</td>
-                <td className="border border-slate-400 p-1 text-center">36 - 40 Minggu</td>
-                <td className="border border-slate-400 p-1">Digunakan untuk kegiatan pembelajaran tatap muka</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">2</td>
-                <td className="border border-slate-400 p-1 font-semibold">Jeda Tengah Semester</td>
-                <td className="border border-slate-400 p-1 text-center">Maksimal 1 Minggu</td>
-                <td className="border border-slate-400 p-1">Satu minggu setiap semester</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">3</td>
-                <td className="border border-slate-400 p-1 font-semibold">Jeda Antar Semester</td>
-                <td className="border border-slate-400 p-1 text-center">Maksimal 2 Minggu</td>
-                <td className="border border-slate-400 p-1">Antara Semester I dan Semester II</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">4</td>
-                <td className="border border-slate-400 p-1 font-semibold">Libur Akhir Tahun Pelajaran</td>
-                <td className="border border-slate-400 p-1 text-center">Maksimal 3 Minggu</td>
-                <td className="border border-slate-400 p-1">Digunakan untuk penyiapan kegiatan tahun ajaran baru</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">5</td>
-                <td className="border border-slate-400 p-1 font-semibold">Hari Libur Keagamaan</td>
-                <td className="border border-slate-400 p-1 text-center">2 - 4 Minggu</td>
-                <td className="border border-slate-400 p-1">Libur awal Ramadhan dan Idul Fitri</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">6</td>
-                <td className="border border-slate-400 p-1 font-semibold">Hari Libur Umum / Nasional</td>
-                <td className="border border-slate-400 p-1 text-center">Maksimal 2 Minggu</td>
-                <td className="border border-slate-400 p-1">Sesuai ketetapan Pemerintah RI</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">7</td>
-                <td className="border border-slate-400 p-1 font-semibold">Hari Libur Khusus Madrasah</td>
-                <td className="border border-slate-400 p-1 text-center">Maksimal 1 Minggu</td>
-                <td className="border border-slate-400 p-1">Hari lahir LP Ma'arif NU / kegiatan khusus</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">8</td>
-                <td className="border border-slate-400 p-1 font-semibold">Kegiatan Khusus Madrasah</td>
-                <td className="border border-slate-400 p-1 text-center">Maksimal 3 Minggu</td>
-                <td className="border border-slate-400 p-1">Porseni / kemah pramuka / karya wisata santri</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">9</td>
-                <td className="border border-slate-400 p-1 font-semibold">Ujian Madrasah / Asesmen Akhir</td>
-                <td className="border border-slate-400 p-1 text-center">1 - 2 Minggu</td>
-                <td className="border border-slate-400 p-1">Jadwal resmi Kemenag RI</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">10</td>
-                <td className="border border-slate-400 p-1 font-semibold">Pengolahan Nilai & RDM</td>
-                <td className="border border-slate-400 p-1 text-center">1 Minggu</td>
-                <td className="border border-slate-400 p-1">Penginputan nilai raport digital</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </KomPageContainer>
-
-      {/* =========================================================================
-          PAGE 41 (Hal. 33) - TABEL 3.8 LANJUTAN & PENGATURAN BEBAN BELAJAR 1-6
-          ========================================================================= */}
-      <KomPageContainer pageNumber="33" pageIndex={41}>
-        <div className="space-y-3 text-[12px] leading-relaxed">
-          <table className="w-full border-collapse border border-slate-400 text-[10px]">
-            <tbody>
-              <tr>
-                <td className="border border-slate-400 p-1 w-6 text-center font-bold">11</td>
-                <td className="border border-slate-400 p-1 font-semibold">Pembagian Raport Semester</td>
-                <td className="border border-slate-400 p-1 text-center w-28">2 Hari</td>
-                <td className="border border-slate-400 p-1">Pertemuan wali murid dan penyerahan buku raport</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 w-6 text-center font-bold">12</td>
-                <td className="border border-slate-400 p-1 font-semibold">Matsama Santri Baru</td>
-                <td className="border border-slate-400 p-1 text-center w-28">3 Hari</td>
-                <td className="border border-slate-400 p-1">Pengenalan lingkungan madrasah kelas I</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 w-6 text-center font-bold">13</td>
-                <td className="border border-slate-400 p-1 font-semibold">Rapat Kerja Kurikulum TPKM</td>
-                <td className="border border-slate-400 p-1 text-center w-28">3 Hari</td>
-                <td className="border border-slate-400 p-1">Evaluasi dan penyusunan draf kurikulum tahunan</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <p className="text-[11px] italic text-slate-700">
-            5. Kalender Pendidikan: Rincian matrik kalender pendidikan tahunan terlampir dalam lampiran dokumen ini.
-          </p>
-
-          <div className="pt-2 space-y-2">
-            <h3 className="font-bold text-slate-950 text-sm">
-              B. Pengaturan Beban Belajar dan Jadwal Pelajaran
-            </h3>
-            <p className="text-[11.5px]">
-              <strong>1. Beban Belajar:</strong> Sistem yang digunakan adalah paket tatap muka, dengan durasi 1 jam pelajaran (JP) = 35 menit.
-            </p>
-            <p className="text-[11.5px]">
-              <strong>2. Pengaturan Jadwal Pelajaran:</strong> Distribusi beban belajar mata pelajaran 1 s.d. 6:
+          <div className="space-y-1.5 pt-1">
+            <h4 className="font-bold text-slate-950 text-xs sm:text-[12.5px]">
+              4. Pengaturan Waktu Libur
+            </h4>
+            <p className="indent-8 text-justify text-[11px]">
+              Penetapan waktu libur madrasah berpedoman pada Keputusan Menteri Agama, kalender pendidikan Kanwil Kemenag Provinsi Jawa Tengah, dan kalender LP Ma'arif NU.
             </p>
 
-            <table className="w-full border-collapse border border-slate-400 text-[10px]">
+            <p className="font-bold text-[10px] text-slate-900">
+              Tabel 3.9. Acuan Alokasi Waktu Minggu Efektif Belajar, Waktu Libur, dan Kegiatan
+            </p>
+
+            <table className="w-full border-collapse border border-slate-400 text-[9.5px]">
               <thead>
                 <tr className="bg-slate-100">
-                  <th className="border border-slate-400 p-1 w-6 text-center">No</th>
-                  <th className="border border-slate-400 p-1 text-left">Mata Pelajaran</th>
-                  <th className="border border-slate-400 p-1 text-center w-16">Kelas I</th>
-                  <th className="border border-slate-400 p-1 text-center w-16">Kelas II</th>
-                  <th className="border border-slate-400 p-1 text-center w-16">Kelas III</th>
-                  <th className="border border-slate-400 p-1 text-center w-16">Kelas IV-VI</th>
+                  <th className="border border-slate-400 p-1 w-5 text-center">No</th>
+                  <th className="border border-slate-400 p-1 text-left">Kegiatan / Peristiwa</th>
+                  <th className="border border-slate-400 p-1 text-center w-24">Alokasi Waktu</th>
+                  <th className="border border-slate-400 p-1 text-left">Keterangan</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="border border-slate-400 p-1 text-center">1</td>
-                  <td className="border border-slate-400 p-1 font-semibold">Al-Qur'an Hadis</td>
-                  <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                  <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                  <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                  <td className="border border-slate-400 p-1 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">1</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Minggu Efektif Belajar</td>
+                  <td className="border border-slate-400 p-0.5 text-center">36 - 40 Minggu</td>
+                  <td className="border border-slate-400 p-0.5">Kegiatan pembelajaran tatap muka</td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-400 p-1 text-center">2</td>
-                  <td className="border border-slate-400 p-1 font-semibold">Akidah Akhlak</td>
-                  <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                  <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                  <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                  <td className="border border-slate-400 p-1 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Jeda Tengah Semester</td>
+                  <td className="border border-slate-400 p-0.5 text-center">Maksimal 1 Minggu</td>
+                  <td className="border border-slate-400 p-0.5">Satu minggu setiap semester</td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-400 p-1 text-center">3</td>
-                  <td className="border border-slate-400 p-1 font-semibold">Fikih</td>
-                  <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                  <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                  <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                  <td className="border border-slate-400 p-1 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">3</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Jeda Antar Semester</td>
+                  <td className="border border-slate-400 p-0.5 text-center">Maksimal 2 Minggu</td>
+                  <td className="border border-slate-400 p-0.5">Antara Semester I dan Semester II</td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-400 p-1 text-center">4</td>
-                  <td className="border border-slate-400 p-1 font-semibold">Sejarah Kebudayaan Islam</td>
-                  <td className="border border-slate-400 p-1 text-center">-</td>
-                  <td className="border border-slate-400 p-1 text-center">-</td>
-                  <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                  <td className="border border-slate-400 p-1 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">4</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Libur Akhir Tahun Pelajaran</td>
+                  <td className="border border-slate-400 p-0.5 text-center">Maksimal 3 Minggu</td>
+                  <td className="border border-slate-400 p-0.5">Penyiapan kegiatan tahun ajaran baru</td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-400 p-1 text-center">5</td>
-                  <td className="border border-slate-400 p-1 font-semibold">Bahasa Arab</td>
-                  <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                  <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                  <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                  <td className="border border-slate-400 p-1 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">5</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Hari Libur Keagamaan</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 - 4 Minggu</td>
+                  <td className="border border-slate-400 p-0.5">Libur awal Ramadhan dan Idul Fitri</td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-400 p-1 text-center">6</td>
-                  <td className="border border-slate-400 p-1 font-semibold">Pendidikan Pancasila</td>
-                  <td className="border border-slate-400 p-1 text-center">4 JP</td>
-                  <td className="border border-slate-400 p-1 text-center">4 JP</td>
-                  <td className="border border-slate-400 p-1 text-center">4 JP</td>
-                  <td className="border border-slate-400 p-1 text-center">4 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">6</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Hari Libur Umum / Nasional</td>
+                  <td className="border border-slate-400 p-0.5 text-center">Maksimal 2 Minggu</td>
+                  <td className="border border-slate-400 p-0.5">Sesuai ketetapan Pemerintah RI</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">7</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Hari Libur Khusus Madrasah</td>
+                  <td className="border border-slate-400 p-0.5 text-center">Maksimal 1 Minggu</td>
+                  <td className="border border-slate-400 p-0.5">Hari lahir LP Ma'arif NU / khusus</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">8</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Kegiatan Khusus Madrasah</td>
+                  <td className="border border-slate-400 p-0.5 text-center">Maksimal 3 Minggu</td>
+                  <td className="border border-slate-400 p-0.5">Porseni / kemah pramuka / karya wisata</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">9</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Ujian Madrasah / Asesmen Akhir</td>
+                  <td className="border border-slate-400 p-0.5 text-center">1 - 2 Minggu</td>
+                  <td className="border border-slate-400 p-0.5">Jadwal resmi Kemenag RI</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">10</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Pengolahan Nilai & RDM</td>
+                  <td className="border border-slate-400 p-0.5 text-center">1 Minggu</td>
+                  <td className="border border-slate-400 p-0.5">Penginputan nilai raport digital</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">11</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Pembagian Raport Semester</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 Hari</td>
+                  <td className="border border-slate-400 p-0.5">Pertemuan wali murid & penyerahan raport</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">12</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Matsama Santri Baru</td>
+                  <td className="border border-slate-400 p-0.5 text-center">3 Hari</td>
+                  <td className="border border-slate-400 p-0.5">Pengenalan lingkungan madrasah kelas I</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">13</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Rapat Kerja Kurikulum TPKM</td>
+                  <td className="border border-slate-400 p-0.5 text-center">3 Hari</td>
+                  <td className="border border-slate-400 p-0.5">Evaluasi & penyusunan draf kurikulum</td>
                 </tr>
               </tbody>
             </table>
@@ -1277,107 +1156,167 @@ export const KomBab3Pages: React.FC<Props> = ({ data }) => {
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 42 (Hal. 34) - BEBAN BELAJAR 7-13 & JUMLAH TOTAL
+          PAGE 40 (Hal. 32) - PENGATURAN BEBAN BELAJAR DAN JADWAL PELAJARAN
           ========================================================================= */}
-      <KomPageContainer pageNumber="34" pageIndex={42}>
-        <div className="space-y-3 text-[12px] leading-relaxed">
-          <p className="font-bold text-[10.5px] text-slate-800">
-            Lanjutan Tabel Beban Belajar Mingguan Mata Pelajaran 7 s.d. 13
+      <KomPageContainer pageNumber="32" pageIndex={40}>
+        <div className="space-y-2.5 text-[12px] leading-relaxed">
+          <p className="text-[11px] italic text-slate-700">
+            5. Kalender Pendidikan: Rincian matrik kalender pendidikan tahunan terlampir dalam lampiran dokumen ini.
           </p>
 
-          <table className="w-full border-collapse border border-slate-400 text-[10px]">
-            <thead>
-              <tr className="bg-slate-100">
-                <th className="border border-slate-400 p-1 w-6 text-center">No</th>
-                <th className="border border-slate-400 p-1 text-left">Mata Pelajaran</th>
-                <th className="border border-slate-400 p-1 text-center w-16">Kelas I</th>
-                <th className="border border-slate-400 p-1 text-center w-16">Kelas II</th>
-                <th className="border border-slate-400 p-1 text-center w-16">Kelas III</th>
-                <th className="border border-slate-400 p-1 text-center w-16">Kelas IV-VI</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">7</td>
-                <td className="border border-slate-400 p-1 font-semibold">Bahasa Indonesia</td>
-                <td className="border border-slate-400 p-1 text-center">6 JP</td>
-                <td className="border border-slate-400 p-1 text-center">7 JP</td>
-                <td className="border border-slate-400 p-1 text-center">6 JP</td>
-                <td className="border border-slate-400 p-1 text-center">6 JP</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">8</td>
-                <td className="border border-slate-400 p-1 font-semibold">Matematika</td>
-                <td className="border border-slate-400 p-1 text-center">4 JP</td>
-                <td className="border border-slate-400 p-1 text-center">5 JP</td>
-                <td className="border border-slate-400 p-1 text-center">5 JP</td>
-                <td className="border border-slate-400 p-1 text-center">5 JP</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">9</td>
-                <td className="border border-slate-400 p-1 font-semibold">IPAS</td>
-                <td className="border border-slate-400 p-1 text-center">-</td>
-                <td className="border border-slate-400 p-1 text-center">-</td>
-                <td className="border border-slate-400 p-1 text-center">5 JP</td>
-                <td className="border border-slate-400 p-1 text-center">5 JP</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">10</td>
-                <td className="border border-slate-400 p-1 font-semibold">PJOK</td>
-                <td className="border border-slate-400 p-1 text-center">3 JP</td>
-                <td className="border border-slate-400 p-1 text-center">3 JP</td>
-                <td className="border border-slate-400 p-1 text-center">3 JP</td>
-                <td className="border border-slate-400 p-1 text-center">3 JP</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">11</td>
-                <td className="border border-slate-400 p-1 font-semibold">Seni dan Budaya (Seni Rupa)</td>
-                <td className="border border-slate-400 p-1 text-center">3 JP</td>
-                <td className="border border-slate-400 p-1 text-center">3 JP</td>
-                <td className="border border-slate-400 p-1 text-center">3 JP</td>
-                <td className="border border-slate-400 p-1 text-center">3 JP</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">12</td>
-                <td className="border border-slate-400 p-1 font-semibold">Bahasa Inggris (Pilihan)</td>
-                <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                <td className="border border-slate-400 p-1 text-center">2 JP</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">13</td>
-                <td className="border border-slate-400 p-1 font-semibold">Muatan Lokal (Bahasa Jawa)</td>
-                <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                <td className="border border-slate-400 p-1 text-center">2 JP</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">14</td>
-                <td className="border border-slate-400 p-1 font-semibold">Ke-NU-an / Aswaja</td>
-                <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                <td className="border border-slate-400 p-1 text-center">2 JP</td>
-                <td className="border border-slate-400 p-1 text-center">2 JP</td>
-              </tr>
-              <tr className="bg-emerald-100 font-bold text-emerald-950">
-                <td className="border border-slate-400 p-1 text-center" colSpan={2}>TOTAL JP PER MINGGU</td>
-                <td className="border border-slate-400 p-1 text-center">34 JP</td>
-                <td className="border border-slate-400 p-1 text-center">36 JP</td>
-                <td className="border border-slate-400 p-1 text-center">42 JP</td>
-                <td className="border border-slate-400 p-1 text-center">42 JP</td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="space-y-1.5">
+            <h3 className="font-bold text-slate-950 text-sm">
+              B. Pengaturan Beban Belajar dan Jadwal Pelajaran
+            </h3>
+            <p className="text-[11.5px]">
+              <strong>1. Beban Belajar:</strong> Sistem yang digunakan adalah paket tatap muka, dengan durasi 1 jam pelajaran (JP) = 35 menit.
+            </p>
+            <p className="text-[11.5px]">
+              <strong>2. Pengaturan Jadwal Pelajaran:</strong> Distribusi beban belajar mata pelajaran 1 s.d. 14 pada setiap fase/kelas:
+            </p>
 
-          <div className="pt-2 text-[11.5px] text-justify space-y-1 text-slate-800">
-            <p className="indent-8">
-              Pengaturan jadwal pelajaran disusun dengan memperhatikan ritme biologis anak usia sekolah dasar, di mana mata pelajaran yang membutuhkan konsentrasi kognitif tinggi (seperti Matematika, IPAS, dan Bahasa Arab) ditempatkan pada jam-jam awal pembelajaran pagi hari.
-            </p>
-            <p className="indent-8">
-              Mata pelajaran yang bersifat kinetik dan kreatif (seperti PJOK, Seni Rupa, dan Kokurikuler Projek P5-RA) ditempatkan setelah istirahat pertama atau di jam-jam siang guna mempertahankan antusiasme dan kegembiraan belajar peserta didik.
-            </p>
+            <table className="w-full border-collapse border border-slate-400 text-[9.5px]">
+              <thead>
+                <tr className="bg-slate-100">
+                  <th className="border border-slate-400 p-1 w-5 text-center">No</th>
+                  <th className="border border-slate-400 p-1 text-left">Mata Pelajaran</th>
+                  <th className="border border-slate-400 p-1 text-center w-14">Kelas I</th>
+                  <th className="border border-slate-400 p-1 text-center w-14">Kelas II</th>
+                  <th className="border border-slate-400 p-1 text-center w-14">Kelas III</th>
+                  <th className="border border-slate-400 p-1 text-center w-14">Kelas IV-VI</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">1</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Al-Qur'an Hadis</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">2</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Akidah Akhlak</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">3</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Fikih</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">4</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Sejarah Kebudayaan Islam</td>
+                  <td className="border border-slate-400 p-0.5 text-center">-</td>
+                  <td className="border border-slate-400 p-0.5 text-center">-</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">5</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Bahasa Arab</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">6</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Pendidikan Pancasila</td>
+                  <td className="border border-slate-400 p-0.5 text-center">4 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">4 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">4 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">4 JP</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">7</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Bahasa Indonesia</td>
+                  <td className="border border-slate-400 p-0.5 text-center">6 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">7 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">6 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">6 JP</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">8</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Matematika</td>
+                  <td className="border border-slate-400 p-0.5 text-center">4 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">5 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">5 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">5 JP</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">9</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">IPAS</td>
+                  <td className="border border-slate-400 p-0.5 text-center">-</td>
+                  <td className="border border-slate-400 p-0.5 text-center">-</td>
+                  <td className="border border-slate-400 p-0.5 text-center">5 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">5 JP</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">10</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">PJOK</td>
+                  <td className="border border-slate-400 p-0.5 text-center">3 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">3 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">3 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">3 JP</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">11</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Seni dan Budaya (Seni Rupa)</td>
+                  <td className="border border-slate-400 p-0.5 text-center">3 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">3 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">3 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">3 JP</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">12</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Bahasa Inggris (Pilihan)</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">13</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Muatan Lokal (Bahasa Jawa)</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-0.5 text-center">14</td>
+                  <td className="border border-slate-400 p-0.5 font-semibold">Ke-NU-an / Aswaja</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">2 JP</td>
+                </tr>
+                <tr className="bg-emerald-100 font-bold text-emerald-950">
+                  <td className="border border-slate-400 p-0.5 text-center" colSpan={2}>TOTAL JP PER MINGGU</td>
+                  <td className="border border-slate-400 p-0.5 text-center">34 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">36 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">42 JP</td>
+                  <td className="border border-slate-400 p-0.5 text-center">42 JP</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div className="pt-1 text-[11px] text-justify space-y-1 text-slate-800">
+              <p className="indent-8">
+                Pengaturan jadwal pelajaran disusun dengan memperhatikan ritme biologis anak usia sekolah dasar, di mana mata pelajaran yang membutuhkan konsentrasi kognitif tinggi (seperti Matematika, IPAS, dan Bahasa Arab) ditempatkan pada jam-jam awal pembelajaran pagi hari.
+              </p>
+              <p className="indent-8">
+                Mata pelajaran yang bersifat kinetik dan kreatif (seperti PJOK, Seni Rupa, dan Kokurikuler Projek P5-RA) ditempatkan setelah istirahat pertama atau di jam-jam siang guna mempertahankan antusiasme dan kegembiraan belajar peserta didik.
+              </p>
+            </div>
           </div>
         </div>
       </KomPageContainer>

@@ -469,28 +469,28 @@ export const KomFrontMatterPages: React.FC<Props> = ({ data }) => {
           <div className="flex justify-between items-baseline font-bold pt-2">
             <span>BAB II VISI, MISI, TUJUAN, SERTA TARGET PENDIDIKAN DI MADRASAH</span>
             <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-            <span className="font-mono">20</span>
+            <span className="font-mono">13</span>
           </div>
           <div className="pl-6 space-y-0.5 text-slate-800">
             <div className="flex justify-between items-baseline">
               <span>A. Visi {data.namaMadrasah}</span>
               <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-              <span className="font-mono">20</span>
+              <span className="font-mono">13</span>
             </div>
             <div className="flex justify-between items-baseline">
               <span>B. Misi {data.namaMadrasah}</span>
               <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-              <span className="font-mono">20</span>
+              <span className="font-mono">13</span>
             </div>
             <div className="flex justify-between items-baseline">
               <span>C. Tujuan Pendidikan {data.namaMadrasah}</span>
               <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-              <span className="font-mono">21</span>
+              <span className="font-mono">14</span>
             </div>
             <div className="flex justify-between items-baseline">
               <span>D. Target Madrasah</span>
               <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-              <span className="font-mono">21</span>
+              <span className="font-mono">15</span>
             </div>
           </div>
 
@@ -498,38 +498,38 @@ export const KomFrontMatterPages: React.FC<Props> = ({ data }) => {
           <div className="flex justify-between items-baseline font-bold pt-2">
             <span>BAB III PENGORGANISASIAN PEMBELAJARAN</span>
             <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-            <span className="font-mono">23</span>
+            <span className="font-mono">17</span>
           </div>
           <div className="pl-6 space-y-0.5 text-slate-800">
             <div className="flex justify-between items-baseline">
               <span>A. Intrakurikuler</span>
               <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-              <span className="font-mono">23</span>
+              <span className="font-mono">17</span>
             </div>
             <div className="flex justify-between items-baseline">
               <span>B. Kokurikuler</span>
               <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-              <span className="font-mono">26</span>
+              <span className="font-mono">24</span>
             </div>
             <div className="flex justify-between items-baseline">
               <span>C. Ekstrakurikuler</span>
               <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-              <span className="font-mono">28</span>
+              <span className="font-mono">26</span>
             </div>
             <div className="flex justify-between items-baseline">
               <span>D. Kegiatan Pembiasaan</span>
               <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-              <span className="font-mono">30</span>
+              <span className="font-mono">28</span>
             </div>
             <div className="flex justify-between items-baseline">
               <span>E. Kalender Pendidikan</span>
               <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-              <span className="font-mono">31</span>
+              <span className="font-mono">29</span>
             </div>
             <div className="flex justify-between items-baseline">
               <span>F. Pengaturan Beban Belajar dan Jadwal Pelajaran</span>
               <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-              <span className="font-mono">33</span>
+              <span className="font-mono">31</span>
             </div>
           </div>
 
@@ -548,17 +548,17 @@ export const KomFrontMatterPages: React.FC<Props> = ({ data }) => {
             <div className="flex justify-between items-baseline">
               <span>B. Perencanaan Pembelajaran Ruang Lingkup Kelas</span>
               <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-              <span className="font-mono">68</span>
+              <span className="font-mono">35</span>
             </div>
             <div className="flex justify-between items-baseline">
-              <span>C. Strategi Pengelolaan Pembelajaran</span>
+              <span>C. Strategi Pengelolaan Pembelajaran & Asesmen</span>
               <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-              <span className="font-mono">69</span>
+              <span className="font-mono">36</span>
             </div>
             <div className="flex justify-between items-baseline">
-              <span>D. Penilaian Pembelajaran</span>
+              <span>D. Modul Ajar & Modul Projek Profil</span>
               <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-              <span className="font-mono">70</span>
+              <span className="font-mono">37</span>
             </div>
           </div>
 
@@ -566,23 +566,23 @@ export const KomFrontMatterPages: React.FC<Props> = ({ data }) => {
           <div className="flex justify-between items-baseline font-bold pt-2">
             <span>BAB V PENDAMPINGAN, EVALUASI, DAN PENGEMBANGAN PROFESIONAL</span>
             <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-            <span className="font-mono">74</span>
+            <span className="font-mono">43</span>
           </div>
           <div className="pl-6 space-y-0.5 text-slate-800">
             <div className="flex justify-between items-baseline">
               <span>A. Pendampingan</span>
               <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-              <span className="font-mono">74</span>
+              <span className="font-mono">43</span>
             </div>
             <div className="flex justify-between items-baseline">
               <span>B. Evaluasi</span>
               <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-              <span className="font-mono">74</span>
+              <span className="font-mono">44</span>
             </div>
             <div className="flex justify-between items-baseline">
               <span>C. Pengembangan Profesional</span>
               <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-              <span className="font-mono">75</span>
+              <span className="font-mono">44</span>
             </div>
           </div>
 
@@ -590,94 +590,136 @@ export const KomFrontMatterPages: React.FC<Props> = ({ data }) => {
           <div className="flex justify-between items-baseline font-bold pt-2">
             <span>BAB VI PENUTUP</span>
             <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-            <span className="font-mono">77</span>
+            <span className="font-mono">46</span>
           </div>
           <div className="pl-6 space-y-0.5 text-slate-800">
             <div className="flex justify-between items-baseline">
               <span>A. Harapan</span>
               <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-              <span className="font-mono">77</span>
+              <span className="font-mono">46</span>
             </div>
             <div className="flex justify-between items-baseline">
               <span>B. Saran</span>
               <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-              <span className="font-mono">77</span>
+              <span className="font-mono">46</span>
             </div>
           </div>
         </div>
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 7 (Hal. vii) - DAFTAR TABEL & LAMPIRAN
+          PAGE 7 (Hal. vii) - DAFTAR TABEL, DAFTAR GAMBAR & LAMPIRAN
           ========================================================================= */}
       <KomPageContainer pageNumber="vii" pageIndex={7}>
-        <div className="flex justify-between items-baseline font-bold pb-2 border-b border-slate-300">
-          <span>LAMPIRAN-LAMPIRAN</span>
-          <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-          <span className="font-mono">78</span>
-        </div>
-
-        <div className="text-center pt-4 pb-4">
-          <h2 className="font-bold text-sm sm:text-base uppercase tracking-wider text-slate-950">
-            DAFTAR TABEL
-          </h2>
-        </div>
-
-        <div className="space-y-1.5 text-[11px] font-sans text-slate-800">
-          {[
-            { no: '1.', title: 'Tabel 1.1. Program Unggulan Budaya Lokal Madrasah', page: '5' },
-            { no: '2.', title: 'Tabel 1.2. Program Unggulan Global di Madrasah', page: '6' },
-            { no: '3.', title: 'Table 1.3. Program Unggulan Madrasah (Asrama)', page: '7' },
-            { no: '4.', title: 'Table 1.4. Program Unggulan Madrasah (Adiwiyata)', page: '7' },
-            { no: '5.', title: 'Tabel 1.5. Data Kualifikasi Pendidik dan Tenaga Kependidikan', page: '8' },
-            { no: '6.', title: 'Tabel 1.6. Rekapitulasi Siswa Madrasah pada Tiga Tahun Terakhir', page: '10' },
-            { no: '7.', title: 'Tabel 1.7. Rekapitulasi Tamatan Siswa Madrasah pada Tiga Tahun Terakhir', page: '10' },
-            { no: '8.', title: 'Tabel 1.8. Data Prestasi MI Ma’arif NU 2 Sanggreman', page: '11' },
-            { no: '9.', title: 'Tabel 1.9. Rekapitulasi Siswa MI Ma’arif NU 2 Sanggreman', page: '15' },
-            { no: '10.', title: 'Tabel 1.10. Rekapitulasi Data Orang Tua Siswa Berdasarkan Pendidikan Formal', page: '16' },
-            { no: '11.', title: 'Tabel 1.11. Rekapitulasi Data Orang Tua Siswa Berdasarkan Pekerjaan', page: '16' },
-            { no: '12.', title: 'Tabel 3.1. Struktur Kurikulum MI Ma’arif NU 2 Sanggreman', page: '24' },
-            { no: '13.', title: 'Tabel 3.2. Asesmen Awal Pemilihan Mata Pelajaran Seni dan Budaya', page: '25' },
-            { no: '14.', title: 'Tabel 3.3. Struktur Kurikulum Kegiatan Kokurikuler', page: '27' },
-            { no: '15.', title: 'Tabel 3.4. Struktur Kegiatan Kokurikuler MI Ma’arif NU 2 Sanggreman', page: '27' },
-            { no: '16.', title: 'Tabel 3.5. Kegiatan Ekstrakurikuler MI Ma’arif NU 2 Sanggreman', page: '28' },
-            { no: '17.', title: 'Tabel 3.6. Kegiatan Pembiasaan', page: '30' },
-            { no: '18.', title: 'Tabel 3.7. Analisis Pekan Belajar Efektif', page: '31' },
-            { no: '19.', title: 'Tabel 3.8. Analisis Waktu Belajar Efektif dan Tidak Efektif', page: '32' },
-            { no: '20.', title: 'Tabel 5.1. Pengembangan Profesional MI Ma’arif NU 2 Sanggreman', page: '75' },
-          ].map((item, idx) => (
-            <div key={idx} className="flex justify-between items-baseline">
-              <span className="w-6 font-semibold">{item.no}</span>
-              <span className="flex-1">{item.title}</span>
-              <span className="flex-1 border-b border-dotted border-slate-300 mx-2"></span>
-              <span className="font-mono">{item.page}</span>
+        <div className="space-y-4">
+          <div>
+            <div className="text-center pb-2 border-b border-slate-300">
+              <h2 className="font-bold text-xs sm:text-sm uppercase tracking-wider text-slate-950 font-serif">
+                DAFTAR TABEL
+              </h2>
             </div>
-          ))}
-        </div>
-      </KomPageContainer>
 
-      {/* =========================================================================
-          PAGE 8 (Hal. viii) - DAFTAR GAMBAR
-          ========================================================================= */}
-      <KomPageContainer pageNumber="viii" pageIndex={8}>
-        <div className="text-center pt-2 pb-6">
-          <h2 className="font-bold text-sm sm:text-base uppercase tracking-wider text-slate-950">
-            DAFTAR GAMBAR
-          </h2>
-        </div>
-
-        <div className="space-y-2 text-[12px] font-sans text-slate-800">
-          <div className="flex justify-between items-baseline">
-            <span className="w-6 font-semibold">1.</span>
-            <span className="flex-1">Gambar 1.1. Letak Wilayah {data.namaMadrasah}</span>
-            <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-            <span className="font-mono">2</span>
+            <div className="pt-2 space-y-1 text-[10.5px] font-sans text-slate-800">
+              {[
+                { no: '1.', title: 'Tabel 1.1 Program Unggulan Budaya Lokal (Tahfidzul Qur\'an)', page: '5' },
+                { no: '2.', title: 'Tabel 1.2 Program Unggulan Global (Teknologi Informasi)', page: '6' },
+                { no: '3.', title: 'Tabel 1.3 Program Unggulan Madrasah (Asrama Santri)', page: '7' },
+                { no: '4.', title: 'Tabel 1.4 Program Unggulan Madrasah (Adiwiyata Ramah Lingkungan)', page: '7' },
+                { no: '5.', title: 'Tabel 1.5 Data Kualifikasi Pendidik dan Tenaga Kependidikan', page: '8' },
+                { no: '6.', title: 'Tabel 1.6 Rekapitulasi Siswa Tiga Tahun Terakhir', page: '9' },
+                { no: '7.', title: 'Tabel 1.7 Rekapitulasi Tamatan Tiga Tahun Terakhir', page: '9' },
+                { no: '8.', title: 'Tabel 1.8 Data Prestasi Madrasah', page: '9' },
+                { no: '9.', title: 'Tabel 1.9 Rekapitulasi Rombongan Belajar', page: '10' },
+                { no: '10.', title: 'Tabel 1.10 Rekapitulasi Pendidikan Orang Tua', page: '10' },
+                { no: '11.', title: 'Tabel 1.11 Rekapitulasi Pekerjaan Orang Tua', page: '10' },
+                { no: '12.', title: 'Tabel 3.1 Struktur Kurikulum Intrakurikuler', page: '17' },
+                { no: '13.', title: 'Tabel 3.2 Asesmen Awal Pemilihan Mata Pelajaran Seni', page: '19' },
+                { no: '14.', title: 'Tabel 3.3 Delapan Dimensi Profil Lulusan Madrasah', page: '23' },
+                { no: '15.', title: 'Tabel 3.4 Struktur Kurikulum Kokurikuler (P5-RA)', page: '24' },
+                { no: '16.', title: 'Tabel 3.5 Jadwal dan Pembina Ekstrakurikuler', page: '26' },
+                { no: '17.', title: 'Tabel 3.6 Kegiatan Pembiasaan Panca Cinta', page: '28' },
+                { no: '18.', title: 'Tabel 3.7 Analisis Pekan Belajar Efektif Semester I & II', page: '29' },
+                { no: '19.', title: 'Tabel 3.8 Acuan Alokasi Waktu Belajar dan Waktu Libur', page: '31' },
+                { no: '20.', title: 'Tabel 5.1 Program Pendampingan Kurikulum Berbasis Cinta', page: '43' },
+              ].map((item, idx) => (
+                <div key={idx} className="flex justify-between items-baseline">
+                  <span className="w-5 font-semibold text-slate-700">{item.no}</span>
+                  <span className="flex-1 truncate pr-2">{item.title}</span>
+                  <span className="flex-1 border-b border-dotted border-slate-300 mx-1"></span>
+                  <span className="font-mono text-slate-900 font-semibold">{item.page}</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="flex justify-between items-baseline">
-            <span className="w-6 font-semibold">2.</span>
-            <span className="flex-1">Gambar 1.2. Bagan Analisis SOAR</span>
-            <span className="flex-1 border-b border-dotted border-slate-400 mx-2"></span>
-            <span className="font-mono">3</span>
+
+          <div className="pt-2">
+            <div className="text-center pb-2 border-b border-slate-300">
+              <h2 className="font-bold text-xs sm:text-sm uppercase tracking-wider text-slate-950 font-serif">
+                DAFTAR GAMBAR
+              </h2>
+            </div>
+
+            <div className="pt-2 space-y-1 text-[10.5px] font-sans text-slate-800">
+              <div className="flex justify-between items-baseline">
+                <span className="w-5 font-semibold text-slate-700">1.</span>
+                <span className="flex-1">Gambar 1.1 Letak Wilayah dan Denah {data.namaMadrasah}</span>
+                <span className="flex-1 border-b border-dotted border-slate-300 mx-1"></span>
+                <span className="font-mono text-slate-900 font-semibold">2</span>
+              </div>
+              <div className="flex justify-between items-baseline">
+                <span className="w-5 font-semibold text-slate-700">2.</span>
+                <span className="flex-1">Gambar 1.2 Bagan Analisis SOAR (Strengths, Opportunities, Aspirations, Results)</span>
+                <span className="flex-1 border-b border-dotted border-slate-300 mx-1"></span>
+                <span className="font-mono text-slate-900 font-semibold">3</span>
+              </div>
+              <div className="flex justify-between items-baseline">
+                <span className="w-5 font-semibold text-slate-700">3.</span>
+                <span className="flex-1">Gambar 3.1 Delapan Dimensi Profil Lulusan {data.namaMadrasah}</span>
+                <span className="flex-1 border-b border-dotted border-slate-300 mx-1"></span>
+                <span className="font-mono text-slate-900 font-semibold">18</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-2">
+            <div className="text-center pb-2 border-b border-slate-300">
+              <h2 className="font-bold text-xs sm:text-sm uppercase tracking-wider text-slate-950 font-serif">
+                DAFTAR LAMPIRAN
+              </h2>
+            </div>
+
+            <div className="pt-2 space-y-1 text-[10.5px] font-sans text-slate-800">
+              <div className="flex justify-between items-baseline">
+                <span className="w-5 font-semibold text-slate-700">1.</span>
+                <span className="flex-1">Lampiran I: Surat Keputusan Kepala Madrasah tentang Penetapan TPKM</span>
+                <span className="flex-1 border-b border-dotted border-slate-300 mx-1"></span>
+                <span className="font-mono text-slate-900 font-semibold">47</span>
+              </div>
+              <div className="flex justify-between items-baseline">
+                <span className="w-5 font-semibold text-slate-700">2.</span>
+                <span className="flex-1">Lampiran II: Matriks Kalender Pendidikan Madrasah Tahun Pelajaran {data.tahunAjaran}</span>
+                <span className="flex-1 border-b border-dotted border-slate-300 mx-1"></span>
+                <span className="font-mono text-slate-900 font-semibold">49</span>
+              </div>
+              <div className="flex justify-between items-baseline">
+                <span className="w-5 font-semibold text-slate-700">3.</span>
+                <span className="flex-1">Lampiran III: Alur Tujuan Pembelajaran (ATP) Fikih Fase A</span>
+                <span className="flex-1 border-b border-dotted border-slate-300 mx-1"></span>
+                <span className="font-mono text-slate-900 font-semibold">50</span>
+              </div>
+              <div className="flex justify-between items-baseline">
+                <span className="w-5 font-semibold text-slate-700">4.</span>
+                <span className="flex-1">Lampiran IV: Lembar Observasi Iklim Kelas Berbasis Cinta (Supervisi KBC)</span>
+                <span className="flex-1 border-b border-dotted border-slate-300 mx-1"></span>
+                <span className="font-mono text-slate-900 font-semibold">51</span>
+              </div>
+              <div className="flex justify-between items-baseline">
+                <span className="w-5 font-semibold text-slate-700">5.</span>
+                <span className="flex-1">Lampiran V: Berita Acara Rapat Kerja Review Kurikulum Madrasah</span>
+                <span className="flex-1 border-b border-dotted border-slate-300 mx-1"></span>
+                <span className="font-mono text-slate-900 font-semibold">52</span>
+              </div>
+            </div>
           </div>
         </div>
       </KomPageContainer>
