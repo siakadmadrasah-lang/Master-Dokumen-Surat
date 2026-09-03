@@ -22,8 +22,10 @@ import {
   Building,
   HelpCircle,
   ShieldCheck,
+  MapPin,
 } from 'lucide-react';
 import { PengesahPejabatModal } from './PengesahPejabatModal';
+import { KomPetaLokasiCard } from './KomPetaLokasiCard';
 
 interface KomCintaManagerViewProps {
   profile: MadrasahProfile;
@@ -58,7 +60,7 @@ export const KomCintaManagerView: React.FC<KomCintaManagerViewProps> = ({
   });
 
   const [activeSubTab, setActiveSubTab] = useState<'PREVIEW' | 'EDITOR'>('PREVIEW');
-  const [editorSection, setEditorSection] = useState<'IDENTITY' | 'VISION' | 'PROGRAMS' | 'CURRICULUM' | 'HABITUATION' | 'CRITERIA'>('IDENTITY');
+  const [editorSection, setEditorSection] = useState<'IDENTITY' | 'MAP_LOCATION' | 'VISION' | 'PROGRAMS' | 'CURRICULUM' | 'HABITUATION' | 'CRITERIA'>('IDENTITY');
   const [searchQuery, setSearchQuery] = useState('');
   const [saveSuccessMsg, setSaveSuccessMsg] = useState(false);
   const [showPengesahModal, setShowPengesahModal] = useState(false);
@@ -116,11 +118,30 @@ export const KomCintaManagerView: React.FC<KomCintaManagerViewProps> = ({
   const handleSaveData = () => {
     try {
       localStorage.setItem('kom_cinta_custom_data', JSON.stringify(formData));
+
+      // Persist recorded map coordinates to general app profile as well
+      const currentProfileStr = localStorage.getItem('automadrasah_profile_v1');
+      if (currentProfileStr) {
+        try {
+          const p = JSON.parse(currentProfileStr);
+          const updatedProfile = {
+            ...p,
+            mapsLatitude: formData.mapsLatitude,
+            mapsLongitude: formData.mapsLongitude,
+            mapsZoom: formData.mapsZoom,
+            denahLokasiUrl: formData.denahGambarUrl,
+          };
+          localStorage.setItem('automadrasah_profile_v1', JSON.stringify(updatedProfile));
+        } catch (err) {
+          console.error('Error saving updated profile coords', err);
+        }
+      }
+
       if (onSaveToArchive) {
         onSaveToArchive(officialDocRepresentation);
       }
       if (onAddLog) {
-        onAddLog(`Menyimpan kustomisasi naskah Kurikulum Berbasis Cinta (KOM CINTA) T.A ${formData.tahunAjaran}`);
+        onAddLog(`Menyimpan kustomisasi naskah Kurikulum Berbasis Cinta (KOM CINTA) T.A ${formData.tahunAjaran} dengan koordinat peta ${formData.mapsLatitude || '-7.517606'}, ${formData.mapsLongitude || '109.132984'}`);
       }
       setSaveSuccessMsg(true);
       setTimeout(() => setSaveSuccessMsg(false), 3000);
@@ -338,6 +359,15 @@ export const KomCintaManagerView: React.FC<KomCintaManagerViewProps> = ({
             </button>
             <button
               type="button"
+              onClick={() => scrollToSection('kom-peta-lokasi-wrapper')}
+              className="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-950 font-bold rounded-md border border-emerald-300 inline-flex items-center gap-1 shadow-2xs"
+              title="Lompat ke Gambar 1.1 Peta & Denah Lokasi Madrasah (Hal. 2)"
+            >
+              <MapPin className="w-3 h-3 text-emerald-700" />
+              <span>Peta Lokasi (Hal. 2)</span>
+            </button>
+            <button
+              type="button"
               onClick={() => scrollToSection('kom-cinta-bab2')}
               className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-md font-medium"
             >
@@ -413,6 +443,19 @@ export const KomCintaManagerView: React.FC<KomCintaManagerViewProps> = ({
 
             <button
               type="button"
+              onClick={() => setEditorSection('MAP_LOCATION')}
+              className={`w-full flex items-center space-x-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition-all ${
+                editorSection === 'MAP_LOCATION'
+                  ? 'bg-emerald-950 text-white shadow-sm'
+                  : 'text-slate-700 hover:bg-slate-100'
+              }`}
+            >
+              <MapPin className="w-4 h-4 text-emerald-400" />
+              <span>2. Peta & Denah Lokasi</span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => setEditorSection('VISION')}
               className={`w-full flex items-center space-x-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-left transition-all ${
                 editorSection === 'VISION'
@@ -421,7 +464,7 @@ export const KomCintaManagerView: React.FC<KomCintaManagerViewProps> = ({
               }`}
             >
               <Compass className="w-4 h-4 text-emerald-400" />
-              <span>2. Visi, Misi & Tujuan</span>
+              <span>3. Visi, Misi & Tujuan</span>
             </button>
 
             <button
@@ -638,6 +681,24 @@ export const KomCintaManagerView: React.FC<KomCintaManagerViewProps> = ({
                     />
                   </div>
                 </div>
+
+                {/* Peta & Denah Lokasi Madrasah (Otomatis Rekam GPS & SIAKAD) */}
+                <div className="pt-6 border-t border-slate-200">
+                  <KomPetaLokasiCard
+                    data={formData}
+                    onChange={(updated) => setFormData((prev) => ({ ...prev, ...updated }))}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* SECTION: MAP LOCATION STANDALONE */}
+            {editorSection === 'MAP_LOCATION' && (
+              <div className="space-y-4">
+                <KomPetaLokasiCard
+                  data={formData}
+                  onChange={(updated) => setFormData((prev) => ({ ...prev, ...updated }))}
+                />
               </div>
             )}
 

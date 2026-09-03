@@ -102,6 +102,43 @@ export const SiakadSyncModal: React.FC<SiakadSyncModalProps> = ({
 
   const handleConfirmApply = () => {
     if (!syncResult) return;
+
+    // Automatically record SIAKAD school profile & GPS maps coordinates
+    if (syncResult.profile) {
+      try {
+        const rawProf = syncResult.profile;
+        const lat = rawProf.maps_latitude;
+        const lng = rawProf.maps_longitude;
+        const zoom = rawProf.maps_zoom;
+
+        if (lat && lng) {
+          // 1. Update general profile
+          const curProfStr = localStorage.getItem('automadrasah_profile_v1');
+          if (curProfStr) {
+            const p = JSON.parse(curProfStr);
+            p.mapsLatitude = lat;
+            p.mapsLongitude = lng;
+            if (zoom) p.mapsZoom = zoom;
+            localStorage.setItem('automadrasah_profile_v1', JSON.stringify(p));
+          }
+
+          // 2. Update KOM Cinta stored data
+          const curKomStr = localStorage.getItem('kom_cinta_custom_data');
+          if (curKomStr) {
+            const k = JSON.parse(curKomStr);
+            k.mapsLatitude = lat;
+            k.mapsLongitude = lng;
+            if (zoom) k.mapsZoom = parseInt(zoom, 10) || 17;
+            k.mapsSource = 'SIAKAD';
+            k.mapsRecordedAt = `${new Date().toLocaleString('id-ID')} (Tarik Otomatis SIAKAD)`;
+            localStorage.setItem('kom_cinta_custom_data', JSON.stringify(k));
+          }
+        }
+      } catch (err) {
+        console.error('Failed to sync profile coordinates from SIAKAD', err);
+      }
+    }
+
     onApplySync({
       teachers: syncResult.teachers,
       students: syncResult.students,

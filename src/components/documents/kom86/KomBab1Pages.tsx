@@ -1,6 +1,7 @@
 import React from 'react';
 import { KomPageContainer } from './KomPageContainer';
 import { KomCintaData } from '../../../data/komCintaDefaultData';
+import { KomPetaLokasiViewer } from './KomPetaLokasiViewer';
 
 interface Props {
   data: KomCintaData;
@@ -99,18 +100,8 @@ export const KomBab1Pages: React.FC<Props> = ({ data }) => {
           ========================================================================= */}
       <KomPageContainer pageNumber="2" pageIndex={10}>
         <div className="space-y-4 text-[12px] leading-relaxed">
-          <div className="text-center space-y-2">
-            <div className="border border-slate-300 rounded-lg p-6 bg-slate-50 flex flex-col items-center justify-center">
-              <div className="w-full max-w-sm h-36 bg-emerald-100/60 border-2 border-dashed border-emerald-500 rounded-lg flex flex-col items-center justify-center text-center p-3">
-                <span className="font-bold text-emerald-950 text-sm">PETA DAN DENAH LOKASI</span>
-                <span className="text-xs text-slate-700">{data.namaMadrasah}</span>
-                <span className="text-[11px] text-slate-500 mt-1">Desa {data.desa}, Kec. {data.kecamatan}, Kab. {data.kabupaten}</span>
-              </div>
-            </div>
-            <p className="font-bold text-slate-800 text-[11.5px]">
-              Gambar 1.1 Letak Wilayah {data.namaMadrasah}
-            </p>
-          </div>
+          {/* Peta dan Denah Wilayah Geografis Madrasah (Gambar 1.1) */}
+          <KomPetaLokasiViewer data={data} />
 
           <div className="space-y-2 pt-2">
             <h4 className="font-bold text-slate-950 text-xs sm:text-[13px]">

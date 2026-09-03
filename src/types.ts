@@ -34,6 +34,12 @@ export interface MadrasahProfile {
   tahunAjaran: string; // e.g. "2025/2026"
   semester: Semester;
   titimangsa: string; // Kota penetapan, e.g. "Malang"
+  mapsLatitude?: string;
+  mapsLongitude?: string;
+  mapsZoom?: number | string;
+  mapsEmbedUrl?: string;
+  petaLokasiUrl?: string;
+  denahLokasiUrl?: string;
 }
 
 export type StatusKepegawaian = 'PNS' | 'PPPK' | 'GTY' | 'GTT' | 'Honorer' | 'PTY';

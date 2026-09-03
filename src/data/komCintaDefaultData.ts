@@ -26,6 +26,21 @@ export interface KomCintaData {
   statusTanah: string;
   statusBangunan: string;
 
+  // Peta & Denah Lokasi Madrasah (Gambar 1.1)
+  mapsLatitude?: string;
+  mapsLongitude?: string;
+  mapsZoom?: number;
+  mapsRecordedAt?: string;
+  mapsSource?: 'GPS' | 'SIAKAD' | 'GEOCODING' | 'MANUAL' | 'DEFAULT';
+  mapsAddress?: string;
+  denahGambarUrl?: string;
+  petaMode?: 'AUTO_MAP' | 'CUSTOM_IMAGE' | 'COMBINATION';
+  keteranganPeta?: string;
+  batasUtara?: string;
+  batasSelatan?: string;
+  batasTimur?: string;
+  batasBarat?: string;
+
   // Surat Pengantar & Rekomendasi
   nomorSuratPermohonan: string;
   tanggalPermohonan: string;
@@ -252,6 +267,21 @@ export const defaultKomCintaData: KomCintaData = {
   luasBangunan: '858 m²',
   statusTanah: 'Wakaf (858 m²)',
   statusBangunan: 'Pribadi / Milik Sendiri',
+
+  // Peta & Denah Lokasi Madrasah (Gambar 1.1)
+  mapsLatitude: '-7.517606',
+  mapsLongitude: '109.132984',
+  mapsZoom: 17,
+  mapsRecordedAt: 'Terekam Otomatis dari SIAKAD Madrasah & Geolocation',
+  mapsSource: 'SIAKAD',
+  mapsAddress: 'Jl. Masjid As-Salafiyah Babakan, RT 02/RW 03, Desa Sanggreman, Kec. Rawalo, Kab. Banyumas',
+  denahGambarUrl: '',
+  petaMode: 'AUTO_MAP',
+  keteranganPeta: 'Peta Geografis dan Denah Wilayah Madrasah Berbasis GPS',
+  batasUtara: 'Persawahan Produktif & Pemukiman Warga Dusun Babakan',
+  batasSelatan: 'Jalan Desa Babakan & Masjid As-Salafiyah',
+  batasTimur: 'Pemukiman Penduduk & Kebun Produktif Masyarakat',
+  batasBarat: 'Saluran Irigasi Pertanian & Jalan Lingkungan Dusun',
 
   nomorSuratPermohonan: '097/LPM/33.17/MI-77/VI/2026',
   tanggalPermohonan: '15 Juli 2026',
