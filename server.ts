@@ -41,38 +41,66 @@ function normalizeTeachersList(rawItems: any[]): any[] {
   if (!Array.isArray(rawItems)) return [];
   return rawItems.map((item, idx) => {
     const nama = item.nama || item.name || item.nama_lengkap || item.nama_guru || `Guru #${idx + 1}`;
-    const nip = item.nip || item.NIP || (item.nip === '-' ? '' : item.nip) || '';
-    const nuptk = item.nuptk || item.NUPTK || (item.nuptk === '-' ? '' : item.nuptk) || '';
-    const pegId = item.peg_id || item.pegId || item.id_pegawai || '';
+    const nip = item.nip && item.nip !== '-' ? String(item.nip).trim() : '';
+    const nuptk = item.nuptk && item.nuptk !== '-' ? String(item.nuptk).trim() : '';
+    const pegId = item.peg_id || item.pegId || item.id_pegawai || item.npk || '';
     
     let jk: 'L' | 'P' = 'L';
     const rawJk = (item.jenis_kelamin || item.jk || item.gender || 'L').toString().toUpperCase();
-    if (rawJk.startsWith('P') || rawJk === 'WANITA' || rawJk === 'FEMALE') {
+    if (rawJk.startsWith('P') || rawJk === 'WANITA' || rawJk === 'PEREMPUAN' || rawJk === 'FEMALE') {
       jk = 'P';
     }
+
+    const gelarBelakang = item.gelar || item.gelar_belakang || item.gelarBelakang || (nama.includes(',') ? nama.split(',').slice(1).join(',').trim() : '');
+
+    // Status Kepegawaian & Pangkat Golongan
+    let statusKep: string = 'GTY';
+    const rawStatus = (item.status_kepegawaian || item.status || '').toUpperCase();
+    if (rawStatus.includes('PNS') || (nip && nip.length >= 18)) {
+      statusKep = 'PNS';
+    } else if (rawStatus.includes('PPPK')) {
+      statusKep = 'PPPK';
+    } else if (rawStatus.includes('GTT') || rawStatus.includes('HONORER')) {
+      statusKep = 'GTT';
+    } else {
+      statusKep = 'GTY';
+    }
+
+    const isSertifikasi = Boolean(
+      item.sertifikasi === true ||
+      item.sertifikasi === 'Sudah Sertifikasi' ||
+      item.status_sertifikasi === 'Sudah Sertifikasi' ||
+      item.is_certified === true ||
+      item.sertifikasi === '1'
+    );
+
+    // Tanggal Lahir check
+    const rawTglLahir = item.tanggal_lahir || item.tanggalLahir || '';
+    const safeTglLahir = (rawTglLahir && String(rawTglLahir).includes('-')) ? String(rawTglLahir) : '1980-01-01';
 
     return {
       id: item.id ? String(item.id) : `T-SIAKAD-${Date.now()}-${idx + 1}`,
       nama: nama,
       gelarDepan: item.gelar_depan || item.gelarDepan || '',
-      gelarBelakang: item.gelar_belakang || item.gelarBelakang || (nama.includes(',') ? nama.split(',').slice(1).join(',').trim() : ''),
+      gelarBelakang: gelarBelakang,
       nip: nip,
       nuptk: nuptk,
       pegId: pegId,
       jenisKelamin: jk,
-      tempatLahir: item.tempat_lahir || item.tempatLahir || 'Malang',
-      tanggalLahir: item.tanggal_lahir || item.tanggalLahir || '1985-05-15',
-      statusKepegawaian: item.status_kepegawaian || item.statusKepegawaian || (nip ? 'PNS' : 'GTY'),
-      pangkatGol: item.pangkat_gol || item.pangkatGol || (nip ? 'Penata Muda / III/a' : 'Guru Tetap'),
-      jabatanUtama: item.jabatan_utama || item.jabatan || item.jabatanUtama || 'Guru Mata Pelajaran',
-      tugasTambahan: item.tugas_tambahan || item.tugasTambahan || (item.wali_kelas ? `Wali Kelas ${item.wali_kelas}` : ''),
-      mapelUtama: item.mapel_utama || item.mapel || item.mata_pelajaran || 'Pendidikan Agama Islam',
+      tempatLahir: item.tempat_lahir || item.tempatLahir || 'Banyumas',
+      tanggalLahir: safeTglLahir,
+      statusKepegawaian: statusKep,
+      pangkatGol: item.pangkat_gol || item.pangkatGol || (statusKep === 'PNS' ? 'Penata Muda / III/a' : 'Guru Tetap Yayasan'),
+      jabatanUtama: item.jabatan_utama || item.jabatan || 'Guru Kelas',
+      tugasTambahan: item.tugas_tambahan || (item.mengajar_kelas ? `Wali ${item.mengajar_kelas}` : ''),
+      mapelUtama: item.mapel_diampu && item.mapel_diampu !== '-' ? item.mapel_diampu : (item.mapel_utama || item.mapel || 'Pendidikan Agama Islam'),
       jumlahJam: Number(item.jumlah_jam || item.jumlahJam || item.jp || 24),
-      waliKelasDi: item.wali_kelas || item.waliKelasDi || item.kelas_wali || '',
-      sertifikasi: Boolean(item.sertifikasi === true || item.sertifikasi === '1' || item.is_certified === true),
-      telepon: item.telepon || item.no_hp || item.phone || '08123456789',
-      email: item.email || `${nama.toLowerCase().replace(/[^a-z0-9]/g, '')}@madrasah.sch.id`,
-      isActive: item.is_active !== undefined ? Boolean(item.is_active) : true,
+      waliKelasDi: item.mengajar_kelas || item.kelas_diampu || item.wali_kelas || '',
+      sertifikasi: isSertifikasi,
+      telepon: item.telepon || item.no_hp || item.phone || '',
+      email: item.email || '',
+      isActive: item.status_keaktifan ? item.status_keaktifan === 'Aktif' : (item.is_active !== undefined ? Boolean(item.is_active) : true),
+      signatureUrl: item.foto_url || item.foto || item.signature_url || undefined,
     };
   });
 }
@@ -81,9 +109,9 @@ function normalizeStudentsList(rawItems: any[]): any[] {
   if (!Array.isArray(rawItems)) return [];
   return rawItems.map((item, idx) => {
     const nama = item.nama || item.name || item.nama_lengkap || item.nama_siswa || `Siswa #${idx + 1}`;
-    const nisn = item.nisn || item.NISN || `00${Date.now().toString().slice(-8)}${idx}`;
+    const nisn = item.nisn || item.NISN || '';
     const nis = item.nis || item.NIS || `MI-${2025000 + idx + 1}`;
-    const nik = item.nik || item.NIK || `350700000000${(idx + 1).toString().padStart(4, '0')}`;
+    const nik = item.nik && item.nik !== '-' ? String(item.nik).replace(/['"]/g, '').trim() : '';
     
     let jk: 'L' | 'P' = 'L';
     const rawJk = (item.jenis_kelamin || item.jk || item.gender || 'L').toString().toUpperCase();
@@ -91,9 +119,12 @@ function normalizeStudentsList(rawItems: any[]): any[] {
       jk = 'P';
     }
 
-    const rombel = item.rombel || item.kelas || item.nama_kelas || 'Kelas 1 A';
+    const rombel = item.rombel || item.kelas || item.nama_kelas || 'Kelas 1';
     const tingkatMatch = String(rombel).match(/\d+/);
     const tingkat = tingkatMatch ? parseInt(tingkatMatch[0], 10) : Number(item.tingkat || 1);
+
+    const rawTglLahir = item.tanggal_lahir || item.tanggalLahir || '';
+    const safeTglLahir = (rawTglLahir && String(rawTglLahir).includes('-')) ? String(rawTglLahir) : '2016-01-01';
 
     return {
       id: item.id ? String(item.id) : `S-SIAKAD-${Date.now()}-${idx + 1}`,
@@ -104,31 +135,28 @@ function normalizeStudentsList(rawItems: any[]): any[] {
       jenisKelamin: jk,
       rombel: rombel,
       tingkat: isNaN(tingkat) ? 1 : tingkat,
-      tempatLahir: item.tempat_lahir || item.tempatLahir || 'Malang',
-      tanggalLahir: item.tanggal_lahir || item.tanggalLahir || '2015-08-20',
-      namaAyah: item.nama_ayah || item.ayah || item.namaAyah || 'Bapak Siswa',
-      namaIbu: item.nama_ibu || item.ibu || item.namaIbu || 'Ibu Siswa',
-      pekerjaanOrtu: item.pekerjaan_ortu || item.pekerjaan || item.pekerjaanOrtu || 'Wiraswasta',
-      alamat: item.alamat || item.alamat_lengkap || 'Jl. Madrasah No. 10',
-      desaKelurahan: item.desa || item.kelurahan || item.desaKelurahan || 'Sukamaju',
-      kecamatan: item.kecamatan || 'Kepanjen',
-      kabupatenKota: item.kabupaten || item.kabupatenKota || 'Kabupaten Malang',
-      provinsi: item.provinsi || 'Jawa Timur',
-      statusSiswa: item.status || item.statusSiswa || 'Aktif',
+      tempatLahir: item.tempat_lahir || item.tempatLahir || 'Banyumas',
+      tanggalLahir: safeTglLahir,
+      namaAyah: item.nama_ayah || item.ayah || item.namaAyah || '',
+      namaIbu: item.nama_ibu || item.ibu || item.namaIbu || '',
+      pekerjaanOrtu: item.pekerjaan_ayah || item.pekerjaan_ortu || item.pekerjaan || 'Wiraswasta',
+      alamat: item.address || item.alamat || item.alamat_lengkap || 'Sanggreman, Rawalo, Banyumas',
+      desaKelurahan: item.desa || item.kelurahan || item.desaKelurahan || 'Sanggreman',
+      kecamatan: item.kecamatan || 'Rawalo',
+      kabupatenKota: item.kabupaten || item.kabupatenKota || 'Banyumas',
+      provinsi: item.provinsi || 'Jawa Tengah',
+      statusSiswa: item.status === 'active' || item.status === 'Aktif' || !item.status ? 'Aktif' : item.status,
       tahunMasuk: String(item.tahun_masuk || item.tahunMasuk || '2024'),
-      teleponOrtu: item.telepon_ortu || item.no_hp_ortu || item.teleponOrtu || '085700000000',
+      teleponOrtu: item.no_hp_ortu || item.phone || item.telepon_ortu || '',
     };
   });
 }
 
-// SIAKAD Test Connection
+// SIAKAD Test Connection (with live teacher & student probing)
 app.post('/api/siakad/test-connection', async (req, res) => {
   try {
     const { baseUrl, apiToken } = req.body;
     const targetUrl = (baseUrl || 'https://siakad-madrasah.jaenalmaskun.biz.id').replace(/\/$/, '');
-
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 7000);
 
     const headers: Record<string, string> = {
       'User-Agent': 'AutoMadrasah-Sync/1.0',
@@ -139,28 +167,114 @@ app.post('/api/siakad/test-connection', async (req, res) => {
       headers['X-API-KEY'] = apiToken;
     }
 
+    let isOnline = false;
+    let statusCode = 200;
+    let statusText = 'OK';
+    let teachersCount = 0;
+    let studentsCount = 0;
+    let madrasahName = '';
+
+    // 1. Check root or api.php
     try {
-      const response = await fetch(targetUrl, {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 6000);
+      const pingRes = await fetch(targetUrl, { headers, signal: controller.signal });
+      clearTimeout(timeout);
+      isOnline = pingRes.ok;
+      statusCode = pingRes.status;
+      statusText = pingRes.statusText;
+    } catch {
+      // If root failed, continue to test api.php directly
+    }
+
+    // 2. Probe Teachers from data_guru
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 6000);
+      const tRes = await fetch(`${targetUrl}/api.php?action=select&table=site_settings&id=data_guru`, {
         headers,
         signal: controller.signal,
       });
       clearTimeout(timeout);
+      if (tRes.ok) {
+        isOnline = true;
+        const json = await tRes.json();
+        const list = Array.isArray(json?.data?.value)
+          ? json.data.value
+          : Array.isArray(json?.data)
+          ? json.data
+          : [];
+        teachersCount = list.length;
+      }
+    } catch {
+      // continue
+    }
 
-      const contentType = response.headers.get('content-type') || '';
-      return res.json({
-        success: true,
-        status: response.status,
-        statusText: response.statusText,
-        contentType,
-        message: `Koneksi berhasil ke ${targetUrl} (HTTP ${response.status} ${response.statusText})`,
+    // 3. Probe Students from students_data
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 6000);
+      const sRes = await fetch(`${targetUrl}/api.php?action=select&table=site_settings&id=students_data`, {
+        headers,
+        signal: controller.signal,
       });
-    } catch (fetchErr: any) {
       clearTimeout(timeout);
+      if (sRes.ok) {
+        const json = await sRes.json();
+        const list = Array.isArray(json?.data?.value)
+          ? json.data.value
+          : Array.isArray(json?.data)
+          ? json.data
+          : [];
+        studentsCount = list.length;
+      }
+    } catch {
+      // continue
+    }
+
+    // 4. Probe Madrasah Profile
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 6000);
+      const pRes = await fetch(`${targetUrl}/api.php?action=select&table=site_settings&id=identitas_madrasah`, {
+        headers,
+        signal: controller.signal,
+      });
+      clearTimeout(timeout);
+      if (pRes.ok) {
+        const json = await pRes.json();
+        madrasahName = json?.data?.value?.nama_madrasah || '';
+      }
+    } catch {
+      // continue
+    }
+
+    if (!isOnline && teachersCount === 0 && studentsCount === 0) {
       return res.json({
         success: false,
-        message: `Tidak dapat terhubung ke ${targetUrl}: ${fetchErr.message || 'Connection timeout/unreachable'}`,
+        message: `Tidak dapat terhubung ke ${targetUrl}. Periksa koneksi internet atau status domain.`,
       });
     }
+
+    const message = teachersCount > 0 || studentsCount > 0
+      ? `Koneksi berhasil! Terhubung ke SIAKAD ${madrasahName ? `(${madrasahName})` : ''} - Terdeteksi ${teachersCount} Guru & ${studentsCount} Siswa di database.`
+      : `Koneksi ke ${targetUrl} berhasil (HTTP ${statusCode} ${statusText}), namun data guru belum terdeteksi. Silakan jalankan Sinkronisasi Otomatis.`;
+
+    return res.json({
+      success: true,
+      status: statusCode,
+      statusText: statusText,
+      teachersCount,
+      studentsCount,
+      madrasahName: madrasahName || 'SIAKAD Madrasah',
+      message,
+      details: {
+        teachersCount,
+        studentsCount,
+        madrasahName,
+        targetUrl,
+      },
+    });
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -183,12 +297,38 @@ app.post('/api/siakad/sync', async (req, res) => {
 
     let teachers: any[] = [];
     let students: any[] = [];
+    let profileData: any = null;
     const errors: string[] = [];
+
+    // Helper to safely extract list from API response
+    const extractList = (json: any, targetKey: 'guru' | 'siswa'): any[] => {
+      if (!json) return [];
+      if (Array.isArray(json)) return json;
+      if (Array.isArray(json?.data?.value)) return json.data.value;
+      if (Array.isArray(json?.value)) return json.value;
+      if (Array.isArray(json?.data)) {
+        if (targetKey === 'guru') {
+          const found = json.data.find((r: any) => r.id === 'data_guru' || r.id === 'data_guru_madrasah_default');
+          if (found && Array.isArray(found.value)) return found.value;
+        } else {
+          const found = json.data.find((r: any) => r.id === 'students_data' || r.id === 'app_students_v2' || r.id === 'students_list');
+          if (found && Array.isArray(found.value)) return found.value;
+        }
+        return json.data;
+      }
+      if (json.teachers || json.guru) return json.teachers || json.guru;
+      if (json.students || json.siswa) return json.students || json.siswa;
+      if (json.items) return json.items;
+      return [];
+    };
 
     // 1. Fetch Teachers if requested
     if (target === 'all' || target === 'teachers') {
       const teacherEndpoints = [
         customEndpoints?.teachers,
+        '/api.php?action=select&table=site_settings&id=data_guru',
+        '/api.php?action=select&table=site_settings&id=data_guru_madrasah_default',
+        '/api.php?action=select&table=site_settings',
         '/api/v1/teachers',
         '/api/v1/guru',
         '/api/teachers',
@@ -201,14 +341,14 @@ app.post('/api/siakad/sync', async (req, res) => {
       for (const ep of teacherEndpoints) {
         try {
           const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), 6000);
+          const timeout = setTimeout(() => controller.abort(), 7000);
           const tUrl = `${rootUrl}${ep?.startsWith('/') ? ep : `/${ep}`}`;
           const tRes = await fetch(tUrl, { headers, signal: controller.signal });
           clearTimeout(timeout);
 
           if (tRes.ok) {
             const json = await tRes.json();
-            const rawList = Array.isArray(json) ? json : json.data || json.teachers || json.guru || json.items || [];
+            const rawList = extractList(json, 'guru');
             if (Array.isArray(rawList) && rawList.length > 0) {
               teachers = normalizeTeachersList(rawList);
               fetchedTeachers = true;
@@ -221,7 +361,7 @@ app.post('/api/siakad/sync', async (req, res) => {
       }
 
       if (!fetchedTeachers) {
-        errors.push(`Endpoint guru di ${rootUrl} tidak mengembalikan data JSON otomatis. Anda dapat menggunakan format import JSON/Excel atau mengatur token/custom endpoint.`);
+        errors.push(`Endpoint guru di ${rootUrl} tidak mengembalikan data. Pastikan server SIAKAD aktif.`);
       }
     }
 
@@ -229,6 +369,10 @@ app.post('/api/siakad/sync', async (req, res) => {
     if (target === 'all' || target === 'students') {
       const studentEndpoints = [
         customEndpoints?.students,
+        '/api.php?action=select&table=site_settings&id=students_data',
+        '/api.php?action=select&table=site_settings&id=app_students_v2',
+        '/api.php?action=select&table=site_settings&id=students_list',
+        '/api.php?action=select&table=site_settings',
         '/api/v1/students',
         '/api/v1/siswa',
         '/api/students',
@@ -241,14 +385,14 @@ app.post('/api/siakad/sync', async (req, res) => {
       for (const ep of studentEndpoints) {
         try {
           const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), 6000);
+          const timeout = setTimeout(() => controller.abort(), 7000);
           const sUrl = `${rootUrl}${ep?.startsWith('/') ? ep : `/${ep}`}`;
           const sRes = await fetch(sUrl, { headers, signal: controller.signal });
           clearTimeout(timeout);
 
           if (sRes.ok) {
             const json = await sRes.json();
-            const rawList = Array.isArray(json) ? json : json.data || json.students || json.siswa || json.items || [];
+            const rawList = extractList(json, 'siswa');
             if (Array.isArray(rawList) && rawList.length > 0) {
               students = normalizeStudentsList(rawList);
               fetchedStudents = true;
@@ -261,7 +405,24 @@ app.post('/api/siakad/sync', async (req, res) => {
       }
 
       if (!fetchedStudents) {
-        errors.push(`Endpoint siswa di ${rootUrl} tidak mengembalikan data JSON otomatis. Pastikan token atau endpoint SIAKAD sesuai.`);
+        errors.push(`Endpoint siswa di ${rootUrl} tidak mengembalikan data. Pastikan endpoint SIAKAD sesuai.`);
+      }
+    }
+
+    // 3. Fetch School Profile if requested
+    if (target === 'all' || target === 'profile') {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 7000);
+        const pUrl = `${rootUrl}/api.php?action=select&table=site_settings&id=identitas_madrasah`;
+        const pRes = await fetch(pUrl, { headers, signal: controller.signal });
+        clearTimeout(timeout);
+        if (pRes.ok) {
+          const json = await pRes.json();
+          profileData = json?.data?.value || null;
+        }
+      } catch {
+        // optional profile
       }
     }
 
@@ -269,12 +430,13 @@ app.post('/api/siakad/sync', async (req, res) => {
     res.json({
       success: hasData || errors.length === 0,
       message: hasData
-        ? `Berhasil menarik ${teachers.length} data guru dan ${students.length} data siswa dari ${rootUrl}`
+        ? `Berhasil menarik ${teachers.length} data guru dan ${students.length} data siswa dari ${rootUrl}!`
         : `Koneksi ke ${rootUrl} selesai. Silakan periksa kredensial token/endpoint jika data belum muncul.`,
       teachersCount: teachers.length,
       studentsCount: students.length,
       teachers: teachers.length > 0 ? teachers : undefined,
       students: students.length > 0 ? students : undefined,
+      profile: profileData || undefined,
       errors: errors.length > 0 ? errors : undefined,
     });
   } catch (error: any) {

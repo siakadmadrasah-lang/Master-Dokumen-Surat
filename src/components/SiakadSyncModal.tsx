@@ -253,9 +253,9 @@ export const SiakadSyncModal: React.FC<SiakadSyncModalProps> = ({
 
               {testResult && (
                 <div
-                  className={`p-3 text-xs rounded-xl border flex items-start gap-2 ${
+                  className={`p-3 text-xs rounded-xl border flex items-start gap-2.5 ${
                     testResult.success
-                      ? 'bg-emerald-100/90 text-emerald-900 border-emerald-300'
+                      ? 'bg-emerald-50 text-emerald-900 border-emerald-300'
                       : 'bg-amber-50 text-amber-900 border-amber-300'
                   }`}
                 >
@@ -264,8 +264,29 @@ export const SiakadSyncModal: React.FC<SiakadSyncModalProps> = ({
                   ) : (
                     <AlertCircle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
                   )}
-                  <div>
-                    <p className="font-semibold">{testResult.message}</p>
+                  <div className="flex-1 space-y-1.5">
+                    <p className="font-semibold text-xs leading-relaxed">{testResult.message}</p>
+                    {testResult.details && (
+                      <div className="flex flex-wrap gap-1.5 pt-0.5">
+                        {testResult.details.teachersCount !== undefined && (
+                          <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded-md font-mono text-[11px] font-bold border border-emerald-200">
+                            <Users className="w-3 h-3 text-emerald-700" />
+                            {testResult.details.teachersCount} Guru Terdeteksi
+                          </span>
+                        )}
+                        {testResult.details.studentsCount !== undefined && (
+                          <span className="inline-flex items-center gap-1 bg-teal-100 text-teal-900 px-2 py-0.5 rounded-md font-mono text-[11px] font-bold border border-teal-200">
+                            <GraduationCap className="w-3 h-3 text-teal-700" />
+                            {testResult.details.studentsCount} Siswa Terdeteksi
+                          </span>
+                        )}
+                        {testResult.details.madrasahName && (
+                          <span className="inline-flex items-center gap-1 bg-slate-100 text-slate-800 px-2 py-0.5 rounded-md text-[11px] font-semibold border border-slate-200">
+                            {testResult.details.madrasahName}
+                          </span>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -473,7 +494,7 @@ export const SiakadSyncModal: React.FC<SiakadSyncModalProps> = ({
                     <label className="text-[11px] font-semibold text-slate-700 block mb-1">Endpoint Guru (GTK):</label>
                     <input
                       type="text"
-                      value={config.customEndpoints?.teachers || '/api/v1/teachers'}
+                      value={config.customEndpoints?.teachers || '/api.php?action=select&table=site_settings&id=data_guru'}
                       onChange={(e) =>
                         setConfig({
                           ...config,
@@ -483,7 +504,7 @@ export const SiakadSyncModal: React.FC<SiakadSyncModalProps> = ({
                           },
                         })
                       }
-                      placeholder="/api/v1/teachers"
+                      placeholder="/api.php?action=select&table=site_settings&id=data_guru"
                       className="w-full text-xs font-mono bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:outline-hidden"
                     />
                   </div>
@@ -492,7 +513,7 @@ export const SiakadSyncModal: React.FC<SiakadSyncModalProps> = ({
                     <label className="text-[11px] font-semibold text-slate-700 block mb-1">Endpoint Siswa:</label>
                     <input
                       type="text"
-                      value={config.customEndpoints?.students || '/api/v1/students'}
+                      value={config.customEndpoints?.students || '/api.php?action=select&table=site_settings&id=students_data'}
                       onChange={(e) =>
                         setConfig({
                           ...config,
@@ -502,7 +523,7 @@ export const SiakadSyncModal: React.FC<SiakadSyncModalProps> = ({
                           },
                         })
                       }
-                      placeholder="/api/v1/students"
+                      placeholder="/api.php?action=select&table=site_settings&id=students_data"
                       className="w-full text-xs font-mono bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:outline-hidden"
                     />
                   </div>

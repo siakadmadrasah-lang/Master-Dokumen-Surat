@@ -1,4 +1,4 @@
-import { Teacher, Student, MadrasahProfile, SiakadSyncConfig, SiakadSyncResult } from '../types';
+import { Teacher, Student, MadrasahProfile, SiakadSyncConfig, SiakadSyncResult, StatusKepegawaian } from '../types';
 
 const SIAKAD_CONFIG_KEY = 'automadrasah_siakad_config_v1';
 
@@ -12,9 +12,9 @@ export const DEFAULT_SIAKAD_CONFIG: SiakadSyncConfig = {
   lastSyncStatus: 'IDLE',
   lastSyncMessage: 'Belum pernah disinkronkan',
   customEndpoints: {
-    students: '/api/v1/students',
-    teachers: '/api/v1/teachers',
-    profile: '/api/v1/school-profile',
+    students: '/api.php?action=select&table=site_settings&id=students_data',
+    teachers: '/api.php?action=select&table=site_settings&id=data_guru',
+    profile: '/api.php?action=select&table=site_settings&id=identitas_madrasah',
   },
 };
 
@@ -42,48 +42,9 @@ export function saveSiakadConfig(config: Partial<SiakadSyncConfig>): SiakadSyncC
 // Map raw incoming teacher object from Siakad / ARD / EMIS into Teacher schema
 export function mapRawToTeacher(item: any, idx: number): Teacher {
   const nama = item.nama || item.name || item.nama_lengkap || item.nama_guru || `Guru #${idx + 1}`;
-  const nip = item.nip || item.NIP || (item.nip === '-' ? '' : item.nip) || '';
-  const nuptk = item.nuptk || item.NUPTK || (item.nuptk === '-' ? '' : item.nuptk) || '';
-  const pegId = item.peg_id || item.pegId || item.id_pegawai || '';
-  
-  let jk: 'L' | 'P' = 'L';
-  const rawJk = (item.jenis_kelamin || item.jk || item.gender || 'L').toString().toUpperCase();
-  if (rawJk.startsWith('P') || rawJk === 'WANITA' || rawJk === 'FEMALE') {
-    jk = 'P';
-  }
-
-  return {
-    id: item.id ? String(item.id) : `T-${Date.now()}-${idx + 1}`,
-    nama: nama,
-    gelarDepan: item.gelar_depan || item.gelarDepan || '',
-    gelarBelakang: item.gelar_belakang || item.gelarBelakang || (nama.includes(',') ? nama.split(',').slice(1).join(',').trim() : ''),
-    nip: nip,
-    nuptk: nuptk,
-    pegId: pegId,
-    jenisKelamin: jk,
-    tempatLahir: item.tempat_lahir || item.tempatLahir || 'Malang',
-    tanggalLahir: item.tanggal_lahir || item.tanggalLahir || '1985-05-15',
-    statusKepegawaian: item.status_kepegawaian || item.statusKepegawaian || (nip ? 'PNS' : 'GTY'),
-    pangkatGol: item.pangkat_gol || item.pangkatGol || (nip ? 'Penata Muda / III/a' : 'Guru Tetap'),
-    jabatanUtama: item.jabatan_utama || item.jabatan || item.jabatanUtama || 'Guru Mata Pelajaran',
-    tugasTambahan: item.tugas_tambahan || item.tugasTambahan || (item.wali_kelas ? `Wali Kelas ${item.wali_kelas}` : ''),
-    mapelUtama: item.mapel_utama || item.mapel || item.mata_pelajaran || 'Pendidikan Agama Islam',
-    jumlahJam: Number(item.jumlah_jam || item.jumlahJam || item.jp || 24),
-    waliKelasDi: item.wali_kelas || item.waliKelasDi || item.kelas_wali || '',
-    sertifikasi: Boolean(item.sertifikasi === true || item.sertifikasi === '1' || item.is_certified === true),
-    telepon: item.telepon || item.no_hp || item.phone || '08123456789',
-    email: item.email || `${nama.toLowerCase().replace(/[^a-z0-9]/g, '')}@madrasah.sch.id`,
-    isActive: item.is_active !== undefined ? Boolean(item.is_active) : true,
-    signatureUrl: item.signature_url || item.signatureUrl || undefined,
-  };
-}
-
-// Map raw incoming student object from Siakad / ARD / EMIS into Student schema
-export function mapRawToStudent(item: any, idx: number): Student {
-  const nama = item.nama || item.name || item.nama_lengkap || item.nama_siswa || `Siswa #${idx + 1}`;
-  const nisn = item.nisn || item.NISN || `00${Date.now().toString().slice(-8)}${idx}`;
-  const nis = item.nis || item.NIS || `MI-${2025000 + idx + 1}`;
-  const nik = item.nik || item.NIK || `350700000000${(idx + 1).toString().padStart(4, '0')}`;
+  const nip = item.nip && item.nip !== '-' ? String(item.nip).trim() : '';
+  const nuptk = item.nuptk && item.nuptk !== '-' ? String(item.nuptk).trim() : '';
+  const pegId = item.peg_id || item.pegId || item.id_pegawai || item.npk || '';
   
   let jk: 'L' | 'P' = 'L';
   const rawJk = (item.jenis_kelamin || item.jk || item.gender || 'L').toString().toUpperCase();
@@ -91,9 +52,77 @@ export function mapRawToStudent(item: any, idx: number): Student {
     jk = 'P';
   }
 
-  const rombel = item.rombel || item.kelas || item.nama_kelas || 'Kelas 1 A';
+  const gelarBelakang = item.gelar || item.gelar_belakang || item.gelarBelakang || (nama.includes(',') ? nama.split(',').slice(1).join(',').trim() : '');
+
+  // Status Kepegawaian & Pangkat Golongan
+  let statusKep: StatusKepegawaian = 'GTY';
+  const rawStatus = (item.status_kepegawaian || item.status || '').toUpperCase();
+  if (rawStatus.includes('PNS') || (nip && nip.length >= 18)) {
+    statusKep = 'PNS';
+  } else if (rawStatus.includes('PPPK')) {
+    statusKep = 'PPPK';
+  } else if (rawStatus.includes('GTT') || rawStatus.includes('HONORER')) {
+    statusKep = 'GTT';
+  } else {
+    statusKep = 'GTY';
+  }
+
+  const isSertifikasi = Boolean(
+    item.sertifikasi === true ||
+    item.sertifikasi === 'Sudah Sertifikasi' ||
+    item.status_sertifikasi === 'Sudah Sertifikasi' ||
+    item.is_certified === true ||
+    item.sertifikasi === '1'
+  );
+
+  const rawTglLahir = item.tanggal_lahir || item.tanggalLahir || '';
+  const safeTglLahir = (rawTglLahir && String(rawTglLahir).includes('-')) ? String(rawTglLahir) : '1980-01-01';
+
+  return {
+    id: item.id ? String(item.id) : `T-${Date.now()}-${idx + 1}`,
+    nama: nama,
+    gelarDepan: item.gelar_depan || item.gelarDepan || '',
+    gelarBelakang: gelarBelakang,
+    nip: nip,
+    nuptk: nuptk,
+    pegId: pegId,
+    jenisKelamin: jk,
+    tempatLahir: item.tempat_lahir || item.tempatLahir || 'Banyumas',
+    tanggalLahir: safeTglLahir,
+    statusKepegawaian: statusKep,
+    pangkatGol: item.pangkat_gol || item.pangkatGol || (statusKep === 'PNS' ? 'Penata Muda / III/a' : 'Guru Tetap Yayasan'),
+    jabatanUtama: item.jabatan_utama || item.jabatan || 'Guru Kelas',
+    tugasTambahan: item.tugas_tambahan || (item.mengajar_kelas ? `Wali ${item.mengajar_kelas}` : ''),
+    mapelUtama: item.mapel_diampu && item.mapel_diampu !== '-' ? item.mapel_diampu : (item.mapel_utama || item.mapel || 'Pendidikan Agama Islam'),
+    jumlahJam: Number(item.jumlah_jam || item.jumlahJam || item.jp || 24),
+    waliKelasDi: item.mengajar_kelas || item.kelas_diampu || item.wali_kelas || '',
+    sertifikasi: isSertifikasi,
+    telepon: item.telepon || item.no_hp || item.phone || '',
+    email: item.email || '',
+    isActive: item.status_keaktifan ? item.status_keaktifan === 'Aktif' : (item.is_active !== undefined ? Boolean(item.is_active) : true),
+    signatureUrl: item.foto_url || item.foto || item.signature_url || item.signatureUrl || undefined,
+  };
+}
+
+// Map raw incoming student object from Siakad / ARD / EMIS into Student schema
+export function mapRawToStudent(item: any, idx: number): Student {
+  const nama = item.nama || item.name || item.nama_lengkap || item.nama_siswa || `Siswa #${idx + 1}`;
+  const nisn = item.nisn || item.NISN || '';
+  const nis = item.nis || item.NIS || `MI-${2025000 + idx + 1}`;
+  const nik = item.nik && item.nik !== '-' ? String(item.nik).replace(/['"]/g, '').trim() : '';
+  
+  let jk: 'L' | 'P' = 'L';
+  const rawJk = (item.jenis_kelamin || item.jk || item.gender || 'L').toString().toUpperCase();
+  if (rawJk.startsWith('P') || rawJk === 'WANITA' || rawJk === 'PEREMPUAN' || rawJk === 'FEMALE') {
+    jk = 'P';
+  }
+
+  const rombel = item.rombel || item.kelas || item.nama_kelas || 'Kelas 1';
   const tingkatMatch = rombel.match(/\d+/);
   const tingkat = tingkatMatch ? parseInt(tingkatMatch[0], 10) : Number(item.tingkat || 1);
+
+  const rawTglLahir = item.tanggal_lahir || item.tanggalLahir || '';
+  const safeTglLahir = (rawTglLahir && String(rawTglLahir).includes('-')) ? String(rawTglLahir) : '2016-01-01';
 
   return {
     id: item.id ? String(item.id) : `S-${Date.now()}-${idx + 1}`,
@@ -104,19 +133,19 @@ export function mapRawToStudent(item: any, idx: number): Student {
     jenisKelamin: jk,
     rombel: rombel,
     tingkat: isNaN(tingkat) ? 1 : tingkat,
-    tempatLahir: item.tempat_lahir || item.tempatLahir || 'Malang',
-    tanggalLahir: item.tanggal_lahir || item.tanggalLahir || '2015-08-20',
-    namaAyah: item.nama_ayah || item.ayah || item.namaAyah || 'Bapak Siswa',
-    namaIbu: item.nama_ibu || item.ibu || item.namaIbu || 'Ibu Siswa',
-    pekerjaanOrtu: item.pekerjaan_ortu || item.pekerjaan || item.pekerjaanOrtu || 'Wiraswasta',
-    alamat: item.alamat || item.alamat_lengkap || 'Jl. Madrasah No. 10',
-    desaKelurahan: item.desa || item.kelurahan || item.desaKelurahan || 'Sukamaju',
-    kecamatan: item.kecamatan || 'Kepanjen',
-    kabupatenKota: item.kabupaten || item.kabupatenKota || 'Kabupaten Malang',
-    provinsi: item.provinsi || 'Jawa Timur',
-    statusSiswa: item.status || item.statusSiswa || 'Aktif',
+    tempatLahir: item.tempat_lahir || item.tempatLahir || 'Banyumas',
+    tanggalLahir: safeTglLahir,
+    namaAyah: item.nama_ayah || item.ayah || item.namaAyah || '',
+    namaIbu: item.nama_ibu || item.ibu || item.namaIbu || '',
+    pekerjaanOrtu: item.pekerjaan_ayah || item.pekerjaan_ortu || item.pekerjaan || 'Wiraswasta',
+    alamat: item.address || item.alamat || item.alamat_lengkap || 'Sanggreman, Rawalo, Banyumas',
+    desaKelurahan: item.desa || item.kelurahan || item.desaKelurahan || 'Sanggreman',
+    kecamatan: item.kecamatan || 'Rawalo',
+    kabupatenKota: item.kabupaten || item.kabupatenKota || 'Banyumas',
+    provinsi: item.provinsi || 'Jawa Tengah',
+    statusSiswa: item.status === 'active' || item.status === 'Aktif' || !item.status ? 'Aktif' : item.status,
     tahunMasuk: String(item.tahun_masuk || item.tahunMasuk || '2024'),
-    teleponOrtu: item.telepon_ortu || item.no_hp_ortu || item.teleponOrtu || '085700000000',
+    teleponOrtu: item.no_hp_ortu || item.phone || item.telepon_ortu || '',
   };
 }
 

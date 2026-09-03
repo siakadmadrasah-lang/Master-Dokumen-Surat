@@ -139,6 +139,15 @@
     max-width: 100% !important;
   }
 
+  /* Strict rule: All chapters and appendices must start on a brand new page */
+  #kom-cinta-bab1,
+  #kom-cinta-bab2,
+  #kom-cinta-bab3,
+  #kom-cinta-bab4,
+  #kom-cinta-bab5,
+  #kom-cinta-bab6,
+  #kom-cinta-lampiran,
+  [data-chapter-start="true"],
   .print\:break-before-page,
   .print\:page-break-before-always {
     page-break-before: always !important;

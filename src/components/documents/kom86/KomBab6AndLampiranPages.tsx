@@ -12,7 +12,7 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
       {/* =========================================================================
           PAGE 71 (Hal. 63) - BAB VI PENUTUP (KESIMPULAN & SARAN)
           ========================================================================= */}
-      <KomPageContainer pageNumber="63" pageIndex={71}>
+      <KomPageContainer id="kom-cinta-bab6" pageNumber="63" pageIndex={71}>
         <div className="text-center pb-4 border-b border-slate-300">
           <h2 className="font-bold text-base sm:text-lg uppercase tracking-wide text-slate-950 font-serif">
             BAB VI<br />PENUTUP

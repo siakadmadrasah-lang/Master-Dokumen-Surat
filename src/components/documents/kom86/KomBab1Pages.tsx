@@ -565,21 +565,33 @@ export const KomBab1Pages: React.FC<Props> = ({ data }) => {
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 16 (Hal. 8) - TABEL 1.5 DATA PTK & TABEL 1.6 REKAP SISWA 3 TAHUN
+          PAGE 16 (Hal. 8) - TABEL 1.5 DATA KUALIFIKASI PTK
           ========================================================================= */}
       <KomPageContainer pageNumber="8" pageIndex={16}>
         <div className="space-y-3 text-[12px] leading-relaxed">
-          <p className="font-bold text-[11px] text-slate-900">
+          <div className="space-y-1.5">
+            <h4 className="font-bold text-slate-950 text-xs sm:text-[13px]">
+              3. Peta Profil Pendidik, Tenaga Kependidikan, Peserta Didik dan Orang Tua di Madrasah
+            </h4>
+            <h5 className="font-bold text-slate-900 text-xs">
+              a. Profil Pendidik dan Tenaga Kependidikan
+            </h5>
+            <p className="indent-8 text-[11.5px] text-justify text-slate-800">
+              Pendidik dan Tenaga Kependidikan {data.namaMadrasah} memiliki kualifikasi akademik yang relevan dengan tugas profesinya. Keseluruhan guru telah berijazah Strata 1 (S1) dan berkomitmen menerapkan Kurikulum Berbasis Cinta (KBC) dan Pembelajaran Mendalam (Deep Learning) dalam setiap proses interaksi edukatif.
+            </p>
+          </div>
+
+          <p className="font-bold text-[11px] text-slate-900 pt-1">
             Tabel 1.5. Data Kualifikasi Pendidik dan Tenaga Kependidikan Tahun Pelajaran {data.tahunAjaran}
           </p>
 
           <table className="w-full border-collapse border border-slate-400 text-[10.5px]">
             <thead>
               <tr className="bg-slate-100">
-                <th className="border border-slate-400 p-1 text-center w-8">No</th>
-                <th className="border border-slate-400 p-1 text-left">Nama Pendidik / Tendik</th>
-                <th className="border border-slate-400 p-1 text-center w-24">Pendidikan</th>
-                <th className="border border-slate-400 p-1 text-left">Jabatan / Tugas</th>
+                <th className="border border-slate-400 p-1.5 text-center w-8">No</th>
+                <th className="border border-slate-400 p-1.5 text-left">Nama Pendidik / Tendik</th>
+                <th className="border border-slate-400 p-1.5 text-center w-24">Pendidikan</th>
+                <th className="border border-slate-400 p-1.5 text-left">Jabatan / Tugas</th>
               </tr>
             </thead>
             <tbody>
@@ -640,14 +652,25 @@ export const KomBab1Pages: React.FC<Props> = ({ data }) => {
             </tbody>
           </table>
 
-          <div className="pt-2 space-y-2">
+          <p className="text-[11px] text-justify text-slate-700 italic">
+            Catatan: Distribusi tenaga pendidik dan kependidikan di atas telah memenuhi kriteria rasio kecukupan guru kelas dan guru mata pelajaran sesuai standar teknis Kementerian Agama Republik Indonesia.
+          </p>
+        </div>
+      </KomPageContainer>
+
+      {/* =========================================================================
+          PAGE 17 (Hal. 9) - REKAP PESERTA DIDIK, TAMATAN & PRESTASI
+          ========================================================================= */}
+      <KomPageContainer pageNumber="9" pageIndex={17}>
+        <div className="space-y-3.5 text-[12px] leading-relaxed">
+          <div className="space-y-1.5">
             <h5 className="font-bold text-slate-900 text-xs sm:text-[12.5px]">
               b. Rekapitulasi Data Peserta Didik
             </h5>
             <p className="font-semibold text-slate-800 text-[11px]">
-              1) Rekapitulasi Data Siswa 3 tahun terakhir
+              1) Rekapitulasi Data Siswa Tiga Tahun Terakhir
             </p>
-            <p className="text-[11px]">
+            <p className="text-[11px] text-slate-700">
               Tabel 1.6. Rekapitulasi Siswa Madrasah pada Tiga Tahun Terakhir
             </p>
 
@@ -682,15 +705,8 @@ export const KomBab1Pages: React.FC<Props> = ({ data }) => {
               </tbody>
             </table>
           </div>
-        </div>
-      </KomPageContainer>
 
-      {/* =========================================================================
-          PAGE 17 (Hal. 9) - DATA TAMATAN SISWA & PRESTASI
-          ========================================================================= */}
-      <KomPageContainer pageNumber="9" pageIndex={17}>
-        <div className="space-y-4 text-[12px] leading-relaxed">
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <h5 className="font-bold text-slate-900 text-xs sm:text-[12.5px]">
               2) Data Tamatan Siswa Madrasah
             </h5>
@@ -701,77 +717,77 @@ export const KomBab1Pages: React.FC<Props> = ({ data }) => {
             <table className="w-full border-collapse border border-slate-400 text-[11px]">
               <thead>
                 <tr className="bg-slate-100">
-                  <th className="border border-slate-400 p-2 text-center">Tahun Kelulusan</th>
-                  <th className="border border-slate-400 p-2 text-center w-28">Jumlah Peserta</th>
-                  <th className="border border-slate-400 p-2 text-center w-28">Jumlah Lulus</th>
-                  <th className="border border-slate-400 p-2 text-center w-28">Persentase</th>
+                  <th className="border border-slate-400 p-1.5 text-center">Tahun Kelulusan</th>
+                  <th className="border border-slate-400 p-1.5 text-center w-28">Jumlah Peserta</th>
+                  <th className="border border-slate-400 p-1.5 text-center w-28">Jumlah Lulus</th>
+                  <th className="border border-slate-400 p-1.5 text-center w-28">Persentase</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="border border-slate-400 p-2 text-center font-semibold">2023/2024</td>
-                  <td className="border border-slate-400 p-2 text-center">12</td>
-                  <td className="border border-slate-400 p-2 text-center">12</td>
-                  <td className="border border-slate-400 p-2 text-center font-bold text-emerald-800">100%</td>
+                  <td className="border border-slate-400 p-1.5 text-center font-semibold">2023/2024</td>
+                  <td className="border border-slate-400 p-1.5 text-center">12</td>
+                  <td className="border border-slate-400 p-1.5 text-center">12</td>
+                  <td className="border border-slate-400 p-1.5 text-center font-bold text-emerald-800">100%</td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-400 p-2 text-center font-semibold">2024/2025</td>
-                  <td className="border border-slate-400 p-2 text-center">14</td>
-                  <td className="border border-slate-400 p-2 text-center">14</td>
-                  <td className="border border-slate-400 p-2 text-center font-bold text-emerald-800">100%</td>
+                  <td className="border border-slate-400 p-1.5 text-center font-semibold">2024/2025</td>
+                  <td className="border border-slate-400 p-1.5 text-center">14</td>
+                  <td className="border border-slate-400 p-1.5 text-center">14</td>
+                  <td className="border border-slate-400 p-1.5 text-center font-bold text-emerald-800">100%</td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-400 p-2 text-center font-semibold">2025/2026</td>
-                  <td className="border border-slate-400 p-2 text-center">11</td>
-                  <td className="border border-slate-400 p-2 text-center">11</td>
-                  <td className="border border-slate-400 p-2 text-center font-bold text-emerald-800">100%</td>
+                  <td className="border border-slate-400 p-1.5 text-center font-semibold">2025/2026</td>
+                  <td className="border border-slate-400 p-1.5 text-center">11</td>
+                  <td className="border border-slate-400 p-1.5 text-center">11</td>
+                  <td className="border border-slate-400 p-1.5 text-center font-bold text-emerald-800">100%</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <div className="pt-2 space-y-2">
+          <div className="space-y-1.5">
             <h5 className="font-bold text-slate-900 text-xs sm:text-[12.5px]">
               3) Data Prestasi Siswa Madrasah
             </h5>
             <p className="font-semibold text-slate-800 text-[11px]">
               A. Prestasi Siswa {data.namaMadrasah}
             </p>
-            <p className="text-[11px]">
+            <p className="text-[11px] text-slate-700">
               Tabel 1.8. Data Prestasi {data.namaMadrasah}
             </p>
 
             <table className="w-full border-collapse border border-slate-400 text-[11px]">
               <thead>
                 <tr className="bg-slate-100">
-                  <th className="border border-slate-400 p-2 w-8 text-center">No</th>
-                  <th className="border border-slate-400 p-2 text-left">Nama Siswa</th>
-                  <th className="border border-slate-400 p-2 text-left">Jenis Lomba / Cabang</th>
-                  <th className="border border-slate-400 p-2 text-center w-28">Tingkat</th>
-                  <th className="border border-slate-400 p-2 text-center w-28">Prestasi / Juara</th>
+                  <th className="border border-slate-400 p-1.5 w-8 text-center">No</th>
+                  <th className="border border-slate-400 p-1.5 text-left">Nama Siswa</th>
+                  <th className="border border-slate-400 p-1.5 text-left">Jenis Lomba / Cabang</th>
+                  <th className="border border-slate-400 p-1.5 text-center w-28">Tingkat</th>
+                  <th className="border border-slate-400 p-1.5 text-center w-28">Prestasi / Juara</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="border border-slate-400 p-2 text-center">1</td>
-                  <td className="border border-slate-400 p-2 font-semibold">Aqila</td>
-                  <td className="border border-slate-400 p-2">Tahfidz Juz 30</td>
-                  <td className="border border-slate-400 p-2 text-center">Kecamatan</td>
-                  <td className="border border-slate-400 p-2 text-center font-bold">Juara Ke 2</td>
+                  <td className="border border-slate-400 p-1.5 text-center">1</td>
+                  <td className="border border-slate-400 p-1.5 font-semibold">Aqila</td>
+                  <td className="border border-slate-400 p-1.5">Tahfidz Juz 30</td>
+                  <td className="border border-slate-400 p-1.5 text-center">Kecamatan</td>
+                  <td className="border border-slate-400 p-1.5 text-center font-bold">Juara Ke 2</td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-400 p-2 text-center">2</td>
-                  <td className="border border-slate-400 p-2 font-semibold">M. Rizky Pratama</td>
-                  <td className="border border-slate-400 p-2">Lomba MTQ PAI</td>
-                  <td className="border border-slate-400 p-2 text-center">Kecamatan</td>
-                  <td className="border border-slate-400 p-2 text-center font-bold">Juara Ke 3</td>
+                  <td className="border border-slate-400 p-1.5 text-center">2</td>
+                  <td className="border border-slate-400 p-1.5 font-semibold">M. Rizky Pratama</td>
+                  <td className="border border-slate-400 p-1.5">Lomba MTQ PAI</td>
+                  <td className="border border-slate-400 p-1.5 text-center">Kecamatan</td>
+                  <td className="border border-slate-400 p-1.5 text-center font-bold">Juara Ke 3</td>
                 </tr>
                 <tr>
-                  <td className="border border-slate-400 p-2 text-center">3</td>
-                  <td className="border border-slate-400 p-2 font-semibold">Tim Rebana Madrasah</td>
-                  <td className="border border-slate-400 p-2">Festival Seni Santri</td>
-                  <td className="border border-slate-400 p-2 text-center">Kabupaten</td>
-                  <td className="border border-slate-400 p-2 text-center font-bold">Harapan I</td>
+                  <td className="border border-slate-400 p-1.5 text-center">3</td>
+                  <td className="border border-slate-400 p-1.5 font-semibold">Tim Rebana Madrasah</td>
+                  <td className="border border-slate-400 p-1.5">Festival Seni Santri</td>
+                  <td className="border border-slate-400 p-1.5 text-center">Kabupaten</td>
+                  <td className="border border-slate-400 p-1.5 text-center font-bold">Harapan I</td>
                 </tr>
               </tbody>
             </table>
@@ -780,16 +796,16 @@ export const KomBab1Pages: React.FC<Props> = ({ data }) => {
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 18 (Hal. 10) - TABEL 1.9 REKAP SISWA 2026/2027 & TABEL 1.10 DATA ORTU
+          PAGE 18 (Hal. 10) - TABEL 1.9 REKAP SISWA ROMBEL & TABEL 1.10/1.11 ORTU
           ========================================================================= */}
       <KomPageContainer pageNumber="10" pageIndex={18}>
-        <div className="space-y-4 text-[12px] leading-relaxed">
-          <div className="space-y-2">
+        <div className="space-y-3.5 text-[12px] leading-relaxed">
+          <div className="space-y-1.5">
             <h5 className="font-bold text-slate-900 text-xs sm:text-[12.5px]">
               b Rekapitulasi Data Siswa Tahun Pelajaran {data.tahunAjaran}
             </h5>
             <p className="font-semibold text-slate-800 text-[11px]">
-              Tabel 1.9. Rekapitulasi Siswa {data.namaMadrasah}
+              Tabel 1.9. Rekapitulasi Siswa {data.namaMadrasah} Berdasarkan Rombongan Belajar
             </p>
 
             <table className="w-full border-collapse border border-slate-400 text-[11px]">
@@ -856,14 +872,14 @@ export const KomBab1Pages: React.FC<Props> = ({ data }) => {
             </table>
           </div>
 
-          <div className="pt-2 space-y-2">
+          <div className="space-y-1.5">
             <h5 className="font-bold text-slate-900 text-xs sm:text-[12.5px]">
-              c. Rekapitulasi data orang tua siswa
+              c. Rekapitulasi Data Orang Tua Siswa
             </h5>
             <p className="font-semibold text-slate-800 text-[11px]">
               1) Rekapitulasi Data Orang Tua Siswa Berdasarkan Pendidikan Formal Terakhir
             </p>
-            <p className="text-[11px]">
+            <p className="text-[11px] text-slate-700">
               Tabel 1.10. Rekapitulasi Data Orang Tua Siswa Berdasarkan Pendidikan Formal
             </p>
 
@@ -909,81 +925,104 @@ export const KomBab1Pages: React.FC<Props> = ({ data }) => {
               </tbody>
             </table>
           </div>
+
+          <div className="space-y-1.5">
+            <p className="font-semibold text-slate-800 text-[11px]">
+              2) Rekapitulasi Data Orang Tua Siswa Berdasarkan Pekerjaan
+            </p>
+            <p className="text-[11px] text-slate-700">
+              Tabel 1.11. Rekapitulasi Data Orang Tua Siswa Berdasarkan Pekerjaan
+            </p>
+
+            <table className="w-full border-collapse border border-slate-400 text-[11px]">
+              <thead>
+                <tr className="bg-slate-100">
+                  <th className="border border-slate-400 p-1.5 w-10 text-center">No</th>
+                  <th className="border border-slate-400 p-1.5 text-left">Jenis Pekerjaan</th>
+                  <th className="border border-slate-400 p-1.5 text-center w-32">Jumlah Orang Tua</th>
+                  <th className="border border-slate-400 p-1.5 text-center w-28">Persentase</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-slate-400 p-1.5 text-center">1</td>
+                  <td className="border border-slate-400 p-1.5">PNS / TNI / POLRI</td>
+                  <td className="border border-slate-400 p-1.5 text-center">0</td>
+                  <td className="border border-slate-400 p-1.5 text-center">0.0%</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-1.5 text-center">2</td>
+                  <td className="border border-slate-400 p-1.5">Petani / Peternak</td>
+                  <td className="border border-slate-400 p-1.5 text-center">45</td>
+                  <td className="border border-slate-400 p-1.5 text-center">73.8%</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-1.5 text-center">3</td>
+                  <td className="border border-slate-400 p-1.5">Buruh Harian Lepas / Pedagang / Lainnya</td>
+                  <td className="border border-slate-400 p-1.5 text-center">16</td>
+                  <td className="border border-slate-400 p-1.5 text-center">26.2%</td>
+                </tr>
+                <tr className="bg-slate-50 font-bold">
+                  <td className="border border-slate-400 p-1.5 text-center" colSpan={2}>JUMLAH TOTAL</td>
+                  <td className="border border-slate-400 p-1.5 text-center">61</td>
+                  <td className="border border-slate-400 p-1.5 text-center">100%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 19 (Hal. 11) - PEKERJAAN ORTU, KEMITRAAN, LANDASAN HUKUM 1-2
+          PAGE 19 (Hal. 11) - KEMITRAAN & LANDASAN HUKUM (1 s.d. 8)
           ========================================================================= */}
       <KomPageContainer pageNumber="11" pageIndex={19}>
-        <div className="space-y-3 text-[12px] leading-relaxed">
-          <p className="font-semibold text-slate-800 text-[11px]">
-            2) Rekapitulasi Data Orang Tua Siswa Berdasarkan Pekerjaan
-          </p>
-          <p className="text-[11px]">
-            Tabel 1.11. Rekapitulasi Data Orang Tua Siswa Berdasarkan Pekerjaan
-          </p>
-
-          <table className="w-full border-collapse border border-slate-400 text-[11px]">
-            <thead>
-              <tr className="bg-slate-100">
-                <th className="border border-slate-400 p-1.5 w-10 text-center">No</th>
-                <th className="border border-slate-400 p-1.5 text-left">Jenis Pekerjaan</th>
-                <th className="border border-slate-400 p-1.5 text-center w-32">Jumlah Orang Tua</th>
-                <th className="border border-slate-400 p-1.5 text-center w-28">Persentase</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border border-slate-400 p-1.5 text-center">1</td>
-                <td className="border border-slate-400 p-1.5">PNS / TNI / POLRI</td>
-                <td className="border border-slate-400 p-1.5 text-center">0</td>
-                <td className="border border-slate-400 p-1.5 text-center">0.0%</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1.5 text-center">2</td>
-                <td className="border border-slate-400 p-1.5">Petani / Peternak</td>
-                <td className="border border-slate-400 p-1.5 text-center">45</td>
-                <td className="border border-slate-400 p-1.5 text-center">73.8%</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1.5 text-center">3</td>
-                <td className="border border-slate-400 p-1.5">Buruh Harian Lepas / Pedagang / Lainnya</td>
-                <td className="border border-slate-400 p-1.5 text-center">16</td>
-                <td className="border border-slate-400 p-1.5 text-center">26.2%</td>
-              </tr>
-              <tr className="bg-slate-50 font-bold">
-                <td className="border border-slate-400 p-1.5 text-center" colSpan={2}>JUMLAH TOTAL</td>
-                <td className="border border-slate-400 p-1.5 text-center">61</td>
-                <td className="border border-slate-400 p-1.5 text-center">100%</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div className="pt-2 space-y-2">
+        <div className="space-y-3.5 text-[12px] leading-relaxed">
+          <div className="space-y-2">
             <h4 className="font-bold text-slate-950 text-xs sm:text-[13px]">
               4. Kemitraan / Kerjasama Madrasah dengan Pihak Lain
             </h4>
-            <div className="space-y-1.5 text-justify">
+            <div className="space-y-2 text-justify text-[11.5px] text-slate-800">
               <p>
-                <strong>a. Kemitraan Pemerintahan:</strong> Bekerja sama secara aktif dengan Puskesmas Rawalo dalam pemeriksaan kesehatan berkala, imunisasi BIAS, penyuluhan gizi seimbang, serta Polsek Rawalo dalam pembinaan ketertiban dan pencegahan perundungan (anti-bullying).
+                <strong>a. Kemitraan Pemerintahan:</strong> Bekerja sama secara aktif dengan Puskesmas Rawalo dalam pemeriksaan kesehatan berkala, skrining gigi anak, imunisasi BIAS, penyuluhan gizi seimbang serta pembinaan UKS; bekerja sama dengan Polsek Rawalo dan Koramil Rawalo dalam pembinaan ketertiban, kedisiplinan baris-berbaris, serta pencegahan perundungan (anti-bullying); serta bermitra dengan KUA Rawalo dalam bimbingan keagamaan dasar.
               </p>
               <p>
-                <strong>b. Kemitraan Non Pemerintahan:</strong> Sinergi erat dengan Ta'mir Masjid As-Salafiyah dalam pembiasaan shalat berjamaah, Pemerintah Desa Sanggreman dalam kegiatan sosial kemasyarakatan, serta Madin As-Salafiyah dalam penguatan kajian keagamaan santri.
+                <strong>b. Kemitraan Non Pemerintahan:</strong> Sinergi erat dengan Ta'mir Masjid As-Salafiyah dalam pembiasaan shalat berjamaah dan peringatan hari besar Islam (PHBI); Pemerintah Desa Sanggreman dalam kegiatan sosial kemasyarakatan dan kepemudaan; Madin As-Salafiyah dalam penguatan kajian kitab kuning dan tahsin Al-Qur'an; serta Komite Madrasah dan paguyuban wali murid dalam penggalangan dana peduli yatim dan pengembangan sarana madrasah.
               </p>
             </div>
           </div>
 
-          <div className="pt-2 space-y-1 text-justify">
-            <h3 className="font-bold text-slate-950 text-xs sm:text-sm">
+          <div className="pt-2 space-y-2 text-justify">
+            <h3 className="font-bold text-slate-950 text-xs sm:text-sm border-b border-slate-300 pb-1">
               B. Landasan Hukum Pengembangan Kurikulum Madrasah
             </h3>
-            <ol className="list-decimal pl-5 space-y-1 text-slate-800">
+            <p className="text-[11px] text-slate-700 indent-6">
+              Pengembangan Kurikulum Operasional Madrasah (KOM) {data.namaMadrasah} berlandaskan pada peraturan perundang-undangan Republik Indonesia dan pedoman teknis kementerian terkait sebagai berikut:
+            </p>
+            <ol className="list-decimal pl-5 space-y-1.5 text-slate-800 text-[11px]">
               <li>
                 Undang-Undang Nomor 20 Tahun 2003 tentang Sistem Pendidikan Nasional (Lembaran Negara Republik Indonesia Tahun 2003 Nomor 78, Tambahan Lembaran Negara Republik Indonesia Nomor 4301);
               </li>
               <li>
                 Undang-Undang Nomor 14 Tahun 2005 tentang Guru dan Dosen (Lembaran Negara Republik Indonesia Tahun 2005 Nomor 157, Tambahan Lembaran Negara Republik Indonesia Nomor 4586);
+              </li>
+              <li>
+                Peraturan Pemerintah Nomor 19 Tahun 2005 tentang Standar Nasional Pendidikan sebagaimana telah beberapa kali diubah terakhir dengan Peraturan Pemerintah Nomor 57 Tahun 2021 tentang Standar Nasional Pendidikan;
+              </li>
+              <li>
+                Peraturan Pemerintah Nomor 4 Tahun 2022 tentang Perubahan Atas Peraturan Pemerintah Nomor 57 Tahun 2021 tentang Standar Nasional Pendidikan;
+              </li>
+              <li>
+                Peraturan Menteri Agama Nomor 90 Tahun 2013 tentang Penyelenggaraan Pendidikan Madrasah sebagaimana telah beberapa kali diubah terakhir dengan Peraturan Menteri Agama Nomor 60 Tahun 2015;
+              </li>
+              <li>
+                Peraturan Menteri Agama Nomor 42 Tahun 2016 tentang Organisasi dan Tata Kerja Kementerian Agama;
+              </li>
+              <li>
+                Peraturan Menteri Pendidikan, Kebudayaan, Riset, dan Teknologi Nomor 5 Tahun 2022 tentang Standar Kompetensi Lulusan pada Pendidikan Anak Usia Dini, Jenjang Pendidikan Dasar, dan Jenjang Pendidikan Menengah;
+              </li>
+              <li>
+                Peraturan Menteri Pendidikan, Kebudayaan, Riset, dan Teknologi Nomor 7 Tahun 2022 tentang Standar Isi pada Pendidikan Anak Usia Dini, Jenjang Pendidikan Dasar, dan Jenjang Pendidikan Menengah;
               </li>
             </ol>
           </div>
@@ -991,17 +1030,14 @@ export const KomBab1Pages: React.FC<Props> = ({ data }) => {
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 20 (Hal. 12) - LANDASAN HUKUM LANJUTAN (3 s.d. 21)
+          PAGE 20 (Hal. 12) - LANDASAN HUKUM LENGKAP LANJUTAN (9 s.d. 30)
           ========================================================================= */}
       <KomPageContainer pageNumber="12" pageIndex={20}>
-        <div className="space-y-1 text-[11px] leading-relaxed text-justify">
-          <ol start={3} className="list-decimal pl-5 space-y-1 text-slate-800">
-            <li>Peraturan Pemerintah Nomor 19 Tahun 2005 tentang Standar Nasional Pendidikan sebagaimana telah beberapa kali diubah terakhir dengan Peraturan Pemerintah Nomor 57 Tahun 2021 tentang Standar Nasional Pendidikan;</li>
-            <li>Peraturan Pemerintah Nomor 4 Tahun 2022 tentang Perubahan Atas Peraturan Pemerintah Nomor 57 Tahun 2021 tentang Standar Nasional Pendidikan;</li>
-            <li>Peraturan Menteri Agama Nomor 90 Tahun 2013 tentang Penyelenggaraan Pendidikan Madrasah sebagaimana telah beberapa kali diubah terakhir dengan Peraturan Menteri Agama Nomor 60 Tahun 2015;</li>
-            <li>Peraturan Menteri Agama Nomor 42 Tahun 2016 tentang Organisasi dan Tata Kerja Kementerian Agama;</li>
-            <li>Peraturan Menteri Pendidikan, Kebudayaan, Riset, dan Teknologi Nomor 5 Tahun 2022 tentang Standar Kompetensi Lulusan pada Pendidikan Anak Usia Dini, Jenjang Pendidikan Dasar, dan Jenjang Pendidikan Menengah;</li>
-            <li>Peraturan Menteri Pendidikan, Kebudayaan, Riset, dan Teknologi Nomor 7 Tahun 2022 tentang Standar Isi pada Pendidikan Anak Usia Dini, Jenjang Pendidikan Dasar, dan Jenjang Pendidikan Menengah;</li>
+        <div className="space-y-2 text-[10.5px] leading-relaxed text-justify">
+          <p className="font-semibold text-slate-800 text-[11px] mb-1">
+            Landasan Hukum Pengembangan Kurikulum (Lanjutan):
+          </p>
+          <ol start={9} className="list-decimal pl-5 space-y-1 text-slate-800">
             <li>Peraturan Menteri Pendidikan, Kebudayaan, Riset, dan Teknologi Nomor 16 Tahun 2022 tentang Standar Proses pada Pendidikan Anak Usia Dini, Jenjang Pendidikan Dasar, dan Jenjang Pendidikan Menengah;</li>
             <li>Peraturan Menteri Pendidikan, Kebudayaan, Riset, dan Teknologi Nomor 21 Tahun 2022 tentang Standar Penilaian Pendidikan pada Pendidikan Anak Usia Dini, Jenjang Pendidikan Dasar, dan Jenjang Pendidikan Menengah;</li>
             <li>Keputusan Menteri Agama Nomor 183 Tahun 2019 tentang Kurikulum Pendidikan Agama Islam dan Bahasa Arab pada Madrasah;</li>
@@ -1014,8 +1050,20 @@ export const KomBab1Pages: React.FC<Props> = ({ data }) => {
             <li>Keputusan Kepala BSKAP Kemendikbudristek Nomor 032/H/KR/2024 tentang Capaian Pembelajaran pada Pendidikan Anak Usia Dini, Jenjang Pendidikan Dasar, dan Jenjang Pendidikan Menengah;</li>
             <li>Keputusan Menteri Agama Nomor 1503 Tahun 2025 tentang Penguatan Kurikulum Nasional, Pembelajaran Mendalam (Deep Learning), dan Kurikulum Berbasis Cinta pada Madrasah;</li>
             <li>Keputusan Direktur Jenderal Pendidikan Islam Nomor 9941 Tahun 2025 tentang Capaian Pembelajaran Pendidikan Agama Islam dan Bahasa Arab pada Madrasah;</li>
-            <li>Peraturan Daerah Provinsi Jawa Tengah Nomor 9 Tahun 2012 tentang Bahasa, Sastra, dan Aksara Jawa.</li>
+            <li>Peraturan Daerah Provinsi Jawa Tengah Nomor 9 Tahun 2012 tentang Bahasa, Sastra, dan Aksara Jawa;</li>
+            <li>Surat Edaran Dirjen Pendidikan Islam Kemenag RI tentang Pelaksanaan Kalender Pendidikan Madrasah Tahun Pelajaran 2026/2027;</li>
+            <li>Pedoman Teknis LP Ma’arif NU Pusat tentang Standar Penyelenggaraan Satuan Pendidikan Ma’arif NU;</li>
+            <li>Anggaran Dasar dan Anggaran Rumah Tangga (AD/ART) Lembaga Pendidikan Ma’arif NU;</li>
+            <li>Rencana Strategis (Renstra) Kementerian Agama Kabupaten {data.kabupaten};</li>
+            <li>Surat Keputusan Kepala {data.namaMadrasah} tentang Pembentukan Tim Pengembang Kurikulum Madrasah (TPKM) Tahun Pelajaran {data.tahunAjaran};</li>
+            <li>Hasil Rapat Kerja dan Evaluasi Kurikulum Bersama Komite Madrasah, Dewan Guru, dan Tokoh Masyarakat {data.namaMadrasah};</li>
+            <li>Panduan Kurikulum Berbasis Cinta (KBC) dan Pembelajaran Mendalam (Deep Learning) Direktorat KSKK Madrasah Kemenag RI;</li>
+            <li>Petunjuk Teknis Asesmen Madrasah Direktorat Jenderal Pendidikan Islam Kementerian Agama RI;</li>
+            <li>Program Kerja Tahunan {data.namaMadrasah} Tahun Pelajaran {data.tahunAjaran}.</li>
           </ol>
+          <p className="text-[10px] text-slate-600 italic pt-1 text-center">
+            (Seluruh regulasi di atas menjadi dasar yuridis formal operasionalisasi pembelajaran pada BAB II s.d. BAB VI)
+          </p>
         </div>
       </KomPageContainer>
     </>
