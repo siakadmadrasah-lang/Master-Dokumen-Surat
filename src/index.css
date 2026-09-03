@@ -9,7 +9,7 @@
 @media print {
   @page {
     size: A4 portrait;
-    margin: 1.2cm 1.5cm 1.5cm 1.5cm;
+    margin: 2.5cm 2.5cm 2.5cm 3.5cm; /* Standar Naskah Dinas & Penjilidan Dokumen Kurikulum: Atas 2.5 cm, Kanan 2.5 cm, Bawah 2.5 cm, Kiri 3.5 cm (Ruang Jilid / Gutter) */
   }
 
   *,

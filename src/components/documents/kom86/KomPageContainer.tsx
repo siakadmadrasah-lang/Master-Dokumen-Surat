@@ -22,7 +22,11 @@ export const KomPageContainer: React.FC<KomPageContainerProps> = ({
       id={id || `kom-page-${pageIndex}`}
       data-page-index={pageIndex}
       data-page-number={pageNumber}
-      className={`kom-exact-page bg-white mx-auto w-full max-w-[210mm] min-h-[297mm] p-10 sm:p-14 text-slate-900 shadow-md border border-slate-200 relative flex flex-col justify-between print:shadow-none print:border-none print:m-0 print:p-0 print:w-full print:max-w-none print:min-h-0 print:break-after-page text-[12px] sm:text-[12.5px] leading-[1.65] font-sans ${className}`}
+      className={`kom-exact-page bg-white mx-auto w-full max-w-[210mm] min-h-[297mm] ${
+        isCover
+          ? 'p-6 sm:p-[25mm]'
+          : 'p-6 sm:pt-[25mm] sm:pb-[25mm] sm:pl-[35mm] sm:pr-[25mm]'
+      } text-slate-900 shadow-md border border-slate-200 relative flex flex-col justify-between print:shadow-none print:border-none print:m-0 print:p-0 print:w-full print:max-w-none print:min-h-0 print:break-after-page text-[12px] sm:text-[12.5px] leading-[1.65] font-sans ${className}`}
       style={{
         pageBreakAfter: 'always',
         breakAfter: 'page',
