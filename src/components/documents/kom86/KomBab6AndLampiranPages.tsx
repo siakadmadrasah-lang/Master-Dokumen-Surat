@@ -88,132 +88,256 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 2 (Hal. 47) - LAMPIRAN I: SK TPKM MADRASAH
+          PAGE 2 (Hal. 47) - LAMPIRAN I: SURAT KEPUTUSAN (SK) TPKM RESMI LENGKAP
           ========================================================================= */}
       <KomPageContainer id="kom-cinta-lampiran" pageNumber="47" pageIndex={47}>
-        <div className="space-y-3 text-[11.5px] leading-relaxed">
-          <div className="text-center pb-2 border-b-2 border-slate-900">
-            <h3 className="font-bold text-xs sm:text-sm uppercase text-slate-950 font-serif">
+        <div className="space-y-2 text-[10px] sm:text-[10.5px] leading-[1.45] text-slate-900 font-sans">
+          {/* KOP SURAT RESMI */}
+          <div className="text-center pb-1.5 border-b-2 border-slate-950">
+            <h3 className="font-bold text-xs sm:text-[13px] uppercase text-slate-950 font-serif leading-tight">
               LEMBAGA PENDIDIKAN MA'ARIF NU KABUPATEN BANYUMAS<br />
               {data.namaMadrasah.toUpperCase()}
             </h3>
-            <p className="text-[10px] text-slate-700">
+            <p className="text-[9.5px] text-slate-700 leading-tight mt-0.5">
               Alamat: {data.alamat}, Desa {data.desa}, Kec. {data.kecamatan}, Kab. {data.kabupaten} - Jawa Tengah
             </p>
           </div>
+          <div className="border-b border-slate-700 -mt-1 mb-1"></div>
 
-          <div className="text-center pt-1 pb-1">
-            <h4 className="font-bold text-xs uppercase underline text-slate-950">
+          {/* JUDUL SURAT KEPUTUSAN */}
+          <div className="text-center pt-0.5 pb-1">
+            <h4 className="font-bold text-[11px] sm:text-xs uppercase underline text-slate-950">
               SURAT KEPUTUSAN KEPALA {data.namaMadrasah.toUpperCase()}
             </h4>
-            <p className="text-[10.5px] text-slate-800">
+            <p className="text-[10px] font-mono font-semibold text-slate-800">
               Nomor: 045/MI.M-2/SK-TPKM/VII/{data.tahunAjaran.split('/')[0]}
             </p>
-            <p className="font-semibold text-xs text-slate-900 mt-1">
+            <p className="font-bold text-[10.5px] text-slate-900 uppercase leading-snug mt-0.5">
               TENTANG<br />
               PENETAPAN TIM PENGEMBANG KURIKULUM MADRASAH (TPKM)<br />
               TAHUN PELAJARAN {data.tahunAjaran}
             </p>
+            <p className="font-bold text-[10px] text-slate-900 uppercase mt-0.5">
+              DENGAN RAHMAT TUHAN YANG MAHA ESA<br />
+              KEPALA {data.namaMadrasah.toUpperCase()},
+            </p>
           </div>
 
-          <div className="space-y-2 text-[11px] text-justify text-slate-800">
-            <div className="flex">
-              <span className="w-24 font-semibold">Menimbang:</span>
-              <span className="flex-1">
-                Bahwa dalam rangka memperlancar pelaksanaan implementasi Kurikulum Berbasis Cinta (KBC) dan Kurikulum Merdeka di {data.namaMadrasah}, maka dipandang perlu menetapkan Tim Pengembang Kurikulum Madrasah Tahun Pelajaran {data.tahunAjaran}.
-              </span>
+          {/* KONSIDERANS */}
+          <div className="space-y-1 text-justify text-slate-800">
+            <table className="w-full border-collapse align-top text-[9.5px] sm:text-[10px]">
+              <tbody>
+                <tr>
+                  <td className="w-20 font-bold align-top py-0.5">Menimbang</td>
+                  <td className="w-2 align-top py-0.5">:</td>
+                  <td className="py-0.5">
+                    <ol className="list-[lower-alpha] pl-3.5 space-y-0.5 leading-snug">
+                      <li>bahwa dalam rangka memperlancar perencanaan, penyusunan, implementasi, dan evaluasi Kurikulum Operasional Madrasah (KOM) Berbasis Cinta (KBC) serta Kurikulum Merdeka Tahun Pelajaran {data.tahunAjaran}, dipandang perlu menetapkan Tim Pengembang Kurikulum Madrasah;</li>
+                      <li>bahwa pendidik dan tenaga kependidikan yang namanya tercantum dalam lampiran keputusan ini dinilai cakap, kompeten, dan memenuhi syarat untuk melaksanakan tugas pengembangan kurikulum;</li>
+                      <li>bahwa berdasarkan pertimbangan sebagaimana dimaksud dalam huruf a dan b, perlu menetapkan Surat Keputusan Kepala Madrasah tentang Tim Pengembang Kurikulum Madrasah (TPKM).</li>
+                    </ol>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="font-bold align-top py-0.5">Mengingat</td>
+                  <td className="align-top py-0.5">:</td>
+                  <td className="py-0.5">
+                    <ol className="list-decimal pl-3.5 space-y-0.5 leading-snug">
+                      <li>Undang-Undang Nomor 20 Tahun 2003 tentang Sistem Pendidikan Nasional;</li>
+                      <li>Peraturan Pemerintah Nomor 57 Tahun 2021 jo. PP No. 4 Tahun 2022 tentang Standar Nasional Pendidikan;</li>
+                      <li>Peraturan Menteri Agama Nomor 38 Tahun 2024 tentang Kurikulum Madrasah;</li>
+                      <li>Keputusan Menteri Agama Nomor 450 Tahun 2024 tentang Pedoman Implementasi Kurikulum pada Madrasah;</li>
+                      <li>Keputusan Menteri Agama Nomor 1503 Tahun 2025 tentang Pedoman Kurikulum Madrasah Berbasis Cinta;</li>
+                      <li>Keputusan Menteri Agama Nomor 9 Tahun 2016 tentang Tata Naskah Dinas Kementerian Agama.</li>
+                    </ol>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="font-bold align-top py-0.5">Memperhatikan</td>
+                  <td className="align-top py-0.5">:</td>
+                  <td className="py-0.5 leading-snug">
+                    Hasil Musyawarah Kerja Dewan Guru, Tenaga Kependidikan, dan Komite Madrasah {data.namaMadrasah} pada tanggal 10 Juli {data.tahunAjaran.split('/')[0]} tentang Penyusunan dan Pengembangan Kurikulum Madrasah.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* DIKTUM MEMUTUSKAN */}
+          <div className="pt-0.5 space-y-1 text-[9.5px] sm:text-[10px]">
+            <p className="text-center font-bold tracking-wider text-slate-950 uppercase">MEMUTUSKAN:</p>
+            <table className="w-full border-collapse align-top text-justify">
+              <tbody>
+                <tr>
+                  <td className="w-20 font-bold align-top py-0.5">Menetapkan</td>
+                  <td className="w-2 align-top py-0.5">:</td>
+                  <td className="py-0.5 font-bold text-slate-900 leading-snug">
+                    KEPUTUSAN KEPALA {data.namaMadrasah.toUpperCase()} TENTANG PENETAPAN TIM PENGEMBANG KURIKULUM MADRASAH (TPKM) TAHUN PELAJARAN {data.tahunAjaran}.
+                  </td>
+                </tr>
+                <tr>
+                  <td className="font-bold align-top py-0.5">KESATU</td>
+                  <td className="align-top py-0.5">:</td>
+                  <td className="py-0.5 leading-snug">
+                    Menetapkan dan mengesahkan Susunan Tim Pengembang Kurikulum Madrasah (TPKM) {data.namaMadrasah} Tahun Pelajaran {data.tahunAjaran} sebagaimana tercantum dalam Lampiran yang merupakan bagian tidak terpisahkan dari Keputusan ini.
+                  </td>
+                </tr>
+                <tr>
+                  <td className="font-bold align-top py-0.5">KEDUA</td>
+                  <td className="align-top py-0.5">:</td>
+                  <td className="py-0.5 leading-snug">
+                    Tim Pengembang Kurikulum bertugas menyusun naskah Kurikulum Operasional Madrasah (KOM) Berbasis Cinta, menyelaraskan Capaian Pembelajaran (CP) dan Alur Tujuan Pembelajaran (ATP), merancang modul ajar intrakurikuler dan kokurikuler P5-RA, serta melakukan monev keterlaksanaan kurikulum secara berkala.
+                  </td>
+                </tr>
+                <tr>
+                  <td className="font-bold align-top py-0.5">KETIGA</td>
+                  <td className="align-top py-0.5">:</td>
+                  <td className="py-0.5 leading-snug">
+                    Segala biaya yang timbul akibat diterbitkannya keputusan ini dibebankan pada anggaran Bantuan Operasional Sekolah (BOS) madrasah atau sumber dana lain yang sah dan sesuai ketentuan peraturan perundang-undangan.
+                  </td>
+                </tr>
+                <tr>
+                  <td className="font-bold align-top py-0.5">KEEMPAT</td>
+                  <td className="align-top py-0.5">:</td>
+                  <td className="py-0.5 leading-snug">
+                    Keputusan ini mulai berlaku sejak tanggal ditetapkan, dan apabila di kemudian hari terdapat kekeliruan akan diadakan perbaikan sebagaimana mestinya.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* KAKI SK: TEMBUSAN & TITI MANGSA */}
+          <div className="pt-2 flex justify-between items-end text-[9px] sm:text-[9.5px]">
+            <div className="w-52 space-y-0.5 text-slate-800">
+              <p className="font-bold underline text-slate-900">Tembusan Yth.:</p>
+              <ol className="list-decimal pl-3 space-y-0.5">
+                <li>Kepala Kantor Kemenag Kab. {data.kabupaten}</li>
+                <li>Pengawas Madrasah Pembina Kec. {data.kecamatan}</li>
+                <li>Ketua Pengurus BP3MNU / LP Ma'arif NU</li>
+                <li>Ketua Komite {data.namaMadrasah}</li>
+                <li>Yang bersangkutan untuk dilaksanakan</li>
+                <li>Arsip</li>
+              </ol>
             </div>
-            <div className="flex">
-              <span className="w-24 font-semibold">Mengingat:</span>
-              <span className="flex-1">
-                1. UU No. 20 Tahun 2003 tentang Sisdiknas; 2. PMA No. 38 Tahun 2024 tentang Kurikulum Madrasah; 3. KMA No. 1503 Tahun 2025 tentang Pedoman Kurikulum Madrasah.
-              </span>
-            </div>
-            <div className="flex">
-              <span className="w-24 font-semibold">Memutuskan:</span>
-              <span className="flex-1 font-semibold text-slate-900">
-                MENETAPKAN KEPUTUSAN KEPALA MADRASAH TENTANG TIM PENGEMBANG KURIKULUM MADRASAH (TPKM) TAHUN PELAJARAN {data.tahunAjaran}.
-              </span>
+
+            <div className="text-center w-56 space-y-0.5">
+              <p>Ditetapkan di: {data.desa}</p>
+              <p>Pada tanggal: 14 Juli {data.tahunAjaran.split('/')[0]}</p>
+              <p className="font-bold pt-0.5">Kepala {data.namaMadrasah},</p>
+              <div className="h-10 flex items-center justify-center">
+                <span className="text-[9px] text-slate-400 italic">(Tanda Tangan & Cap Stempel)</span>
+              </div>
+              <p className="font-bold text-slate-950 underline">{(data as any).namaKepalaMadrasah || data.namaKepala}</p>
+              <p className="text-[9px] text-slate-800">NIP. {(data as any).nipKepalaMadrasah || data.nipKepala}</p>
             </div>
           </div>
         </div>
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 3 (Hal. 48) - LAMPIRAN I LANJUTAN: SUSUNAN PERSONALIA TPKM
+          PAGE 3 (Hal. 48) - LAMPIRAN I LANJUTAN: SUSUNAN PERSONALIA & RINCIAN TUGAS TPKM
           ========================================================================= */}
       <KomPageContainer pageNumber="48" pageIndex={48}>
-        <div className="space-y-3 text-[11.5px] leading-relaxed">
-          <p className="font-bold text-[10.5px] text-slate-900">
-            Lampiran Surat Keputusan Kepala {data.namaMadrasah}<br />
-            Nomor: 045/MI.M-2/SK-TPKM/VII/{data.tahunAjaran.split('/')[0]}<br />
-            Tentang: Susunan Tim Pengembang Kurikulum Madrasah (TPKM) Tahun Pelajaran {data.tahunAjaran}
+        <div className="space-y-2.5 text-[10.5px] sm:text-[11px] leading-relaxed">
+          {/* HEADER LAMPIRAN */}
+          <div className="border-b border-slate-300 pb-1 text-[10px] text-slate-800">
+            <p className="font-bold">
+              LAMPIRAN SURAT KEPUTUSAN KEPALA {data.namaMadrasah.toUpperCase()}
+            </p>
+            <p>
+              Nomor: 045/MI.M-2/SK-TPKM/VII/{data.tahunAjaran.split('/')[0]}
+            </p>
+            <p className="font-semibold text-slate-900">
+              Tentang: Susunan dan Rincian Tugas Tim Pengembang Kurikulum Madrasah (TPKM) Tahun Pelajaran {data.tahunAjaran}
+            </p>
+          </div>
+
+          <p className="font-bold text-slate-900 text-[10.5px]">
+            A. Susunan Personalia Tim Pengembang Kurikulum Madrasah (TPKM)
           </p>
 
-          <table className="w-full border-collapse border border-slate-400 text-[10px]">
+          <table className="w-full border-collapse border border-slate-400 text-[9.5px]">
             <thead>
-              <tr className="bg-slate-100">
-                <th className="border border-slate-400 p-1.5 w-8 text-center">No</th>
-                <th className="border border-slate-400 p-1.5 text-left">Nama / NIP</th>
-                <th className="border border-slate-400 p-1.5 text-left w-36">Jabatan Pokok</th>
-                <th className="border border-slate-400 p-1.5 text-left w-40">Jabatan dalam Tim</th>
+              <tr className="bg-slate-100 font-semibold text-slate-900">
+                <th className="border border-slate-400 p-1 w-7 text-center">No</th>
+                <th className="border border-slate-400 p-1 text-left">Nama / NIP</th>
+                <th className="border border-slate-400 p-1 text-left w-36">Jabatan Pokok</th>
+                <th className="border border-slate-400 p-1 text-left w-40">Jabatan dalam Tim</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-slate-400 p-1.5 text-center">1</td>
-                <td className="border border-slate-400 p-1.5 font-semibold">{(data as any).namaKepalaMadrasah || data.namaKepala}</td>
-                <td className="border border-slate-400 p-1.5">Kepala Madrasah</td>
-                <td className="border border-slate-400 p-1.5 font-bold text-emerald-900">Penanggung Jawab</td>
+                <td className="border border-slate-400 p-1 text-center font-bold">1</td>
+                <td className="border border-slate-400 p-1 font-semibold">{(data as any).namaKepalaMadrasah || data.namaKepala}</td>
+                <td className="border border-slate-400 p-1">Kepala Madrasah</td>
+                <td className="border border-slate-400 p-1 font-bold text-emerald-900">Penanggung Jawab</td>
               </tr>
               <tr>
-                <td className="border border-slate-400 p-1.5 text-center">2</td>
-                <td className="border border-slate-400 p-1.5 font-semibold">{(data as any).namaKomite || data.namaKetuaKomite}</td>
-                <td className="border border-slate-400 p-1.5">Ketua Komite</td>
-                <td className="border border-slate-400 p-1.5 font-bold text-emerald-900">Penasehat / Pengarah</td>
+                <td className="border border-slate-400 p-1 text-center font-bold">2</td>
+                <td className="border border-slate-400 p-1 font-semibold">{(data as any).namaKomite || data.namaKetuaKomite}</td>
+                <td className="border border-slate-400 p-1">Ketua Komite Madrasah</td>
+                <td className="border border-slate-400 p-1 font-bold text-emerald-900">Penasehat / Pengarah</td>
               </tr>
               <tr>
-                <td className="border border-slate-400 p-1.5 text-center">3</td>
-                <td className="border border-slate-400 p-1.5 font-semibold">Ustadz Ahmad Ma'ruf, S.Pd.I.</td>
-                <td className="border border-slate-400 p-1.5">Guru Senior / Waka Kurikulum</td>
-                <td className="border border-slate-400 p-1.5 font-bold">Ketua Tim</td>
+                <td className="border border-slate-400 p-1 text-center font-bold">3</td>
+                <td className="border border-slate-400 p-1 font-semibold">Ustadz Ahmad Ma'ruf, S.Pd.I.</td>
+                <td className="border border-slate-400 p-1">Guru Senior / Waka Kurikulum</td>
+                <td className="border border-slate-400 p-1 font-bold">Ketua Tim Pengembang</td>
               </tr>
               <tr>
-                <td className="border border-slate-400 p-1.5 text-center">4</td>
-                <td className="border border-slate-400 p-1.5 font-semibold">Ustadzah Siti Fatimah, S.Pd.</td>
-                <td className="border border-slate-400 p-1.5">Guru Kelas I</td>
-                <td className="border border-slate-400 p-1.5 font-bold">Sekretaris</td>
+                <td className="border border-slate-400 p-1 text-center font-bold">4</td>
+                <td className="border border-slate-400 p-1 font-semibold">Ustadzah Siti Fatimah, S.Pd.</td>
+                <td className="border border-slate-400 p-1">Guru Kelas I</td>
+                <td className="border border-slate-400 p-1 font-bold">Sekretaris Tim</td>
               </tr>
               <tr>
-                <td className="border border-slate-400 p-1.5 text-center">5</td>
-                <td className="border border-slate-400 p-1.5 font-semibold">Ustadzah Nur Hidayah, S.Pd.</td>
-                <td className="border border-slate-400 p-1.5">Bendahara Madrasah</td>
-                <td className="border border-slate-400 p-1.5 font-bold">Bendahara</td>
+                <td className="border border-slate-400 p-1 text-center font-bold">5</td>
+                <td className="border border-slate-400 p-1 font-semibold">Ustadzah Nur Hidayah, S.Pd.</td>
+                <td className="border border-slate-400 p-1">Bendahara Madrasah</td>
+                <td className="border border-slate-400 p-1 font-bold">Bendahara Tim</td>
               </tr>
               <tr>
-                <td className="border border-slate-400 p-1.5 text-center">6</td>
-                <td className="border border-slate-400 p-1.5 font-semibold">Ustadz Muhammad Rizqi, S.Pd.</td>
-                <td className="border border-slate-400 p-1.5">Guru PJOK & Ekstra</td>
-                <td className="border border-slate-400 p-1.5">Koordinator P5-RA & Ekstra</td>
+                <td className="border border-slate-400 p-1 text-center font-bold">6</td>
+                <td className="border border-slate-400 p-1 font-semibold">Ustadz Muhammad Rizqi, S.Pd.</td>
+                <td className="border border-slate-400 p-1">Guru PJOK & Pembina Ekstra</td>
+                <td className="border border-slate-400 p-1">Koordinator P5-RA & Ekstra</td>
               </tr>
               <tr>
-                <td className="border border-slate-400 p-1.5 text-center">7</td>
-                <td className="border border-slate-400 p-1.5 font-semibold">Ustadzah Anis Marsela, S.Pd.</td>
-                <td className="border border-slate-400 p-1.5">Guru Kelas IV</td>
-                <td className="border border-slate-400 p-1.5">Anggota Bidang Asesmen</td>
+                <td className="border border-slate-400 p-1 text-center font-bold">7</td>
+                <td className="border border-slate-400 p-1 font-semibold">Ustadzah Anis Marsela, S.Pd.</td>
+                <td className="border border-slate-400 p-1">Guru Kelas IV</td>
+                <td className="border border-slate-400 p-1">Koordinator Asesmen & RDM</td>
               </tr>
             </tbody>
           </table>
 
-          <div className="pt-4 flex justify-end text-xs">
-            <div className="text-center w-60 space-y-1">
+          {/* B. RINCIAN TUGAS POKOK */}
+          <div className="space-y-1 text-[10px] text-justify text-slate-800">
+            <p className="font-bold text-slate-900 text-[10.5px]">
+              B. Rincian Uraian Tugas Pokok Tim Pengembang Kurikulum
+            </p>
+            <ol className="list-decimal pl-4 space-y-0.5 leading-snug">
+              <li><strong>Penanggung Jawab:</strong> Bertanggung jawab penuh atas seluruh kebijakan, perumusan, legalitas, dan pelaksanaan kurikulum di madrasah.</li>
+              <li><strong>Penasehat/Pengarah:</strong> Memberikan pertimbangan, saran, serta menyelaraskan aspirasi wali santri dan komite madrasah.</li>
+              <li><strong>Ketua Tim:</strong> Memimpin rapat teknis TPKM, mengoordinasikan penulisan Bab 1 s.d. Bab 6 dokumen KOM, serta menyusun kalender pendidikan.</li>
+              <li><strong>Sekretaris:</strong> Mengadministrasikan seluruh notula rapat, berita acara, instrumen telaah kurikulum, dan pengesahan dokumen fisik/digital.</li>
+              <li><strong>Bendahara:</strong> Mengelola alokasi anggaran rapat kerja, pengadaan bahan literatur kurikulum, dan sarana lokakarya guru.</li>
+              <li><strong>Koordinator P5-RA & Ekstrakurikuler:</strong> Merancang modul tema P5-RA, jadwal blok mingguan, serta portofolio gelar karya kreasi santri.</li>
+              <li><strong>Koordinator Asesmen & RDM:</strong> Mengawal pedoman kriteria kenaikan kelas, kelulusan, format rubrik rapor KBC, dan sinkronisasi RDM Kemenag.</li>
+            </ol>
+          </div>
+
+          <div className="pt-2 flex justify-end text-xs">
+            <div className="text-center w-56 space-y-0.5 text-[9.5px]">
               <p>Ditetapkan di: {data.desa}</p>
-              <p className="font-bold">Kepala {data.namaMadrasah},</p>
-              <div className="h-16 flex items-center justify-center">
-                <span className="text-[11px] text-slate-400 italic">(Cap & TTD)</span>
+              <p>Pada tanggal: 14 Juli {data.tahunAjaran.split('/')[0]}</p>
+              <p className="font-bold pt-0.5">Kepala {data.namaMadrasah},</p>
+              <div className="h-10 flex items-center justify-center">
+                <span className="text-[9px] text-slate-400 italic">(Cap & TTD)</span>
               </div>
-              <p className="font-bold underline">{(data as any).namaKepalaMadrasah || data.namaKepala}</p>
-              <p className="text-[11px]">NIP. {(data as any).nipKepalaMadrasah || data.nipKepala}</p>
+              <p className="font-bold text-slate-950 underline">{(data as any).namaKepalaMadrasah || data.namaKepala}</p>
+              <p className="text-[9px] text-slate-800">NIP. {(data as any).nipKepalaMadrasah || data.nipKepala}</p>
             </div>
           </div>
         </div>
