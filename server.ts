@@ -152,6 +152,21 @@ function normalizeStudentsList(rawItems: any[]): any[] {
   });
 }
 
+async function safeJsonFetch(url: string, options?: any): Promise<any | null> {
+  try {
+    const res = await fetch(url, options);
+    if (!res.ok) return null;
+    const text = await res.text();
+    const trimmed = text.trim();
+    if (trimmed.startsWith('<') || trimmed.startsWith('<!doctype') || trimmed.startsWith('<!DOCTYPE')) {
+      return null;
+    }
+    return JSON.parse(text);
+  } catch {
+    return null;
+  }
+}
+
 // SIAKAD Test Connection (with live teacher & student probing)
 app.post('/api/siakad/test-connection', async (req, res) => {
   try {
@@ -191,14 +206,13 @@ app.post('/api/siakad/test-connection', async (req, res) => {
     try {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 6000);
-      const tRes = await fetch(`${targetUrl}/api.php?action=select&table=site_settings&id=data_guru`, {
+      const json = await safeJsonFetch(`${targetUrl}/api.php?action=select&table=site_settings&id=data_guru`, {
         headers,
         signal: controller.signal,
       });
       clearTimeout(timeout);
-      if (tRes.ok) {
+      if (json) {
         isOnline = true;
-        const json = await tRes.json();
         const list = Array.isArray(json?.data?.value)
           ? json.data.value
           : Array.isArray(json?.data)
@@ -214,13 +228,12 @@ app.post('/api/siakad/test-connection', async (req, res) => {
     try {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 6000);
-      const sRes = await fetch(`${targetUrl}/api.php?action=select&table=site_settings&id=students_data`, {
+      const json = await safeJsonFetch(`${targetUrl}/api.php?action=select&table=site_settings&id=students_data`, {
         headers,
         signal: controller.signal,
       });
       clearTimeout(timeout);
-      if (sRes.ok) {
-        const json = await sRes.json();
+      if (json) {
         const list = Array.isArray(json?.data?.value)
           ? json.data.value
           : Array.isArray(json?.data)
@@ -236,13 +249,12 @@ app.post('/api/siakad/test-connection', async (req, res) => {
     try {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 6000);
-      const pRes = await fetch(`${targetUrl}/api.php?action=select&table=site_settings&id=identitas_madrasah`, {
+      const json = await safeJsonFetch(`${targetUrl}/api.php?action=select&table=site_settings&id=identitas_madrasah`, {
         headers,
         signal: controller.signal,
       });
       clearTimeout(timeout);
-      if (pRes.ok) {
-        const json = await pRes.json();
+      if (json) {
         madrasahName = json?.data?.value?.nama_madrasah || '';
       }
     } catch {
@@ -343,11 +355,10 @@ app.post('/api/siakad/sync', async (req, res) => {
           const controller = new AbortController();
           const timeout = setTimeout(() => controller.abort(), 7000);
           const tUrl = `${rootUrl}${ep?.startsWith('/') ? ep : `/${ep}`}`;
-          const tRes = await fetch(tUrl, { headers, signal: controller.signal });
+          const json = await safeJsonFetch(tUrl, { headers, signal: controller.signal });
           clearTimeout(timeout);
 
-          if (tRes.ok) {
-            const json = await tRes.json();
+          if (json) {
             const rawList = extractList(json, 'guru');
             if (Array.isArray(rawList) && rawList.length > 0) {
               teachers = normalizeTeachersList(rawList);
@@ -355,7 +366,7 @@ app.post('/api/siakad/sync', async (req, res) => {
               break;
             }
           }
-        } catch (e: any) {
+        } catch {
           // continue checking other endpoints
         }
       }
@@ -387,11 +398,10 @@ app.post('/api/siakad/sync', async (req, res) => {
           const controller = new AbortController();
           const timeout = setTimeout(() => controller.abort(), 7000);
           const sUrl = `${rootUrl}${ep?.startsWith('/') ? ep : `/${ep}`}`;
-          const sRes = await fetch(sUrl, { headers, signal: controller.signal });
+          const json = await safeJsonFetch(sUrl, { headers, signal: controller.signal });
           clearTimeout(timeout);
 
-          if (sRes.ok) {
-            const json = await sRes.json();
+          if (json) {
             const rawList = extractList(json, 'siswa');
             if (Array.isArray(rawList) && rawList.length > 0) {
               students = normalizeStudentsList(rawList);
@@ -399,7 +409,7 @@ app.post('/api/siakad/sync', async (req, res) => {
               break;
             }
           }
-        } catch (e: any) {
+        } catch {
           // continue checking other endpoints
         }
       }
@@ -415,10 +425,9 @@ app.post('/api/siakad/sync', async (req, res) => {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 7000);
         const pUrl = `${rootUrl}/api.php?action=select&table=site_settings&id=identitas_madrasah`;
-        const pRes = await fetch(pUrl, { headers, signal: controller.signal });
+        const json = await safeJsonFetch(pUrl, { headers, signal: controller.signal });
         clearTimeout(timeout);
-        if (pRes.ok) {
-          const json = await pRes.json();
+        if (json) {
           profileData = json?.data?.value || null;
         }
       } catch {

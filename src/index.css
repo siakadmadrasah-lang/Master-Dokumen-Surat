@@ -6,6 +6,44 @@
   }
 }
 
+/* =========================================================================
+   STANDAR RESMI TATA NASKAH DINAS KEMENAG (OPSI B: FONT 12PT, SPASI 1.5 RESMI)
+   ========================================================================= */
+.kom-dense-continuous .kom-chapter-folio {
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: #0f172a;
+}
+
+.kom-dense-continuous .kom-chapter-folio p,
+.kom-dense-continuous .kom-flow-subpage p {
+  font-size: 15px;
+  line-height: 1.65;
+  text-align: justify;
+  margin-bottom: 0.85rem;
+}
+
+.kom-dense-continuous .kom-chapter-folio li,
+.kom-dense-continuous .kom-flow-subpage li {
+  font-size: 15px;
+  line-height: 1.65;
+  margin-bottom: 0.35rem;
+}
+
+.kom-dense-continuous .kom-chapter-folio table {
+  font-size: 12.5px;
+  line-height: 1.5;
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.kom-dense-continuous .kom-chapter-folio td,
+.kom-dense-continuous .kom-chapter-folio th {
+  padding: 6px 10px;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
 @media print {
   @page {
     size: A4 portrait;
@@ -140,6 +178,85 @@
     border: none !important;
     width: 100% !important;
     max-width: 100% !important;
+  }
+
+  /* Continuous Dense Flow (Sesuai PDF/Word Asli: Naskah padat mengalir tanpa ruang kosong buatan) */
+  .kom-dense-continuous .kom-chapter-folio {
+    page-break-before: always !important;
+    break-before: page !important;
+    page-inside: auto !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+    page-break-after: auto !important;
+    break-after: auto !important;
+    display: block !important;
+    min-height: auto !important;
+    height: auto !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 12pt !important;
+    line-height: 1.65 !important;
+  }
+
+  .kom-dense-continuous .kom-flow-subpage {
+    page-break-after: auto !important;
+    break-after: auto !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+    display: block !important;
+    min-height: auto !important;
+    height: auto !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 12pt !important;
+    line-height: 1.65 !important;
+  }
+
+  /* Opsi B: Standar Resmi Dinas Kemenag (12pt, Spasi 1.5 Resmi) */
+  .kom-dense-continuous .kom-flow-subpage p,
+  .kom-dense-continuous .kom-chapter-folio p {
+    font-size: 12pt !important;
+    line-height: 1.65 !important;
+    margin-bottom: 7pt !important;
+    text-align: justify !important;
+  }
+
+  .kom-dense-continuous .kom-flow-subpage li,
+  .kom-dense-continuous .kom-chapter-folio li {
+    font-size: 12pt !important;
+    line-height: 1.65 !important;
+    margin-bottom: 2.5pt !important;
+  }
+
+  .kom-dense-continuous .kom-flow-subpage table,
+  .kom-dense-continuous .kom-chapter-folio table {
+    font-size: 10.5pt !important;
+    line-height: 1.45 !important;
+    margin-top: 6pt !important;
+    margin-bottom: 8pt !important;
+  }
+
+  .kom-dense-continuous .kom-flow-subpage td,
+  .kom-dense-continuous .kom-flow-subpage th,
+  .kom-dense-continuous .kom-chapter-folio td,
+  .kom-dense-continuous .kom-chapter-folio th {
+    padding: 4pt 6pt !important;
+    font-size: 10.5pt !important;
+    line-height: 1.45 !important;
+  }
+
+  .kom-dense-continuous .kom-page-number-footer {
+    display: none !important;
   }
 
   .kom-page-number-footer {

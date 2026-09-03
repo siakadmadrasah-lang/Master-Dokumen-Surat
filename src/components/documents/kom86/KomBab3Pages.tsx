@@ -922,7 +922,7 @@ export const KomBab3Pages: React.FC<Props> = ({ data }) => {
               A. Kalender Pendidikan
             </h3>
             <p className="text-[11.5px]">
-              <strong>1. Permulaan Tahun Pelajaran:</strong> Tahun Pelajaran {data.tahunAjaran} dimulai pada hari Senin, 13 Juli 2026 diawali dengan Masa Ta'aruf Siswa Madrasah (MATSAMA) selama 3 hari.
+              <strong>1. Permulaan Tahun Pelajaran:</strong> Tahun Pelajaran {data.tahunAjaran} dimulai pada hari Senin, {data.tahunAjaran?.startsWith('2025') ? '14 Juli 2025' : '13 Juli 2026'} diawali dengan Masa Ta'aruf Siswa Madrasah (MATSAMA) selama 3 hari.
             </p>
             <p className="text-[11.5px]">
               <strong>2. Pekan Belajar Efektif (PBE):</strong> Analisis pekan efektif belajar semester ganjil disusun sebagai berikut:

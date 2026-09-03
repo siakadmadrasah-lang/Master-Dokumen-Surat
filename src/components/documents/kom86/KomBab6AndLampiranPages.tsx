@@ -70,8 +70,8 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
               <div className="h-12 flex items-center justify-center">
                 <span className="text-[10px] text-slate-400 italic">(Tanda Tangan)</span>
               </div>
-              <p className="font-bold text-slate-900 underline">USTADZ AHMAD MA'RUF, S.Pd.I.</p>
-              <p className="text-[10px] text-slate-700">NIP. -</p>
+              <p className="font-bold text-slate-900 underline">{data.namaBidangKurikulum || 'Jaenal Maskun, S.Pd.I'}</p>
+              <p className="text-[10px] text-slate-700">NIP. {data.nipBidangKurikulum || '197808152009011009'}</p>
             </div>
 
             <div className="space-y-0.5">
@@ -281,8 +281,8 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
               </tr>
               <tr>
                 <td className="border border-slate-400 p-1 text-center font-bold">3</td>
-                <td className="border border-slate-400 p-1 font-semibold">Ustadz Ahmad Ma'ruf, S.Pd.I.</td>
-                <td className="border border-slate-400 p-1">Guru Senior / Waka Kurikulum</td>
+                <td className="border border-slate-400 p-1 font-semibold">{data.namaBidangKurikulum || 'Jaenal Maskun, S.Pd.I'}</td>
+                <td className="border border-slate-400 p-1">Waka Kurikulum / Guru</td>
                 <td className="border border-slate-400 p-1 font-bold">Ketua Tim Pengembang</td>
               </tr>
               <tr>
@@ -568,7 +568,7 @@ export const KomBab6AndLampiranPages: React.FC<Props> = ({ data }) => {
 
           <div className="pt-1 text-[10.5px] text-justify space-y-1.5 text-slate-800">
             <p className="indent-8">
-              Pada hari ini, <strong>Sabtu</strong> tanggal <strong>Empat</strong> bulan <strong>Juli</strong> tahun <strong>Dua Ribu Dua Puluh Enam</strong> bertempat di Ruang Guru {data.namaMadrasah}, telah diselenggarakan Rapat Kerja Review dan Finalisasi Dokumen Kurikulum Operasional Madrasah (KOM) Berbasis Cinta Tahun Pelajaran {data.tahunAjaran}.
+              Pada hari ini, <strong>Sabtu</strong> tanggal <strong>Empat</strong> bulan <strong>Juli</strong> tahun <strong>{data.tahunAjaran?.startsWith('2025') ? 'Dua Ribu Dua Puluh Lima' : 'Dua Ribu Dua Puluh Enam'}</strong> bertempat di Ruang Guru {data.namaMadrasah}, telah diselenggarakan Rapat Kerja Review dan Finalisasi Dokumen Kurikulum Operasional Madrasah (KOM) Berbasis Cinta Tahun Pelajaran {data.tahunAjaran}.
             </p>
             <p className="indent-8">
               Rapat kerja dihadiri oleh Pengawas Madrasah, Kepala Madrasah, Tim Pengembang Kurikulum Madrasah (TPKM), Dewan Guru, Tenaga Kependidikan, serta Pengurus Komite Madrasah dan perwakilan Tokoh Masyarakat.

@@ -453,7 +453,7 @@ export const defaultKomCintaData: KomCintaData = {
   ],
 
   siswaRombel2026: [
-    { kelas: 'Kelas I', putra: 3, putri: 4, total: 7 },
+    { kelas: 'Kelas I', putra: 3, putri: 5, total: 8 },
     { kelas: 'Kelas II', putra: 3, putri: 8, total: 11 },
     { kelas: 'Kelas III', putra: 5, putri: 5, total: 10 },
     { kelas: 'Kelas IV', putra: 3, putri: 8, total: 11 },
@@ -521,10 +521,10 @@ export const defaultKomCintaData: KomCintaData = {
     'SK PW LP Ma’arif NU Jawa Tengah Nomor 014/PW.11/LPMNU/SK/I/2020 Tentang Kurikulum Mata Pelajaran Ke-NU-an.',
     'SK Bupati Banyumas Nomor 430/1111/2015 tentang Kurikulum Mulok Bahasa Jawa Banyumasan.',
     'Kalender Pendidikan LP Ma’arif NU PCNU Kab. Banyumas Tahun Ajaran 2026/2027.',
-    'SK Kepala Madrasah Nomor 229/LPM/33.08/MI-32/SK/VII/2025 Tentang Tim Pengembang Madrasah.',
-    'SK Kepala Madrasah Nomor 230/LPM/33.08/MI-32/SK/VII/2025 Tentang Tim Pengembang Kurikulum (TPKM).',
-    'SK Kepala Madrasah Nomor 232/LPM/33.08/MI-32/SK/VII/2025 Tentang Penetapan Mulok Madrasah.',
-    'SK Kepala Madrasah Nomor 233/LPM/33.08/MI-32/SK/VII/2025 Tentang Kalender Pendidikan di MI Ma’arif NU 2 Sanggreman.',
+    'SK Kepala Madrasah Nomor 229/LPM/33.08/MI-32/SK/VII/2026 Tentang Tim Pengembang Madrasah.',
+    'SK Kepala Madrasah Nomor 230/LPM/33.08/MI-32/SK/VII/2026 Tentang Tim Pengembang Kurikulum (TPKM).',
+    'SK Kepala Madrasah Nomor 232/LPM/33.08/MI-32/SK/VII/2026 Tentang Penetapan Mulok Madrasah di MI Ma’arif NU 2 Sanggreman.',
+    'SK Kepala Madrasah Nomor 233/LPM/33.08/MI-32/SK/VII/2026 Tentang Kalender Pendidikan di MI Ma’arif NU 2 Sanggreman.',
   ],
 
   targetStandar: [

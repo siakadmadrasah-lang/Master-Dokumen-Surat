@@ -2,7 +2,8 @@ import React from 'react';
 import { MadrasahProfile, OfficialDocument, Teacher, Student } from '../../types';
 import { KomCintaData, defaultKomCintaData } from '../../data/komCintaDefaultData';
 import { KomComplete78PagesDocument } from './kom86/KomComplete78PagesDocument';
-import { CheckCircle2, Printer, Sparkles, FileCheck } from 'lucide-react';
+import { KomLayoutProvider, useKomLayout } from './kom86/KomLayoutContext';
+import { CheckCircle2, Printer, FileText, Layers } from 'lucide-react';
 
 interface KomCintaDocumentViewProps {
   document?: OfficialDocument;
@@ -11,6 +12,81 @@ interface KomCintaDocumentViewProps {
   students?: Student[];
   customData?: KomCintaData;
 }
+
+const KomCintaDocumentContent: React.FC<{ data: KomCintaData }> = ({ data }) => {
+  const { layoutMode, setLayoutMode } = useKomLayout();
+  const isContinuous = layoutMode === 'CONTINUOUS';
+
+  return (
+    <div id="kom-cinta-doc-container" className="font-sans text-slate-900 leading-[1.6]">
+      {/* Banner Notifikasi Verifikasi & Paginasi Standar */}
+      <div className="mb-6 p-4 bg-emerald-950 text-white rounded-2xl flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 shadow-md border border-emerald-800 print:hidden">
+        <div className="flex items-start sm:items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-emerald-800 flex items-center justify-center flex-shrink-0 mt-1 sm:mt-0">
+            <CheckCircle2 className="w-6 h-6 text-emerald-300" />
+          </div>
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="font-bold text-sm">Dokumen Resmi KOM KMA 1503 Tahun 2025</h3>
+              <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full ${isContinuous ? 'bg-amber-400 text-slate-950' : 'bg-emerald-700 text-emerald-100'}`}>
+                {isContinuous ? 'Standar Resmi Dinas Kemenag (12pt, Spasi 1.5)' : 'Mode 78 Lembar Terpisah'}
+              </span>
+            </div>
+            <p className="text-xs text-emerald-200 mt-0.5">
+              {isContinuous
+                ? 'Naskah tersambung alami dan padat tanpa ruang kosong buatan dengan ukuran huruf resmi 12pt & spasi 1.5 (~72-78 halaman). Pindah halaman hanya pada awal bab dan lampiran resmi.'
+                : 'Menampilkan setiap halaman dalam kotak terpisah (78 lembar) dengan nomor halaman di bagian bawah masing-masing kotak.'}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Switcher Mode Tampilan */}
+          <div className="inline-flex rounded-xl bg-emerald-900/80 p-1 border border-emerald-700">
+            <button
+              type="button"
+              onClick={() => setLayoutMode('CONTINUOUS')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                isContinuous
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'text-emerald-200 hover:text-white hover:bg-emerald-800/60'
+              }`}
+              title="Teks dan tabel mengalir padat menyambung tanpa jeda kosong, persis seperti cetakan dokumen PDF aslinya"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>Padat Mengalir (Asli PDF)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setLayoutMode('PAGINATED')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                !isContinuous
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'text-emerald-200 hover:text-white hover:bg-emerald-800/60'
+              }`}
+              title="Kotak per lembar terpisah (78 halaman)"
+            >
+              <Layers className="w-3.5 h-3.5" />
+              <span>78 Lembar Terpisah</span>
+            </button>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold rounded-xl flex items-center gap-2 transition-colors shadow-sm cursor-pointer ml-auto lg:ml-0"
+          >
+            <Printer className="w-4 h-4" />
+            <span>Cetak / Unduh PDF</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Dokumen Lengkap */}
+      <KomComplete78PagesDocument data={data} />
+    </div>
+  );
+};
 
 export const KomCintaDocumentView: React.FC<KomCintaDocumentViewProps> = ({
   document,
@@ -89,39 +165,9 @@ export const KomCintaDocumentView: React.FC<KomCintaDocumentViewProps> = ({
   };
 
   return (
-    <div id="kom-cinta-doc-container" className="font-sans text-slate-900 leading-[1.75]">
-      {/* Banner Notifikasi Verifikasi & Paginasi Standar */}
-      <div className="mb-6 p-4 bg-emerald-950 text-white rounded-2xl flex flex-col md:flex-row md:items-center md:justify-between gap-3 shadow-md border border-emerald-800 print:hidden">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-800 flex items-center justify-center flex-shrink-0">
-            <CheckCircle2 className="w-6 h-6 text-emerald-300" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h3 className="font-bold text-sm">Dokumen Terstandarisasi 78 Halaman (KMA 1503 Tahun 2025)</h3>
-              <span className="px-2 py-0.5 text-[10px] font-bold bg-amber-400 text-slate-950 rounded-full">
-                Spasi 1.5 Resmi
-              </span>
-            </div>
-            <p className="text-xs text-emerald-200">
-              Format paginasi tepat 78 halaman dengan alokasi halaman terstruktur per bab untuk validasi pengawas dan verifikator.
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => window.print()}
-            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl flex items-center gap-2 transition-colors shadow-sm cursor-pointer"
-          >
-            <Printer className="w-4 h-4" />
-            <span>Cetak / Unduh PDF (78 Hal)</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Dokumen Lengkap 78 Halaman */}
-      <KomComplete78PagesDocument data={data} />
-    </div>
+    <KomLayoutProvider initialMode="CONTINUOUS">
+      <KomCintaDocumentContent data={data} />
+    </KomLayoutProvider>
   );
 };
+

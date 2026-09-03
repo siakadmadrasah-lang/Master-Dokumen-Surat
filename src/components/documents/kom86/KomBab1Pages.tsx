@@ -1095,7 +1095,7 @@ export const KomBab1Pages: React.FC<Props> = ({ data }) => {
             <li>Keputusan Menteri Agama Nomor 1503 Tahun 2025 tentang Penguatan Kurikulum Nasional, Pembelajaran Mendalam (Deep Learning), dan Kurikulum Berbasis Cinta pada Madrasah;</li>
             <li>Keputusan Direktur Jenderal Pendidikan Islam Nomor 9941 Tahun 2025 tentang Capaian Pembelajaran Pendidikan Agama Islam dan Bahasa Arab pada Madrasah;</li>
             <li>Peraturan Daerah Provinsi Jawa Tengah Nomor 9 Tahun 2012 tentang Bahasa, Sastra, dan Aksara Jawa;</li>
-            <li>Surat Edaran Dirjen Pendidikan Islam Kemenag RI tentang Pelaksanaan Kalender Pendidikan Madrasah Tahun Pelajaran 2026/2027;</li>
+            <li>Surat Edaran Dirjen Pendidikan Islam Kemenag RI tentang Pelaksanaan Kalender Pendidikan Madrasah Tahun Pelajaran {data.tahunAjaran};</li>
             <li>Pedoman Teknis LP Ma’arif NU Pusat tentang Standar Penyelenggaraan Satuan Pendidikan Ma’arif NU;</li>
             <li>Anggaran Dasar dan Anggaran Rumah Tangga (AD/ART) Lembaga Pendidikan Ma’arif NU;</li>
             <li>Rencana Strategis (Renstra) Kementerian Agama Kabupaten {data.kabupaten};</li>

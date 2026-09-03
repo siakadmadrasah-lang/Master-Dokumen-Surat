@@ -110,11 +110,12 @@ export const PublicPortalView: React.FC<PublicPortalViewProps> = ({
   // Construct official KOM CINTA document reference for print/verification
   const komCintaDoc = useMemo(() => {
     const existing = documents.find((d) => d.type === 'KOM_CINTA');
+    const effectiveTahunAjaran = komCintaData.tahunAjaran || profile.tahunAjaran || existing?.tahunAjaran || '2026/2027';
     if (existing) {
       return {
         ...existing,
-        title: existing.title || `Kurikulum ${profile.namaMadrasah} Berbasis Cinta (KMA 1503/2025) T.A ${profile.tahunAjaran || '2025/2026'}`,
-        tahunAjaran: profile.tahunAjaran || existing.tahunAjaran || '2025/2026',
+        title: `Kurikulum Operasional Madrasah Berbasis Cinta (${profile.namaMadrasah}) T.A ${effectiveTahunAjaran}`,
+        tahunAjaran: effectiveTahunAjaran,
         contentData: {
           ...defaultKomCintaData,
           ...((existing.contentData as any) || {}),
@@ -125,10 +126,10 @@ export const PublicPortalView: React.FC<PublicPortalViewProps> = ({
     return {
       id: 'DOC-KOM-CINTA-2026',
       type: 'KOM_CINTA' as DocumentType,
-      title: `Kurikulum ${profile.namaMadrasah} Berbasis Cinta (KMA 1503/2025) T.A ${profile.tahunAjaran || '2025/2026'}`,
+      title: `Kurikulum Operasional Madrasah Berbasis Cinta (${profile.namaMadrasah}) T.A ${effectiveTahunAjaran}`,
       nomorSurat: '097/LPM/33.17/MI-77/VI/2026',
       tanggalSurat: '25 Juli 2026',
-      tahunAjaran: profile.tahunAjaran || '2025/2026',
+      tahunAjaran: effectiveTahunAjaran,
       semester: 'Ganjil',
       status: 'SIGNED',
       creatorName: 'Tim Pengembang Kurikulum Madrasah (TPKM)',

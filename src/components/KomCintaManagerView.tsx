@@ -218,34 +218,97 @@ export const KomCintaManagerView: React.FC<KomCintaManagerViewProps> = ({
         )}
       </div>
 
-      {/* Main Switcher: Preview vs Editor */}
+      {/* Main Switcher: Preview vs Editor & Tahun Ajaran Selector */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-200 pb-3">
-        <div className="flex items-center space-x-2 bg-slate-200/80 p-1 rounded-xl w-full sm:w-auto">
-          <button
-            type="button"
-            onClick={() => setActiveSubTab('PREVIEW')}
-            className={`flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-              activeSubTab === 'PREVIEW'
-                ? 'bg-white text-emerald-950 shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Eye className="w-4 h-4 text-emerald-700" />
-            <span>Pratinjau Naskah Lengkap</span>
-          </button>
+        <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+          <div className="flex items-center space-x-2 bg-slate-200/80 p-1 rounded-xl w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={() => setActiveSubTab('PREVIEW')}
+              className={`flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                activeSubTab === 'PREVIEW'
+                  ? 'bg-white text-emerald-950 shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Eye className="w-4 h-4 text-emerald-700" />
+              <span>Pratinjau Naskah Lengkap</span>
+            </button>
 
-          <button
-            type="button"
-            onClick={() => setActiveSubTab('EDITOR')}
-            className={`flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-              activeSubTab === 'EDITOR'
-                ? 'bg-white text-emerald-950 shadow-sm'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Edit3 className="w-4 h-4 text-emerald-700" />
-            <span>Sesuaikan / Edit Naskah</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => setActiveSubTab('EDITOR')}
+              className={`flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                activeSubTab === 'EDITOR'
+                  ? 'bg-white text-emerald-950 shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <Edit3 className="w-4 h-4 text-emerald-700" />
+              <span>Sesuaikan / Edit Naskah</span>
+            </button>
+          </div>
+
+          {/* Quick Switcher Tahun Ajaran */}
+          <div className="flex items-center space-x-1.5 bg-emerald-50 border border-emerald-300/80 rounded-xl px-2.5 py-1 text-xs shadow-xs">
+            <span className="text-emerald-900 font-semibold text-[11px] whitespace-nowrap">Tahun Ajaran:</span>
+            <div className="flex bg-white rounded-lg p-0.5 border border-emerald-200">
+              <button
+                type="button"
+                onClick={() => {
+                  const updated = {
+                    ...formData,
+                    tahunAjaran: '2025/2026',
+                    tanggalPermohonan: '15 Juli 2025',
+                    tanggalRekomendasi: '15 Juli 2025',
+                    tanggalPengesahan: '25 Juli 2025',
+                    nomorSuratPermohonan: (formData.nomorSuratPermohonan || '').replace('2026', '2025'),
+                  };
+                  setFormData(updated);
+                  try {
+                    localStorage.setItem('kom_cinta_custom_data', JSON.stringify(updated));
+                  } catch (e) {
+                    console.error(e);
+                  }
+                }}
+                className={`px-2 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
+                  formData.tahunAjaran === '2025/2026'
+                    ? 'bg-emerald-700 text-white shadow-xs'
+                    : 'text-slate-600 hover:text-emerald-900 hover:bg-slate-50'
+                }`}
+                title="Gunakan Tahun Ajaran 2025/2026"
+              >
+                2025/2026
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const updated = {
+                    ...formData,
+                    tahunAjaran: '2026/2027',
+                    tanggalPermohonan: '15 Juli 2026',
+                    tanggalRekomendasi: '15 Juli 2026',
+                    tanggalPengesahan: '25 Juli 2026',
+                    nomorSuratPermohonan: (formData.nomorSuratPermohonan || '').replace('2025', '2026'),
+                  };
+                  setFormData(updated);
+                  try {
+                    localStorage.setItem('kom_cinta_custom_data', JSON.stringify(updated));
+                  } catch (e) {
+                    console.error(e);
+                  }
+                }}
+                className={`px-2 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
+                  formData.tahunAjaran === '2026/2027'
+                    ? 'bg-emerald-700 text-white shadow-xs'
+                    : 'text-slate-600 hover:text-emerald-900 hover:bg-slate-50'
+                }`}
+                title="Gunakan Tahun Ajaran 2026/2027 (sesuai sampul naskah PDF)"
+              >
+                2026/2027
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Quick Chapter Navigation Pills (Preview Mode) */}
