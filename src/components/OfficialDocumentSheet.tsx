@@ -26,6 +26,12 @@ interface OfficialDocumentSheetProps {
   teachers?: Teacher[];
   students?: Student[];
   onOpenSignModal?: (signer: any) => void;
+  margin?: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
 }
 
 export const OfficialDocumentSheet: React.FC<OfficialDocumentSheetProps> = ({
@@ -34,6 +40,7 @@ export const OfficialDocumentSheet: React.FC<OfficialDocumentSheetProps> = ({
   teachers = [],
   students = [],
   onOpenSignModal,
+  margin,
 }) => {
   const { type, contentData, signatures } = document;
 
@@ -41,7 +48,19 @@ export const OfficialDocumentSheet: React.FC<OfficialDocumentSheetProps> = ({
     <div className="w-full overflow-x-auto pb-4 print:p-0 print:m-0 print:overflow-visible">
       <div
         id="official-doc-sheet"
-        className="bg-white text-slate-900 mx-auto p-6 sm:p-10 md:p-12 max-w-4xl shadow-xl rounded-xl border border-slate-200 print:shadow-none print:border-none print:p-0 print:m-0 print:max-w-none text-[12.5px] leading-relaxed font-sans min-w-[320px]"
+        style={
+          margin && type !== 'KOM' && type !== 'KOM_CINTA'
+            ? {
+                paddingTop: `${margin.top}cm`,
+                paddingRight: `${margin.right}cm`,
+                paddingBottom: `${margin.bottom}cm`,
+                paddingLeft: `${margin.left}cm`,
+              }
+            : undefined
+        }
+        className={`bg-white text-slate-900 mx-auto ${
+          margin && type !== 'KOM' && type !== 'KOM_CINTA' ? '' : 'p-6 sm:p-10 md:p-12'
+        } max-w-4xl shadow-xl rounded-xl border border-slate-200 print:shadow-none print:border-none print:p-0 print:m-0 print:max-w-none text-[12.5px] leading-relaxed font-sans min-w-[320px]`}
       >
         {/* KOP SURAT RESMI KEMENAG RI (Ditampilkan untuk Dokumen SK / Surat Resmi, tidak menduplikasi Cover KOM / KOM CINTA) */}
         {type !== 'KOM' && type !== 'KOM_CINTA' && (

@@ -620,7 +620,7 @@ Tolong buatkan struktur dokumen KOM yang lengkap, mendalam, inspiratif, dan siap
 Pastikan gaya bahasa sangat resmi, akademis, santun, sesuai tata laksana Kemenag RI. Berikan output murni JSON.`;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-flash-latest',
+      model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
         responseMimeType: 'application/json',
@@ -671,7 +671,7 @@ Kembalikan format JSON dengan key:
 - "diktumKelima": Isi ketetapan KELIMA (mulai berlaku dan perbaikan jika kekeliruan)`;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-flash-latest',
+      model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
         responseMimeType: 'application/json',
@@ -717,7 +717,7 @@ Kembalikan JSON dengan key:
 - "summaryOfChanges": ringkasan apa saja yang diperbaiki (e.g. ejaan, diksi, dasar regulasi)`;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-flash-latest',
+      model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
         responseMimeType: 'application/json',

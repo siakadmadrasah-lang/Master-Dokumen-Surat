@@ -9,7 +9,7 @@
 @media print {
   @page {
     size: A4 portrait;
-    margin: 2.5cm 2.5cm 2.5cm 3.5cm; /* Standar Naskah Dinas & Penjilidan Dokumen Kurikulum: Atas 2.5 cm, Kanan 2.5 cm, Bawah 2.5 cm, Kiri 3.5 cm (Ruang Jilid / Gutter) */
+    margin: 2.5cm 2.0cm 2.0cm 3.0cm; /* Standar Tata Naskah Dinas Kemenag RI: Atas 2.5 cm, Kanan 2.0 cm, Bawah 2.0 cm, Kiri 3.0 cm (Gutter / Ruang Penjilidan & Klip) */
   }
 
   *,
@@ -129,14 +129,25 @@
   .kom-exact-page {
     page-break-after: always !important;
     break-after: page !important;
-    height: auto !important;
-    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+    min-height: 242mm !important; /* Pas dengan area cetak A4 (297mm - margin 25mm atas - margin 25mm bawah - safety buffer 5mm) */
     padding: 0 !important;
     margin: 0 !important;
     box-shadow: none !important;
     border: none !important;
     width: 100% !important;
     max-width: 100% !important;
+  }
+
+  .kom-page-number-footer {
+    margin-top: auto !important;
+    width: 100% !important;
+    text-align: center !important;
+    padding-top: 8px !important;
+    padding-bottom: 0 !important;
   }
 
   /* Strict rule: All chapters and appendices must start on a brand new page */

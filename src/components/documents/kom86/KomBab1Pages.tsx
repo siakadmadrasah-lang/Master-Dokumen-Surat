@@ -393,94 +393,101 @@ export const KomBab1Pages: React.FC<Props> = ({ data }) => {
           PAGE 14 (Hal. 6) - LANJUTAN TAHFIDZ & PROGRAM UNGGULAN GLOBAL (TIK)
           ========================================================================= */}
       <KomPageContainer pageNumber="6" pageIndex={14}>
-        <div className="space-y-3 text-[12px] leading-relaxed">
+        <div className="space-y-2.5 text-[11px] leading-relaxed">
           <p className="font-bold text-[11px] text-slate-800">
             Lanjutan Tabel 1.1 Program Unggulan Budaya Lokal {data.namaMadrasah}
           </p>
 
-          <table className="w-full border-collapse border border-slate-400 text-[11px]">
+          <table className="w-full border-collapse border border-slate-400 text-[10.5px]">
             <thead>
               <tr className="bg-slate-100">
-                <th className="border border-slate-400 p-2 w-16 text-center">Kelas</th>
-                <th className="border border-slate-400 p-2 text-left">Target Hafalan Surat</th>
-                <th className="border border-slate-400 p-2 w-32 text-center">Waktu & Metode</th>
+                <th className="border border-slate-400 p-1.5 w-16 text-center">Kelas</th>
+                <th className="border border-slate-400 p-1.5 text-left">Target Hafalan Surat</th>
+                <th className="border border-slate-400 p-1.5 w-32 text-center">Waktu & Metode</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-slate-400 p-2 text-center font-bold">Kelas V</td>
-                <td className="border border-slate-400 p-2">
-                  Hafalan Surat At-Takwir s.d. An-Naba', penguatan makhraj, wakaf wal ibtida', dan muraja'ah 1/2 Juz 30.
+                <td className="border border-slate-400 p-1.5 text-center font-bold">Kelas V</td>
+                <td className="border border-slate-400 p-1.5">
+                  Hafalan Surat Al-Buruj, Al-Insyiqaq, Al-Muthaffifin, Al-Infithar, At-Takwir, 'Abasa, Doa Qunut, Ayat Kursi. Penguatan makhraj, wakaf wal ibtida', dan muroja'ah intensif 1/2 Juz 30.
                 </td>
-                <td className="border border-slate-400 p-2 text-center">
-                  Muroja'ah intensif & pendampingan santri
+                <td className="border border-slate-400 p-1.5 text-center">
+                  Muroja'ah pagi 07.00-07.30 & bimbingan guru tahfidz
                 </td>
               </tr>
               <tr>
-                <td className="border border-slate-400 p-2 text-center font-bold">Kelas VI</td>
-                <td className="border border-slate-400 p-2">
-                  Muroja'ah tuntas Juz 30 (An-Naba' s.d. An-Nas) secara sempurna, ujian tasmi' terbuka, dan wisuda tahfidz madrasah.
+                <td className="border border-slate-400 p-1.5 text-center font-bold">Kelas VI</td>
+                <td className="border border-slate-400 p-1.5">
+                  Muroja'ah tuntas Juz 30 (Surat An-Nazi'at, An-Naba' s.d. An-Nas) secara mutqin, niat dan doa sesudah sholat Dhuha, Tahsin Juz 30 & Surat Al-Baqarah ayat 284-286, Ujian Tasmi' terbuka, dan Wisuda Khotmil Qur'an.
                 </td>
-                <td className="border border-slate-400 p-2 text-center">
-                  Ujian Tasmi' & Wisuda Khotmil Qur'an
+                <td className="border border-slate-400 p-1.5 text-center">
+                  Ujian Tasmi' Terbuka & Wisuda Khotmil Qur'an
                 </td>
               </tr>
             </tbody>
           </table>
 
-          <div className="pt-2 space-y-2">
-            <h5 className="font-bold text-slate-900 text-xs sm:text-[12.5px]">
+          <div className="pt-1 space-y-1.5">
+            <h5 className="font-bold text-slate-900 text-xs sm:text-[12px]">
               b. Program Unggulan Global (Keterampilan Teknologi Informasi)
             </h5>
-            <p className="text-justify">
-              Menyiapkan peserta didik agar tangguh dan cerdas teknologi di era revolusi industri 4.0 dan Society 5.0 dengan penguasaan literasi digital berkarakter Islami.
+            <p className="text-justify text-[11px] text-slate-800 indent-6">
+              Menyiapkan peserta didik agar tangguh, cakap, dan berdaya saing di era digitalisasi Society 5.0 dan kecerdasan buatan (AI) melalui penguasaan literasi digital yang berkarakter Islami. Program ini membekali santri keterampilan aplikasi komputer perkantoran, desain grafis dakwah, logika komputasional, serta etika berinternet sehat (cyber ethics).
             </p>
 
-            <p className="font-bold text-[11.5px] text-slate-900 pt-1">
+            <p className="font-bold text-[11px] text-slate-900 pt-0.5">
               Tabel 1.2. Program Unggulan Global di Madrasah
             </p>
 
-            <table className="w-full border-collapse border border-slate-400 text-[11px]">
+            <table className="w-full border-collapse border border-slate-400 text-[10.5px]">
               <thead>
                 <tr className="bg-slate-100">
-                  <th className="border border-slate-400 p-1.5 w-16 text-center">Kelas</th>
-                  <th className="border border-slate-400 p-1.5 text-left">Materi Keterampilan TIK</th>
-                  <th className="border border-slate-400 p-1.5 w-28 text-center">Target Capaian</th>
+                  <th className="border border-slate-400 p-1 w-14 text-center">Kelas</th>
+                  <th className="border border-slate-400 p-1 text-left">Materi Keterampilan TIK</th>
+                  <th className="border border-slate-400 p-1 w-28 text-center">Target Capaian</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td className="border border-slate-400 p-1 text-center font-bold">Kelas I</td>
-                  <td className="border border-slate-400 p-1">Pengenalan perangkat keras komputer & mouse/keyboard dasar</td>
+                  <td className="border border-slate-400 p-1">Pengenalan perangkat keras komputer (CPU, monitor, keyboard, mouse), prosedur menyalakan/mematikan komputer, pengenalan aplikasi Paint.</td>
                   <td className="border border-slate-400 p-1 text-center">Motorik digital</td>
                 </tr>
                 <tr>
                   <td className="border border-slate-400 p-1 text-center font-bold">Kelas II</td>
-                  <td className="border border-slate-400 p-1">Menggambar kreatif dan mewarnai digital dengan aplikasi Paint</td>
+                  <td className="border border-slate-400 p-1">Menggambar kreatif, mewarnai ornamen Islami, pengenalan toolbar drawing Paint, membuat kartu ucapan hari besar Islam sederhana.</td>
                   <td className="border border-slate-400 p-1 text-center">Kreativitas visual</td>
                 </tr>
                 <tr>
                   <td className="border border-slate-400 p-1 text-center font-bold">Kelas III</td>
-                  <td className="border border-slate-400 p-1">Dasar pengolah kata (mengetik teks Islami, format font sederhana)</td>
+                  <td className="border border-slate-400 p-1">Dasar Ms Word (mengetik teks doa dan hadits pendek, pemformatan font, warna teks, perataan paragraf, penyimpanan file).</td>
                   <td className="border border-slate-400 p-1 text-center">Literasi naskah</td>
                 </tr>
                 <tr>
                   <td className="border border-slate-400 p-1 text-center font-bold">Kelas IV</td>
-                  <td className="border border-slate-400 p-1">Pengolah kata lanjutan (tabel, gambar, layout naskah rapi)</td>
+                  <td className="border border-slate-400 p-1">Ms Word lanjutan (penyisipan tabel, gambar, border, layout naskah rapi), pengenalan dasar Ms Excel (tabel data sederhana) dan Canva poster dakwah.</td>
                   <td className="border border-slate-400 p-1 text-center">Penyusunan tugas</td>
                 </tr>
                 <tr>
                   <td className="border border-slate-400 p-1 text-center font-bold">Kelas V</td>
-                  <td className="border border-slate-400 p-1">Dasar presentasi multimedia & etika internet sehat / aman</td>
+                  <td className="border border-slate-400 p-1">Pengenalan CorelDraw dasar / pengolahan grafis sederhana, Ms PowerPoint presentasi multimedia, etika internet sehat & keamanan data pribadi.</td>
                   <td className="border border-slate-400 p-1 text-center">Presentasi digital</td>
                 </tr>
                 <tr>
                   <td className="border border-slate-400 p-1 text-center font-bold">Kelas VI</td>
-                  <td className="border border-slate-400 p-1">Pengolahan angka dasar & pengenalan logika coding / AI edukatif</td>
+                  <td className="border border-slate-400 p-1">Penguasaan terpadu Ms Office (Word, Excel, PowerPoint), penyusunan laporan mini project, pengenalan logika komputasi, algoritma dasar, dan pemanfaatan AI edukatif secara bijak.</td>
                   <td className="border border-slate-400 p-1 text-center">Komputasi & AI</td>
                 </tr>
               </tbody>
             </table>
+
+            <div className="pt-1 text-justify text-[10.5px] text-slate-700 leading-relaxed">
+              <p className="font-semibold text-slate-900">Strategi Pembelajaran dan Sarana TIK:</p>
+              <p className="indent-6">
+                Pembelajaran TIK dilaksanakan terjadwal 1 (satu) Jam Pelajaran (JP) per pekan di Laboratorium Multimedia madrasah secara praktik langsung. Pendekatan pembelajaran berbasis proyek (Project-Based Learning) diterapkan dengan mengintegrasikan tugas TIK ke dalam mata pelajaran umum dan muatan keagamaan, disertai penanaman adab bermedia digital yang santun dan bertanggung jawab.
+              </p>
+            </div>
           </div>
         </div>
       </KomPageContainer>
@@ -489,83 +496,111 @@ export const KomBab1Pages: React.FC<Props> = ({ data }) => {
           PAGE 15 (Hal. 7) - PROGRAM ASRAMA, ADIWIYATA, PROFIL PTK
           ========================================================================= */}
       <KomPageContainer pageNumber="7" pageIndex={15}>
-        <div className="space-y-3 text-[12px] leading-relaxed text-justify">
-          <h5 className="font-bold text-slate-900 text-xs sm:text-[12.5px]">
+        <div className="space-y-2 text-[11px] leading-relaxed text-justify">
+          <h5 className="font-bold text-slate-900 text-xs sm:text-[12px]">
             c. Program Unggulan Madrasah Lainnya
           </h5>
 
-          <p className="font-semibold text-slate-800 text-[11.5px]">
-            1. Program Asrama / Mitra Pesantren
-          </p>
-          <p>
-            Tabel 1.3. Program Unggulan Madrasah (Asrama)
-          </p>
-          <table className="w-full border-collapse border border-slate-400 text-[11px]">
-            <thead>
-              <tr className="bg-slate-100">
-                <th className="border border-slate-400 p-1.5 w-10 text-center">No</th>
-                <th className="border border-slate-400 p-1.5 text-left">Nama Program</th>
-                <th className="border border-slate-400 p-1.5 text-left">Kegiatan Utama</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">1</td>
-                <td className="border border-slate-400 p-1 font-semibold">Kajian Kitab Kuning</td>
-                <td className="border border-slate-400 p-1">Safinatun Najah, Mabadi Fiqih, Aqidatul Awam ba'da Maghrib</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">2</td>
-                <td className="border border-slate-400 p-1 font-semibold">Qiyamul Lail</td>
-                <td className="border border-slate-400 p-1">Shalat Tahajud bersama dan muhasabah setiap malam Jum'at</td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="space-y-1">
+            <p className="font-bold text-slate-800 text-[11px]">
+              1. Program Asrama / Pondok Pesantren Mitra
+            </p>
+            <p className="text-[10.5px] text-slate-700 indent-6 leading-relaxed">
+              Sebagai komitmen melestarikan tradisi keilmuan Islam Ahlussunnah wal Jama'ah dan membangun kemandirian santri, {data.namaMadrasah} menjalin kemitraan sinergis dengan Pondok Pesantren As-Salafiyah / Madin. Program asrama ini dirancang untuk membiasakan amaliah ibadah praktis, penguatan akhlakul karimah, pendalaman kitab kuning salaf (turats), serta pembentukan karakter disiplin santri.
+            </p>
 
-          <p className="font-semibold text-slate-800 text-[11.5px] pt-1">
-            2. Program Madrasah Adiwiyata (Ramah Lingkungan)
-          </p>
-          <p>
-            Tabel 1.4. Program Unggulan Madrasah (Adiwiyata)
-          </p>
-          <table className="w-full border-collapse border border-slate-400 text-[11px]">
-            <thead>
-              <tr className="bg-slate-100">
-                <th className="border border-slate-400 p-1.5 w-10 text-center">No</th>
-                <th className="border border-slate-400 p-1.5 text-left">Program Adiwiyata</th>
-                <th className="border border-slate-400 p-1.5 text-left">Sasaran & Indikator Keberhasilan</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">1</td>
-                <td className="border border-slate-400 p-1 font-semibold">Green Madrasah & Apotek Hidup</td>
-                <td className="border border-slate-400 p-1">Penanaman tanaman obat dan pohon perindang di pekarangan madrasah</td>
-              </tr>
-              <tr>
-                <td className="border border-slate-400 p-1 text-center">2</td>
-                <td className="border border-slate-400 p-1 font-semibold">Bank Sampah & Pilah Sampah</td>
-                <td className="border border-slate-400 p-1">Pemisahan sampah organik dan anorganik serta daur ulang kreatif</td>
-              </tr>
-            </tbody>
-          </table>
+            <p className="font-semibold text-[10.5px] text-slate-800">
+              Tabel 1.3. Program Unggulan Asrama / Mitra Pesantren
+            </p>
+            <table className="w-full border-collapse border border-slate-400 text-[10px]">
+              <thead>
+                <tr className="bg-slate-100">
+                  <th className="border border-slate-400 p-1 w-8 text-center">No</th>
+                  <th className="border border-slate-400 p-1 w-44 text-left">Nama Program</th>
+                  <th className="border border-slate-400 p-1 text-left">Kegiatan Utama & Materi</th>
+                  <th className="border border-slate-400 p-1 w-28 text-center">Waktu Pelaksanaan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-slate-400 p-1 text-center">1</td>
+                  <td className="border border-slate-400 p-1 font-semibold">Pembiasaan 'Ubudhiyah</td>
+                  <td className="border border-slate-400 p-1">Shalat fardhu berjamaah 5 waktu, wirid ratibul haddad, dzikir ba'da shalat, dan shalat dhuha.</td>
+                  <td className="border border-slate-400 p-1 text-center">Setiap hari</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-1 text-center">2</td>
+                  <td className="border border-slate-400 p-1 font-semibold">Kajian Kitab Kuning (Salaf)</td>
+                  <td className="border border-slate-400 p-1">Kajian kitab Safinatun Najah, Mabadiul Fiqhiyyah, Aqidatul Awam, dan Al-Akhlaq lil Banin/Banat.</td>
+                  <td className="border border-slate-400 p-1 text-center">Ba'da Maghrib s.d. Isya</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-1 text-center">3</td>
+                  <td className="border border-slate-400 p-1 font-semibold">Tahfidz & Tahsin Al-Qur'an</td>
+                  <td className="border border-slate-400 p-1">Bimbingan makharijul huruf bersanad, tadarus bersama, dan penguatan muroja'ah Juz 30.</td>
+                  <td className="border border-slate-400 p-1 text-center">Ba'da Subuh</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-1 text-center">4</td>
+                  <td className="border border-slate-400 p-1 font-semibold">Qiyamul Lail & Muhasabah</td>
+                  <td className="border border-slate-400 p-1">Shalat Tahajud, Shalat Tasbih bersama, muhasabah malam Jum'at, dan tadris mufradat bahasa Arab.</td>
+                  <td className="border border-slate-400 p-1 text-center">Malam Jum'at & Ahad</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-          <div className="pt-2 space-y-2">
-            <h4 className="font-bold text-slate-950 text-xs sm:text-[13px]">
-              3. Peta Profil Pendidik, Tenaga Kependidikan, Peserta Didik dan Orang Tua di Madrasah
-            </h4>
-            <h5 className="font-bold text-slate-900 text-xs">
-              a. Profil Pendidik dan Tenaga Kependidikan
-            </h5>
-            <p className="indent-8">
-              Pendidik dan Tenaga Kependidikan {data.namaMadrasah} memiliki kualifikasi akademik yang relevan dengan tugas profesinya. Keseluruhan guru telah berijazah Strata 1 (S1) dan berkomitmen menerapkan Kurikulum Berbasis Cinta dalam setiap proses interaksi edukatif.
+          <div className="pt-1 space-y-1">
+            <p className="font-bold text-slate-800 text-[11px]">
+              2. Program Madrasah Adiwiyata (Ramah Lingkungan Hidup)
+            </p>
+            <p className="text-[10.5px] text-slate-700 indent-6 leading-relaxed">
+              {data.namaMadrasah} menerapkan Gerakan Peduli dan Berbudaya Lingkungan Hidup di Madrasah (PBLHM) sebagai perwujudan Islam Rahmatan lil 'Alamin. Melalui program Madrasah Adiwiyata, seluruh ekosistem madrasah berpartisipasi aktif dalam pelestarian fungsi lingkungan hidup yang mencakup 6 (enam) aspek Perilaku Ramah Lingkungan Hidup (PRLH):
+            </p>
+
+            <ul className="list-disc pl-5 space-y-0.5 text-[10px] text-slate-800">
+              <li><strong>Kebersihan & Sanitasi:</strong> Piket harian, gerakan Jum'at Bersih, pemeliharaan toilet sehat dan drainase bebas jentik nyamuk.</li>
+              <li><strong>Pengelolaan Sampah (3R):</strong> Pemilahan sampah organik dan anorganik, Bank Sampah Berkah, serta karya ecobrick daur ulang.</li>
+              <li><strong>Penanaman & Pemeliharaan Tanaman:</strong> Gerakan satu santri satu pohon, penghijauan pekarangan, dan taman Apotek Hidup (TOGA).</li>
+              <li><strong>Konservasi Air:</strong> Pembuatan sumur biopori, penampungan air hujan, dan pemanfaatan kembali air wudhu untuk menyiram kebun madrasah.</li>
+              <li><strong>Konservasi Energi Listrik:</strong> Budaya hemat listrik (mematikan lampu/kipas saat ruangan kosong) dan optimalisasi ventilasi alami kelas.</li>
+              <li><strong>Inovasi Ramah Lingkungan:</strong> Kampanye madrasah ramah lingkungan bebas sampah plastik (zero single-use plastic) pada kantin sehat.</li>
+            </ul>
+
+            <p className="font-semibold text-[10.5px] text-slate-800 pt-0.5">
+              Tabel 1.4. Program Adiwiyata Madrasah {data.namaMadrasah}
+            </p>
+            <table className="w-full border-collapse border border-slate-400 text-[10px]">
+              <thead>
+                <tr className="bg-slate-100">
+                  <th className="border border-slate-400 p-1 w-8 text-center">No</th>
+                  <th className="border border-slate-400 p-1 w-44 text-left">Program Adiwiyata</th>
+                  <th className="border border-slate-400 p-1 text-left">Sasaran & Indikator Keberhasilan Terukur</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-slate-400 p-1 text-center">1</td>
+                  <td className="border border-slate-400 p-1 font-semibold">Green Madrasah & Apotek Hidup</td>
+                  <td className="border border-slate-400 p-1">Pekarangan hijau tertata rapi, ketersediaan 20+ varietas tanaman obat keluarga (TOGA), dan pohon perindang rindang.</td>
+                </tr>
+                <tr>
+                  <td className="border border-slate-400 p-1 text-center">2</td>
+                  <td className="border border-slate-400 p-1 font-semibold">Bank Sampah & 3R Berkelanjutan</td>
+                  <td className="border border-slate-400 p-1">100% kelas memiliki tempat sampah terpilah (organik, anorganik, B3), reduksi sampah plastik sebesar 70%, dan operasional Bank Sampah.</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p className="text-[10px] text-justify text-slate-700 italic leading-relaxed pt-0.5">
+              Seluruh program keunggulan di atas dievaluasi berkala setiap akhir semester melalui Rapat Evaluasi Mutu Madrasah bersama Komite Madrasah guna menjamin pencapaian Standar Kompetensi Lulusan (SKL) yang beriman, mandiri, peduli lingkungan, dan berdaya saing global sesuai sasaran KMA Nomor 450 Tahun 2024.
             </p>
           </div>
         </div>
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 16 (Hal. 8) - TABEL 1.5 DATA KUALIFIKASI PTK
+          PAGE 16 (Hal. 8) - TABEL 1.5 DATA KUALIFIKASI PTK & ANALISIS KOMPETENSI
           ========================================================================= */}
       <KomPageContainer pageNumber="8" pageIndex={16}>
         <div className="space-y-3 text-[12px] leading-relaxed">
@@ -576,12 +611,12 @@ export const KomBab1Pages: React.FC<Props> = ({ data }) => {
             <h5 className="font-bold text-slate-900 text-xs">
               a. Profil Pendidik dan Tenaga Kependidikan
             </h5>
-            <p className="indent-8 text-[11.5px] text-justify text-slate-800">
+            <p className="indent-8 text-[11.5px] text-justify text-slate-800 leading-relaxed">
               Pendidik dan Tenaga Kependidikan {data.namaMadrasah} memiliki kualifikasi akademik yang relevan dengan tugas profesinya. Keseluruhan guru telah berijazah Strata 1 (S1) dan berkomitmen menerapkan Kurikulum Berbasis Cinta (KBC) dan Pembelajaran Mendalam (Deep Learning) dalam setiap proses interaksi edukatif.
             </p>
           </div>
 
-          <p className="font-bold text-[11px] text-slate-900 pt-1">
+          <p className="font-bold text-[11px] text-slate-900 pt-0.5">
             Tabel 1.5. Data Kualifikasi Pendidik dan Tenaga Kependidikan Tahun Pelajaran {data.tahunAjaran}
           </p>
 
@@ -655,6 +690,15 @@ export const KomBab1Pages: React.FC<Props> = ({ data }) => {
           <p className="text-[11px] text-justify text-slate-700 italic">
             Catatan: Distribusi tenaga pendidik dan kependidikan di atas telah memenuhi kriteria rasio kecukupan guru kelas dan guru mata pelajaran sesuai standar teknis Kementerian Agama Republik Indonesia.
           </p>
+
+          <div className="pt-1.5 space-y-1.5">
+            <h5 className="font-bold text-slate-900 text-xs">
+              Program Peningkatan Kompetensi Berkelanjutan (PKB) Pendidik
+            </h5>
+            <p className="indent-8 text-[11px] text-justify text-slate-800 leading-relaxed">
+              Dalam rangka menjaga mutu layanan pembelajaran bermakna, seluruh pendidik secara aktif diikutsertakan dalam forum Kelompok Kerja Guru (KKG), bimbingan teknis implementasi kurikulum merdeka, pelatihan pemanfaatan media digital berbasis AI edukasi, serta workshop pendampingan literasi dan numerasi yang diselenggarakan oleh Kementerian Agama Kabupaten dan Balai Diklat Keagamaan.
+            </p>
+          </div>
         </div>
       </KomPageContainer>
 

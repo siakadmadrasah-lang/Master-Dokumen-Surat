@@ -26,7 +26,7 @@ export const KomPageContainer: React.FC<KomPageContainerProps> = ({
         isCover
           ? 'p-6 sm:p-[25mm]'
           : 'p-6 sm:pt-[25mm] sm:pb-[25mm] sm:pl-[35mm] sm:pr-[25mm]'
-      } text-slate-900 shadow-md border border-slate-200 relative flex flex-col justify-between print:shadow-none print:border-none print:m-0 print:p-0 print:w-full print:max-w-none print:min-h-0 print:break-after-page text-[12px] sm:text-[12.5px] leading-[1.65] font-sans ${className}`}
+      } text-slate-900 shadow-md border border-slate-200 relative flex flex-col justify-between print:shadow-none print:border-none print:m-0 print:p-0 print:w-full print:max-w-none print:min-h-[240mm] print:break-after-page text-[12px] sm:text-[12.5px] leading-[1.65] font-sans ${className}`}
       style={{
         pageBreakAfter: 'always',
         breakAfter: 'page',
@@ -39,7 +39,7 @@ export const KomPageContainer: React.FC<KomPageContainerProps> = ({
 
       {/* Page Number Centered at Bottom */}
       {!isCover && (
-        <div className="pt-4 mt-auto text-center font-serif text-xs text-slate-700 select-none print:text-slate-900">
+        <div className="kom-page-number-footer pt-4 mt-auto text-center font-serif text-xs text-slate-700 select-none print:text-slate-900 print:mt-auto print:pt-3 print:pb-0">
           {pageNumber}
         </div>
       )}

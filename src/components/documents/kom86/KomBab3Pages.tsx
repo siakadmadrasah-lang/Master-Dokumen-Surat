@@ -10,20 +10,20 @@ export const KomBab3Pages: React.FC<Props> = ({ data }) => {
   return (
     <>
       {/* =========================================================================
-          PAGE 25 (Hal. 17) - BAB III PENGORGANISASIAN & INTRAKURIKULER
+          PAGE 25 (Hal. 17) - BAB III PENGORGANISASIAN & INTRAKURIKULER (FASE A, B, C)
           ========================================================================= */}
       <KomPageContainer id="kom-cinta-bab3" pageNumber="17" pageIndex={25}>
-        <div className="text-center pb-4 border-b border-slate-300">
+        <div className="text-center pb-3 border-b border-slate-300">
           <h2 className="font-bold text-base sm:text-lg uppercase tracking-wide text-slate-950 font-serif">
             BAB III<br />PENGORGANISASIAN PEMBELAJARAN
           </h2>
         </div>
 
-        <div className="pt-4 space-y-3 text-[12px] leading-relaxed text-justify">
+        <div className="pt-3 space-y-3 text-[12px] leading-relaxed text-justify">
           <h3 className="font-bold text-slate-950 text-sm">
             A. Intrakurikuler
           </h3>
-          <p className="indent-8">
+          <p className="indent-8 text-[11.5px]">
             Kegiatan intrakurikuler di {data.namaMadrasah} dirancang untuk memberikan pengalaman belajar yang bermakna, kontekstual, dan berpusat pada peserta didik. Pembelajaran mengintegrasikan muatan kurikulum nasional dengan kekhasan madrasah, muatan lokal bahasa jawa, penguatan literasi dan numerasi, serta penanaman nilai-nilai keislaman Ahlussunnah wal Jama'ah An-Nahdliyyah.
           </p>
 
@@ -31,55 +31,55 @@ export const KomBab3Pages: React.FC<Props> = ({ data }) => {
             <h4 className="font-bold text-slate-950 text-xs sm:text-[12.5px]">
               1. Struktur Kurikulum
             </h4>
-            <p>
+            <p className="text-[11.5px]">
               Struktur kurikulum madrasah ibtidaiyah terbagi ke dalam 3 (tiga) fase perkembangan peserta didik:
             </p>
-            <ul className="list-disc pl-5 space-y-1 text-slate-800 text-[11.5px]">
+            <ul className="list-disc pl-5 space-y-2 text-slate-800 text-[11px]">
               <li>
-                <strong>Fase A:</strong> Diperuntukkan bagi peserta didik kelas I dan kelas II. Fokus utama pembelajaran adalah penyesuaian diri dari jenjang RA/TK ke pendidikan dasar, pembiasaan adab, penanaman aqidah dasar, penguasaan literasi membaca dan menulis permulaan, serta pengenalan konsep bilangan konkret.
+                <strong>Fase A (Kelas I dan II):</strong> Fokus utama pembelajaran adalah penyesuaian diri dari jenjang RA/TK ke pendidikan dasar, pembiasaan adab, penanaman aqidah dasar, penguasaan literasi membaca dan menulis permulaan, serta pengenalan konsep bilangan konkret.
               </li>
               <li>
-                <strong>Fase B:</strong> Diperuntukkan bagi peserta didik kelas III dan kelas IV. Pembelajaran diarahkan pada penguatan kompetensi literasi, numerasi tingkat lanjut, pemahaman konsep dasar ilmu pengetahuan alam dan sosial (IPAS), penguasaan ibadah praktis (shalat fardhu), dan pengembangan nalar kritis.
+                <strong>Fase B (Kelas III dan IV):</strong> Pembelajaran diarahkan pada penguatan kompetensi literasi, numerasi tingkat lanjut, pemahaman konsep dasar ilmu pengetahuan alam dan sosial (IPAS), penguasaan ibadah praktis (shalat fardhu), dan pengembangan nalar kritis.
+              </li>
+              <li>
+                <strong>Fase C (Kelas V dan VI):</strong> Peserta didik dilatih untuk berpikir abstrak, melakukan pemecahan masalah (problem solving), penelitian sederhana berbasis lingkungan, serta pembekalan kemandirian dan kepemimpinan menjelang masa pubertas dan transisi ke jenjang lanjutan.
               </li>
             </ul>
+            <p className="text-[11px] text-slate-700 italic pt-1">
+              Pengorganisasian pembelajaran intrakurikuler dijabarkan ke dalam alokasi waktu tahunan yang mencakup jam tatap muka intrakurikuler dan kokurikuler (P5-RA) sebagaimana disajikan pada tabel struktur kurikulum pada halaman berikutnya.
+            </p>
           </div>
         </div>
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 26 (Hal. 18) - FASE C & TABEL 3.1 STRUKTUR KURIKULUM ALOKASI WAKTU
+          PAGE 26 (Hal. 18) - TABEL 3.1 STRUKTUR KURIKULUM & KETERANGAN LENGKAP (a - g)
           ========================================================================= */}
       <KomPageContainer pageNumber="18" pageIndex={26}>
-        <div className="space-y-3 text-[12px] leading-relaxed">
-          <ul className="list-disc pl-5 space-y-1 text-slate-800 text-[11.5px]">
-            <li>
-              <strong>Fase C:</strong> Diperuntukkan bagi peserta didik kelas V dan kelas VI. Pada fase ini peserta didik dilatih untuk berpikir abstrak, melakukan pemecahan masalah (problem solving), penelitian sederhana berbasis lingkungan, serta pembekalan kemandirian dan kepemimpinan menjelang masa pubertas dan transisi ke jenjang madrasah tsanawiyah/menengah pertama.
-            </li>
-          </ul>
-
-          <p className="font-bold text-slate-950 text-[11px] pt-1">
+        <div className="space-y-2 text-[12px] leading-relaxed">
+          <p className="font-bold text-slate-950 text-[11px]">
             Tabel 3.1. Struktur Kurikulum {data.namaMadrasah} Tahun Pelajaran {data.tahunAjaran}
           </p>
 
-          <table className="w-full border-collapse border border-slate-400 text-[10px]">
+          <table className="w-full border-collapse border border-slate-400 text-[9.5px] print:break-inside-avoid">
             <thead>
               <tr className="bg-slate-100">
                 <th className="border border-slate-400 p-1 w-6 text-center" rowSpan={2}>No</th>
                 <th className="border border-slate-400 p-1 text-left" rowSpan={2}>Mata Pelajaran</th>
-                <th className="border border-slate-400 p-1 text-center" colSpan={2}>Kelas I</th>
-                <th className="border border-slate-400 p-1 text-center" colSpan={2}>Kelas II</th>
-                <th className="border border-slate-400 p-1 text-center" colSpan={2}>Kelas III-V</th>
-                <th className="border border-slate-400 p-1 text-center" colSpan={2}>Kelas VI</th>
+                <th className="border border-slate-400 p-0.5 text-center" colSpan={2}>Kelas I</th>
+                <th className="border border-slate-400 p-0.5 text-center" colSpan={2}>Kelas II</th>
+                <th className="border border-slate-400 p-0.5 text-center" colSpan={2}>Kelas III-V</th>
+                <th className="border border-slate-400 p-0.5 text-center" colSpan={2}>Kelas VI</th>
               </tr>
               <tr className="bg-slate-50">
-                <th className="border border-slate-400 p-0.5 text-center w-8">Intra</th>
-                <th className="border border-slate-400 p-0.5 text-center w-8">P5</th>
-                <th className="border border-slate-400 p-0.5 text-center w-8">Intra</th>
-                <th className="border border-slate-400 p-0.5 text-center w-8">P5</th>
-                <th className="border border-slate-400 p-0.5 text-center w-8">Intra</th>
-                <th className="border border-slate-400 p-0.5 text-center w-8">P5</th>
-                <th className="border border-slate-400 p-0.5 text-center w-8">Intra</th>
-                <th className="border border-slate-400 p-0.5 text-center w-8">P5</th>
+                <th className="border border-slate-400 p-0.5 text-center w-7">Intra</th>
+                <th className="border border-slate-400 p-0.5 text-center w-7">P5</th>
+                <th className="border border-slate-400 p-0.5 text-center w-7">Intra</th>
+                <th className="border border-slate-400 p-0.5 text-center w-7">P5</th>
+                <th className="border border-slate-400 p-0.5 text-center w-7">Intra</th>
+                <th className="border border-slate-400 p-0.5 text-center w-7">P5</th>
+                <th className="border border-slate-400 p-0.5 text-center w-7">Intra</th>
+                <th className="border border-slate-400 p-0.5 text-center w-7">P5</th>
               </tr>
             </thead>
             <tbody>
@@ -205,39 +205,36 @@ export const KomBab3Pages: React.FC<Props> = ({ data }) => {
             </tbody>
           </table>
 
-          <div className="text-[11px] space-y-0.5 text-slate-800 pt-1">
-            <p className="font-semibold">Keterangan Tabel 3.1:</p>
-            <p>a. Pembelajaran Pendidikan Agama Islam (PAI) terbagi menjadi empat rumpun mata pelajaran: Al-Qur'an Hadis, Akidah Akhlak, Fikih, dan Sejarah Kebudayaan Islam (SKI mulai kelas III).</p>
-            <p>b. Bahasa Arab diajarkan sejak kelas I sebagai kekhasan madrasah dengan penekanan pada mufradat dasar dan percakapan sederhana.</p>
-            <p>c. Alokasi proyek P5-RA diambil sekitar 20-30% dari total alokasi jam tatap muka pertahun untuk penguatan karakter.</p>
+          <div className="text-[10px] leading-tight space-y-0.5 text-slate-800 pt-1">
+            <p className="font-semibold text-slate-900">Keterangan Tabel 3.1:</p>
+            <p><strong>a.</strong> Pembelajaran PAI terbagi 4 mata pelajaran: Al-Qur'an Hadis, Akidah Akhlak, Fikih, dan SKI (mulai kelas III).</p>
+            <p><strong>b.</strong> Bahasa Arab diajarkan sejak kelas I dengan penekanan pada mufradat dasar dan percakapan santun harian.</p>
+            <p><strong>c.</strong> Alokasi proyek P5-RA diambil 20-30% dari total alokasi jam tatap muka pertahun untuk penguatan karakter santri.</p>
+            <p><strong>d.</strong> Bahasa Indonesia difokuskan pada penguasaan menyimak, berbicara, membaca nyaring, dan menulis karangan.</p>
+            <p><strong>e.</strong> Matematika mengedepankan nalar kontekstual, kemampuan numerasi terapan, dan pemecahan masalah konkret.</p>
+            <p><strong>f.</strong> Muatan lokal Bahasa Jawa melestarikan unggah-ungguh krama alus, sastra, dan tembang dolanan anak.</p>
+            <p><strong>g.</strong> Mata pelajaran Ke-NU-an / Aswaja menanamkan akidah Islam Ahlussunnah wal Jama'ah An-Nahdliyyah.</p>
           </div>
         </div>
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 27 (Hal. 19) - KETERANGAN LANJUTAN, TABEL 3.2 ASESMEN SENI, PRINSIP KBC
+          PAGE 27 (Hal. 19) - TABEL 3.2 SENI, PRINSIP KBC LENGKAP & STRATEGI DEEP LEARNING
           ========================================================================= */}
       <KomPageContainer pageNumber="19" pageIndex={27}>
-        <div className="space-y-3 text-[12px] leading-relaxed text-justify">
-          <div className="space-y-1 text-[11px] text-slate-800">
-            <p>d. Bahasa Indonesia difokuskan pada penguasaan 4 keterampilan berbahasa: menyimak, berbicara, membaca, dan menulis naskah.</p>
-            <p>e. Matematika mengedepankan pemahaman nalar kontekstual, pemecahan masalah (numerasi), dan logika berhitung.</p>
-            <p>f. Muatan lokal Bahasa Jawa bertujuan melestarikan unggah-ungguh basa, sastra jawa, dan aksara jawa sebagai kearifan lokal.</p>
-            <p>g. Mata pelajaran Ke-NU-an / Aswaja diajarkan sebagai muatan khas Lembaga Pendidikan Ma'arif NU untuk menanamkan aqidah Islam Ahlussunnah wal Jama'ah.</p>
-          </div>
-
-          <div className="space-y-2 pt-1">
-            <p className="font-bold text-[11px] text-slate-900">
+        <div className="space-y-2.5 text-[11.5px] leading-relaxed text-justify">
+          <div>
+            <p className="font-bold text-[11px] text-slate-900 pb-1">
               Tabel 3.2. Asesmen Awal Pemilihan Mata Pelajaran Seni dan Budaya
             </p>
 
-            <table className="w-full border-collapse border border-slate-400 text-[10.5px]">
+            <table className="w-full border-collapse border border-slate-400 text-[10px] print:break-inside-avoid">
               <thead>
                 <tr className="bg-slate-100">
                   <th className="border border-slate-400 p-1 w-8 text-center">No</th>
                   <th className="border border-slate-400 p-1 text-left">Pilihan Seni</th>
-                  <th className="border border-slate-400 p-1 text-center w-28">Kesiapan Guru</th>
-                  <th className="border border-slate-400 p-1 text-center w-28">Minat Siswa</th>
+                  <th className="border border-slate-400 p-1 text-center w-24">Kesiapan Guru</th>
+                  <th className="border border-slate-400 p-1 text-center w-24">Minat Siswa</th>
                   <th className="border border-slate-400 p-1 text-center w-28">Keputusan</th>
                 </tr>
               </thead>
@@ -267,158 +264,113 @@ export const KomBab3Pages: React.FC<Props> = ({ data }) => {
             </table>
           </div>
 
-          <p className="indent-8 text-[11.5px] pt-1">
-            {data.namaMadrasah} merupakan madrasah reguler yang senantiasa terbuka menerima dan melayani kebutuhan seluruh peserta didik termasuk layanan akomodasi peserta didik berkebutuhan khusus dengan pendekatan individual yang penuh kasih sayang.
+          <p className="indent-8 text-[11px] text-slate-800">
+            {data.namaMadrasah} merupakan madrasah reguler yang senantiasa terbuka menerima dan melayani kebutuhan seluruh peserta didik termasuk layanan akomodasi peserta didik berkebutuhan khusus (PDBK) dengan pendekatan individual yang penuh kasih sayang.
           </p>
 
-          <div className="space-y-1.5 pt-1">
-            <h4 className="font-bold text-slate-950 text-xs sm:text-[12.5px]">
+          <div className="space-y-1 pt-0.5">
+            <h4 className="font-bold text-slate-950 text-xs sm:text-[12px]">
               2. Prinsip Kurikulum Berbasis Cinta dalam Pembelajaran Intrakurikuler
             </h4>
-            <ol className="list-alpha pl-5 space-y-1 text-slate-800 text-[11.5px]">
+            <ol className="list-alpha pl-5 space-y-1 text-slate-800 text-[11px]">
               <li>
                 <strong>Kasih Sayang dan Keberterimaan:</strong> Guru memandang setiap murid sebagai amanah suci dari Allah Swt. yang memiliki keunikan potensi, bakat, dan kecepatan belajar yang berbeda-beda tanpa penghakiman.
               </li>
               <li>
                 <strong>Keselamatan Fisik dan Emosional:</strong> Menghadirkan ruang kelas yang bebas dari ancaman hukuman fisik, cemoohan verbal, diskriminasi, maupun perundungan antar-teman.
               </li>
+              <li>
+                <strong>Kolaborasi Tanpa Diskriminasi:</strong> Membiasakan kerja sama tim yang rukun, saling menolong, menghargai perbedaan latar belakang keluarga, dan mengikis egoisme pribadi.
+              </li>
+              <li>
+                <strong>Keadilan dan Empati:</strong> Pendidik berlaku adil dalam memberikan perhatian, umpan balik yang membangun, serta mendengarkan aspirasi dan kegelisahan siswa dengan hati terbuka.
+              </li>
             </ol>
           </div>
-        </div>
-      </KomPageContainer>
 
-      {/* =========================================================================
-          PAGE 28 (Hal. 20) - PRINSIP KBC, STRATEGI DEEP LEARNING, CONTOH MAPEL
-          ========================================================================= */}
-      <KomPageContainer pageNumber="20" pageIndex={28}>
-        <div className="space-y-3 text-[12px] leading-relaxed text-justify">
-          <ol start={3} className="list-alpha pl-5 space-y-1 text-slate-800 text-[11.5px]">
-            <li>
-              <strong>Kolaborasi Tanpa Diskriminasi:</strong> Membiasakan kerja sama tim yang rukun, saling menolong, menghargai perbedaan latar belakang keluarga, dan mengikis egoisme pribadi.
-            </li>
-            <li>
-              <strong>Keadilan dan Empati:</strong> Pendidik berlaku adil dalam memberikan perhatian, umpan balik yang membangun, serta mendengarkan aspirasi dan kegelisahan siswa dengan hati terbuka.
-            </li>
-          </ol>
-
-          <div className="space-y-1.5 pt-1">
-            <h4 className="font-bold text-slate-950 text-xs sm:text-[12.5px]">
+          <div className="space-y-1 pt-0.5">
+            <h4 className="font-bold text-slate-950 text-xs sm:text-[12px]">
               3. Implementasi Strategi Deep Learning (Pembelajaran Mendalam)
             </h4>
-            <p className="text-[11.5px]">
-              Pembelajaran mendalam (<em>Deep Learning</em>) di {data.namaMadrasah} berpijak pada 3 pilar:
+            <p className="text-[11px]">
+              Pembelajaran mendalam (<em>Deep Learning</em>) di {data.namaMadrasah} berpijak pada 3 pilar utama:
             </p>
-            <ul className="list-disc pl-5 space-y-1 text-slate-800 text-[11.5px]">
+            <ul className="list-disc pl-5 space-y-0.5 text-slate-800 text-[10.5px]">
               <li><strong>Mindful Learning (Berkesadaran):</strong> Siswa diajak menyadari tujuan belajarnya, fokus pada apa yang dipelajari, dan menghayati proses tanpa terburu-buru.</li>
               <li><strong>Meaningful Learning (Bermakna):</strong> Mengaitkan setiap materi dengan kehidupan nyata, konteks ibadah harian, dan pemecahan masalah lingkungan santri.</li>
               <li><strong>Joyful Learning (Menyenangkan):</strong> Menciptakan kegembiraan belajar melalui eksplorasi, eksperimen sains sederhana, permainan edukatif, dan apresiasi positif.</li>
             </ul>
           </div>
+        </div>
+      </KomPageContainer>
 
-          <div className="space-y-1.5 pt-1">
-            <h4 className="font-bold text-slate-950 text-xs sm:text-[12.5px]">
+      {/* =========================================================================
+          PAGE 28 (Hal. 20) - CONTOH MAPEL, MULOK, & IMPLEMENTASI 8 PROFIL (a - d)
+          ========================================================================= */}
+      <KomPageContainer pageNumber="20" pageIndex={28}>
+        <div className="space-y-3 text-[11.5px] leading-relaxed text-justify">
+          <div className="space-y-1">
+            <h4 className="font-bold text-slate-950 text-xs sm:text-[12px]">
               4. Contoh Penerapan pada Beberapa Mata Pelajaran
             </h4>
-            <p className="text-[11.5px]">
-              Dalam mata pelajaran Fikih wudhu, siswa tidak sekadar menghafal rukun wudhu melainkan diajak praktik kesadaran air bersih, hemat energi, dan refleksi mensucikan hati dari rasa benci. Pada mata pelajaran Matematika, siswa menggunakan konsep pecahan untuk menghitung sedekah dan pembagian makanan secara adil kepada kaum duafa.
+            <p className="text-[11px] indent-8">
+              Dalam mata pelajaran Fikih wudhu, siswa tidak sekadar menghafal rukun wudhu melainkan diajak praktik kesadaran air bersih, hemat energi, dan refleksi mensucikan hati dari rasa benci. Pada mata pelajaran Matematika, siswa menggunakan konsep pecahan untuk menghitung sedekah dan pembagian makanan secara adil kepada kaum duafa di lingkungan sekitar madrasah.
             </p>
           </div>
 
-          <div className="space-y-1.5 pt-1">
-            <h4 className="font-bold text-slate-950 text-xs sm:text-[12.5px]">
+          <div className="space-y-1">
+            <h4 className="font-bold text-slate-950 text-xs sm:text-[12px]">
               5. Muatan Lokal dan Cinta Budaya Lokal
             </h4>
-            <p className="text-[11.5px]">
-              Penanaman budi pekerti luhur melalui pembiasaan basa krama alus kepada orang tua dan guru, tembang macapat dolanan anak, serta pementasan kesenian rebana hadroh.
+            <p className="text-[11px] indent-8">
+              Penanaman budi pekerti luhur dilaksanakan melalui pembiasaan basa krama alus kepada orang tua dan guru, tembang macapat dolanan anak, serta pementasan kesenian rebana hadroh santri yang sarat makna shalawat.
             </p>
           </div>
 
           <div className="space-y-1 pt-1">
-            <h4 className="font-bold text-slate-950 text-xs sm:text-[12.5px]">
+            <h4 className="font-bold text-slate-950 text-xs sm:text-[12px]">
               6. Implementasi 8 Profil Lulusan dalam Kegiatan Intrakurikuler
             </h4>
-            <p className="text-[11.5px]">
-              <strong>a. Keimanan dan Ketakwaan:</strong> Tercermin dalam pembiasaan doa sebelum dan sesudah belajar, zikir asmaul husna, dan tadarus Al-Qur'an.
+            <p className="text-[11px]">
+              Delapan profil lulusan diintegrasikan dalam materi dan pembiasaan kelas sehari-hari:
             </p>
-          </div>
-        </div>
-      </KomPageContainer>
-
-      {/* =========================================================================
-          PAGE 29 (Hal. 21) - 8 PROFIL LULUSAN LANJUTAN (b s.d. h)
-          ========================================================================= */}
-      <KomPageContainer pageNumber="21" pageIndex={29}>
-        <div className="space-y-3.5 text-[12px] leading-relaxed text-justify">
-          <ul className="list-none space-y-2 text-slate-800 text-[11.5px]">
-            <li>
-              <strong>b. Kewargaan:</strong> Memupuk rasa cinta tanah air Indonesia, menghormati bendera merah putih, menjaga persatuan bangsa dalam bingkai kebhinekaan, dan menaati tata tertib madrasah.
-            </li>
-            <li>
-              <strong>c. Penalaran Kritis:</strong> Mendorong siswa bertanya hal-hal esensial, memverifikasi kebenaran informasi sebelum percaya, serta mampu memberikan alasan yang logis atas pendapatnya.
-            </li>
-            <li>
-              <strong>d. Kreativitas:</strong> Menghasilkan karya orisinal berupa gambar, puisi santri, kerajinan dari bahan bekas, hingga ide pemecahan masalah sederhana di kelas.
-            </li>
-            <li>
-              <strong>e. Kolaborasi:</strong> Membiasakan kerja kelompok, menghargai pembagian tugas, mendengarkan pendapat kawan, dan mencapai mufakat demi kemaslahatan bersama.
-            </li>
-            <li>
-              <strong>f. Kemandirian:</strong> Melatih siswa menyiapkan perlengkapan belajar sendiri, bertanggung jawab atas tugas yang diberikan, dan berani tampil di depan publik.
-            </li>
-            <li>
-              <strong>g. Kesehatan:</strong> Membiasakan makan bekal bergizi seimbang, gemar berolahraga, mencuci tangan memakai sabun, dan menjaga kebersihan diri serta toilet.
-            </li>
-            <li>
-              <strong>h. Komunikasi:</strong> Mampu menyampaikan gagasan, perasaan, dan pesan dengan tutur kata yang santun, jelas, serta mendengarkan orang lain dengan penuh rasa hormat.
-            </li>
-          </ul>
-
-          <div className="p-3 bg-slate-50 border border-slate-300 rounded-lg text-[11px] text-slate-700 italic">
-            "Delapan dimensi profil lulusan ini merupakan kompas utama yang menuntun pendidik di {data.namaMadrasah} dalam menyusun rancangan modul ajar dan melaksanakan asesmen autentik harian."
-          </div>
-        </div>
-      </KomPageContainer>
-
-      {/* =========================================================================
-          PAGE 30 (Hal. 22) - KOKURIKULER (P5-RA) & GAMBAR 3.1 DIMENSI PROFIL LULUSAN
-          ========================================================================= */}
-      <KomPageContainer pageNumber="22" pageIndex={30}>
-        <div className="space-y-3 text-[12px] leading-relaxed text-justify">
-          <h3 className="font-bold text-slate-950 text-sm">
-            B. Kokurikuler (Penguatan Profil Pelajar Pancasila dan Profil Pelajar Rahmatan lil 'Alamin)
-          </h3>
-
-          <div className="space-y-1">
-            <h4 className="font-bold text-slate-950 text-xs sm:text-[12.5px]">
-              1. Pengertian Kokurikuler
-            </h4>
-            <p className="indent-8 text-[11.5px]">
-              Kegiatan kokurikuler merupakan pembelajaran lintas disiplin ilmu yang dirancang untuk mengamati, mengeksplorasi, dan mencari solusi terhadap persoalan di lingkungan sekitar madrasah. Melalui Projek Penguatan Profil Pelajar Pancasila dan Rahmatan lil 'Alamin (P5-RA), peserta didik mempraktikkan langsung nilai-nilai luhur Pancasila dan Islam moderat dalam aksi nyata.
-            </p>
-          </div>
-
-          <div className="space-y-1">
-            <h4 className="font-bold text-slate-950 text-xs sm:text-[12.5px]">
-              2. Pentingnya Kokurikuler
-            </h4>
-            <p className="indent-8 text-[11.5px]">
-              Kokurikuler memiliki urgensi fundamental dalam kurikulum merdeka karena memberikan ruang yang fleksibel di luar struktur ketat mata pelajaran reguler:
-            </p>
-            <ul className="list-disc pl-5 space-y-0.5 text-slate-800 text-[11px]">
-              <li>Siswa mengasah kepekaan sosial terhadap kondisi tetangga, kawan dhuafa, dan kelestarian alam sekitar desa Sanggreman.</li>
-              <li>Siswa mengembangkan karakter kepemimpinan, daya tahan mental, dan kemampuan bekerjasama tanpa membedakan status sosial.</li>
-              <li>Pembelajaran menjadi kontekstual dan menjawab tantangan global terkait krisis lingkungan dan degradasi moral generasi muda.</li>
+            <ul className="list-none space-y-1.5 text-slate-800 text-[11px]">
+              <li>
+                <strong>a. Keimanan dan Ketakwaan:</strong> Pembiasaan doa sebelum dan sesudah belajar, zikir asmaul husna, dan tadarus Al-Qur'an tartil setiap pagi.
+              </li>
+              <li>
+                <strong>b. Kewargaan:</strong> Memupuk rasa cinta tanah air Indonesia, menghormati bendera merah putih, dan menjaga persatuan bangsa dalam bingkai kebhinekaan.
+              </li>
+              <li>
+                <strong>c. Penalaran Kritis:</strong> Mendorong siswa bertanya hal-hal esensial, memverifikasi kebenaran informasi, serta mampu memberikan alasan yang logis.
+              </li>
+              <li>
+                <strong>d. Kreativitas:</strong> Menghasilkan karya orisinal berupa gambar, kaligrafi, puisi santri, kerajinan bahan daur ulang, dan ide kreatif di kelas.
+              </li>
             </ul>
           </div>
+        </div>
+      </KomPageContainer>
 
-          <div className="space-y-1">
-            <h4 className="font-bold text-slate-950 text-xs sm:text-[12.5px]">
-              3. Tujuan Kokurikuler
-            </h4>
-            <p className="indent-8 text-[11.5px]">
-              Tujuan kokurikuler adalah memperkuat pencapaian 8 dimensi profil lulusan {data.namaMadrasah} yang selaras dengan nilai-nilai Rahmatan lil 'Alamin (Tawassuth, I'tidal, Tasamuh, Syura, Qudwah, dan Ishlah).
-            </p>
-          </div>
+      {/* =========================================================================
+          PAGE 29 (Hal. 21) - IMPLEMENTASI 8 PROFIL (e - h) & GAMBAR 3.1 INFOGRAFIS
+          ========================================================================= */}
+      <KomPageContainer pageNumber="21" pageIndex={29}>
+        <div className="space-y-3 text-[11.5px] leading-relaxed text-justify">
+          <ul className="list-none space-y-2 text-slate-800 text-[11px]">
+            <li>
+              <strong>e. Kolaborasi:</strong> Membiasakan kerja kelompok, menghargai pembagian tugas, mendengarkan saran kawan, dan mufakat bersama secara santun.
+            </li>
+            <li>
+              <strong>f. Kemandirian:</strong> Melatih siswa menyiapkan perlengkapan belajar sendiri, bertanggung jawab atas tugas, dan percaya diri tampil di depan publik.
+            </li>
+            <li>
+              <strong>g. Kesehatan:</strong> Membiasakan makan bekal bergizi seimbang, gemar berolahraga, mencuci tangan pakai sabun, dan menjaga sanitasi lingkungan kelas.
+            </li>
+            <li>
+              <strong>h. Komunikasi:</strong> Mampu menyampaikan gagasan dengan tutur kata yang santun, jelas, dan menyimak pembicaraan orang lain dengan penuh hormat.
+            </li>
+          </ul>
 
           <div className="text-center pt-2">
             <div className="border border-slate-300 rounded-lg p-3 bg-slate-50 flex flex-col items-center justify-center">
@@ -442,19 +394,23 @@ export const KomBab3Pages: React.FC<Props> = ({ data }) => {
               Gambar 3.1 Delapan Dimensi Profil Lulusan {data.namaMadrasah}
             </p>
           </div>
+
+          <div className="p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-[10.5px] text-slate-700 italic">
+            "Delapan dimensi profil lulusan ini menjadi kompas utama pendidik di {data.namaMadrasah} dalam menyusun modul ajar, merancang proyek tematik, serta melaksanakan asesmen autentik harian."
+          </div>
         </div>
       </KomPageContainer>
 
       {/* =========================================================================
-          PAGE 32 (Hal. 24) - TABEL 3.3 DELAPAN DIMENSI PROFIL LULUSAN
+          PAGE 30 (Hal. 22) - TABEL 3.3 DELAPAN DIMENSI PROFIL LULUSAN LENGKAP
           ========================================================================= */}
-      <KomPageContainer pageNumber="24" pageIndex={32}>
+      <KomPageContainer pageNumber="22" pageIndex={30}>
         <div className="space-y-3 text-[12px] leading-relaxed">
           <p className="font-bold text-[11.5px] text-slate-900">
             Tabel 3.3. Delapan Dimensi Profil Lulusan {data.namaMadrasah}
           </p>
 
-          <table className="w-full border-collapse border border-slate-400 text-[10.5px]">
+          <table className="w-full border-collapse border border-slate-400 text-[10px] print:break-inside-avoid">
             <thead>
               <tr className="bg-slate-100">
                 <th className="border border-slate-400 p-1.5 w-8 text-center">No</th>
@@ -505,6 +461,49 @@ export const KomBab3Pages: React.FC<Props> = ({ data }) => {
               </tr>
             </tbody>
           </table>
+        </div>
+      </KomPageContainer>
+
+      {/* =========================================================================
+          PAGE 31 (Hal. 23) - KOKURIKULER (P5-RA) PENGERTIAN, URGENSI & TUJUAN
+          ========================================================================= */}
+      <KomPageContainer pageNumber="23" pageIndex={31}>
+        <div className="space-y-3 text-[12px] leading-relaxed text-justify">
+          <h3 className="font-bold text-slate-950 text-sm">
+            B. Kokurikuler (Penguatan Profil Pelajar Pancasila dan Profil Pelajar Rahmatan lil 'Alamin)
+          </h3>
+
+          <div className="space-y-1">
+            <h4 className="font-bold text-slate-950 text-xs sm:text-[12.5px]">
+              1. Pengertian Kokurikuler
+            </h4>
+            <p className="indent-8 text-[11.5px]">
+              Kegiatan kokurikuler merupakan pembelajaran lintas disiplin ilmu yang dirancang untuk mengamati, mengeksplorasi, dan mencari solusi terhadap persoalan di lingkungan sekitar madrasah. Melalui Projek Penguatan Profil Pelajar Pancasila dan Rahmatan lil 'Alamin (P5-RA), peserta didik mempraktikkan langsung nilai-nilai luhur Pancasila dan Islam moderat dalam aksi nyata.
+            </p>
+          </div>
+
+          <div className="space-y-1">
+            <h4 className="font-bold text-slate-950 text-xs sm:text-[12.5px]">
+              2. Pentingnya Kokurikuler
+            </h4>
+            <p className="indent-8 text-[11.5px]">
+              Kokurikuler memiliki urgensi fundamental dalam kurikulum merdeka karena memberikan ruang yang fleksibel di luar struktur ketat mata pelajaran reguler:
+            </p>
+            <ul className="list-disc pl-5 space-y-1 text-slate-800 text-[11px]">
+              <li>Siswa mengasah kepekaan sosial terhadap kondisi tetangga, kawan dhuafa, dan kelestarian alam sekitar desa Sanggreman.</li>
+              <li>Siswa mengembangkan karakter kepemimpinan, daya tahan mental, dan kemampuan bekerjasama tanpa membedakan status sosial.</li>
+              <li>Pembelajaran menjadi kontekstual dan menjawab tantangan global terkait krisis lingkungan dan degradasi moral generasi muda.</li>
+            </ul>
+          </div>
+
+          <div className="space-y-1">
+            <h4 className="font-bold text-slate-950 text-xs sm:text-[12.5px]">
+              3. Tujuan Kokurikuler
+            </h4>
+            <p className="indent-8 text-[11.5px]">
+              Tujuan kokurikuler adalah memperkuat pencapaian 8 dimensi profil lulusan {data.namaMadrasah} yang selaras dengan nilai-nilai Rahmatan lil 'Alamin (Tawassuth, I'tidal, Tasamuh, Syura, Qudwah, dan Ishlah).
+            </p>
+          </div>
         </div>
       </KomPageContainer>
 
