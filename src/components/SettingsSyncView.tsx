@@ -15,9 +15,12 @@ import {
   RefreshCw,
   ArrowLeft,
   Sparkles,
+  Loader2,
+  Check,
 } from 'lucide-react';
 import { MadrasahProfile, Teacher, Student, OfficialDocument, Rombel, ActivityLog } from '../types';
 import { downloadMadrasahSql } from '../utils/sqlExport';
+import { notifySuccess } from '../utils/toast';
 
 interface SettingsSyncViewProps {
   profile: MadrasahProfile;
@@ -56,6 +59,7 @@ export const SettingsSyncView: React.FC<SettingsSyncViewProps> = ({
   onAddLog,
 }) => {
   const [formData, setFormData] = useState<MadrasahProfile>(profile);
+  const [saveStatus, setSaveStatus] = useState<'IDLE' | 'SAVING' | 'SAVED'>('IDLE');
   const [showSavedToast, setShowSavedToast] = useState(false);
   const [showSyncToast, setShowSyncToast] = useState(false);
   const [showSqlSuccessToast, setShowSqlSuccessToast] = useState(false);
@@ -90,9 +94,19 @@ export const SettingsSyncView: React.FC<SettingsSyncViewProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onUpdateProfile(formData);
-    setShowSavedToast(true);
-    setTimeout(() => setShowSavedToast(false), 3000);
+    setSaveStatus('SAVING');
+
+    setTimeout(() => {
+      onUpdateProfile(formData);
+      setSaveStatus('SAVED');
+      setShowSavedToast(true);
+      notifySuccess('Penyimpanan Berhasil!', `Data profil madrasah ${formData.namaMadrasah} & Kop Surat telah tersimpan aman.`);
+
+      setTimeout(() => {
+        setSaveStatus('IDLE');
+        setShowSavedToast(false);
+      }, 3500);
+    }, 300);
   };
 
   // Full System Export
@@ -490,14 +504,48 @@ export const SettingsSyncView: React.FC<SettingsSyncViewProps> = ({
           </div>
         </div>
 
-        <div className="flex justify-end pt-4 border-t border-slate-200">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-4 border-t border-slate-200">
+          <div className="flex items-center space-x-2">
+            {saveStatus === 'SAVED' && (
+              <div
+                id="inline-save-success-banner"
+                role="status"
+                className="flex items-center space-x-2 bg-emerald-100 border border-emerald-300 text-emerald-950 px-3.5 py-2 rounded-xl text-xs font-bold animate-fade-in shadow-xs"
+              >
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0 animate-bounce" />
+                <span>Penyimpanan Berhasil! Data profil & kop surat telah diperbarui.</span>
+              </div>
+            )}
+          </div>
+
           <button
             id="save-profile-btn"
             type="submit"
-            className="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer"
+            disabled={saveStatus === 'SAVING'}
+            className={`px-6 py-2.5 rounded-xl text-xs font-bold shadow-md transition-all duration-200 flex items-center space-x-2 cursor-pointer active:scale-95 ${
+              saveStatus === 'SAVED'
+                ? 'bg-emerald-600 text-white ring-4 ring-emerald-200 scale-102'
+                : saveStatus === 'SAVING'
+                ? 'bg-emerald-800 text-emerald-200 cursor-wait'
+                : 'bg-emerald-700 hover:bg-emerald-800 text-white hover:shadow-emerald-900/20'
+            }`}
           >
-            <Save className="w-4 h-4" />
-            <span>Simpan Perubahan Profil</span>
+            {saveStatus === 'SAVING' ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin text-emerald-300" />
+                <span>Menyimpan ke Database...</span>
+              </>
+            ) : saveStatus === 'SAVED' ? (
+              <>
+                <Check className="w-4 h-4 text-white" />
+                <span>✓ Berhasil Disimpan!</span>
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4" />
+                <span>Simpan Perubahan Profil</span>
+              </>
+            )}
           </button>
         </div>
       </form>

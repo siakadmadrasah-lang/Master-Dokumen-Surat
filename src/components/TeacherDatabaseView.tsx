@@ -14,10 +14,14 @@ import {
   Sparkles,
   Globe,
   ArrowLeft,
+  Loader2,
+  Check,
+  Save,
 } from 'lucide-react';
 import { Teacher, StatusKepegawaian, Student } from '../types';
 import { exportToCSV, parseCSV } from '../utils/storage';
 import { SiakadSyncModal } from './SiakadSyncModal';
+import { notifySuccess, notifyError } from '../utils/toast';
 
 interface TeacherDatabaseViewProps {
   teachers: Teacher[];
@@ -45,6 +49,7 @@ export const TeacherDatabaseView: React.FC<TeacherDatabaseViewProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSiakadModalOpen, setIsSiakadModalOpen] = useState(false);
   const [editingTeacher, setEditingTeacher] = useState<Teacher | null>(null);
+  const [isSavingTeacher, setIsSavingTeacher] = useState(false);
 
   // Form State for Add / Edit
   const [formData, setFormData] = useState<Partial<Teacher>>({
@@ -117,17 +122,26 @@ export const TeacherDatabaseView: React.FC<TeacherDatabaseViewProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.nama) return;
-
-    if (editingTeacher) {
-      onUpdateTeacher(formData as Teacher);
-    } else {
-      onAddTeacher({
-        ...formData,
-        id: `TCH-${Date.now()}`,
-      } as Teacher);
+    if (!formData.nama) {
+      notifyError('Validasi Gagal', 'Mohon isi Nama Lengkap Guru / Pegawai.');
+      return;
     }
-    setIsModalOpen(false);
+
+    setIsSavingTeacher(true);
+    setTimeout(() => {
+      if (editingTeacher) {
+        onUpdateTeacher(formData as Teacher);
+        notifySuccess('Penyimpanan Berhasil!', `Data guru "${formData.nama}" berhasil diperbarui.`);
+      } else {
+        onAddTeacher({
+          ...formData,
+          id: `TCH-${Date.now()}`,
+        } as Teacher);
+        notifySuccess('Penyimpanan Berhasil!', `Guru / Tenaga Pendidik "${formData.nama}" berhasil ditambahkan ke database.`);
+      }
+      setIsSavingTeacher(false);
+      setIsModalOpen(false);
+    }, 300);
   };
 
   // CSV Import handler
@@ -513,9 +527,24 @@ export const TeacherDatabaseView: React.FC<TeacherDatabaseViewProps> = ({
                 <button
                   id="save-teacher-form-btn"
                   type="submit"
-                  className="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold shadow-sm cursor-pointer"
+                  disabled={isSavingTeacher}
+                  className={`px-5 py-2 rounded-xl font-bold shadow-sm transition-all duration-200 flex items-center space-x-1.5 cursor-pointer active:scale-95 ${
+                    isSavingTeacher
+                      ? 'bg-emerald-900 text-emerald-200 cursor-wait'
+                      : 'bg-emerald-700 hover:bg-emerald-800 text-white'
+                  }`}
                 >
-                  Simpan Data Guru
+                  {isSavingTeacher ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-emerald-300" />
+                      <span>Menyimpan Guru...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4" />
+                      <span>Simpan Data Guru</span>
+                    </>
+                  )}
                 </button>
               </div>
             </form>

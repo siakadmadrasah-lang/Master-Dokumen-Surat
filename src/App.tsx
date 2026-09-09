@@ -35,6 +35,8 @@ import { MainFooter } from './components/MainFooter';
 import { StickyActionFooter } from './components/StickyActionFooter';
 import { LoginPage, UserSession } from './components/LoginPage';
 import { PublicPortalView } from './components/PublicPortalView';
+import { ToastNotificationContainer } from './components/ToastNotification';
+import { notifySuccess } from './utils/toast';
 import { X, Printer, ShieldCheck } from 'lucide-react';
 
 export default function App() {
@@ -187,6 +189,7 @@ export default function App() {
       return [doc, ...prev];
     });
     addLog(`Menyimpan dokumen resmi: ${doc.title}`, doc.title);
+    notifySuccess('Penyimpanan Berhasil!', `Dokumen "${doc.title}" berhasil disimpan ke arsip resmi madrasah.`);
     setActiveTab('DOCUMENTS');
   };
 
@@ -393,6 +396,8 @@ export default function App() {
             students={students}
           />
         )}
+
+        <ToastNotificationContainer />
       </div>
     );
   }
@@ -406,6 +411,7 @@ export default function App() {
           onLoginSuccess={handleLoginSuccess}
           onOpenPublicPortal={() => setAppMode('PUBLIC')}
         />
+        <ToastNotificationContainer />
       </div>
     );
   }
@@ -647,6 +653,8 @@ export default function App() {
           documentNumber={signingContext.document.nomorSurat}
         />
       )}
+      {/* Global Toast Notification Portal */}
+      <ToastNotificationContainer />
     </div>
   );
 }

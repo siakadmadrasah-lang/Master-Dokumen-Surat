@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { MadrasahProfile } from '../types';
 import { KomCintaData } from '../data/komCintaDefaultData';
+import { notifySuccess } from '../utils/toast';
 
 interface PengesahPejabatModalProps {
   isOpen: boolean;
@@ -79,10 +80,11 @@ export const PengesahPejabatModal: React.FC<PengesahPejabatModalProps> = ({
       tanggalPengesahan,
     });
     setIsSaved(true);
+    notifySuccess('Penyimpanan Berhasil!', 'Data Pejabat Pengesah & Rekomendasi berhasil disimpan dan diterapkan.');
     setTimeout(() => {
       setIsSaved(false);
       onClose();
-    }, 1200);
+    }, 900);
   };
 
   const handleResetBanyumas = () => {

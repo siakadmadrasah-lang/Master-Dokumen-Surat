@@ -23,9 +23,12 @@ import {
   HelpCircle,
   ShieldCheck,
   MapPin,
+  Loader2,
+  Check,
 } from 'lucide-react';
 import { PengesahPejabatModal } from './PengesahPejabatModal';
 import { KomPetaLokasiCard } from './KomPetaLokasiCard';
+import { notifySuccess } from '../utils/toast';
 
 interface KomCintaManagerViewProps {
   profile: MadrasahProfile;
@@ -63,6 +66,7 @@ export const KomCintaManagerView: React.FC<KomCintaManagerViewProps> = ({
   const [editorSection, setEditorSection] = useState<'IDENTITY' | 'MAP_LOCATION' | 'VISION' | 'PROGRAMS' | 'CURRICULUM' | 'HABITUATION' | 'CRITERIA'>('IDENTITY');
   const [searchQuery, setSearchQuery] = useState('');
   const [saveSuccessMsg, setSaveSuccessMsg] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'IDLE' | 'SAVING' | 'SAVED'>('IDLE');
   const [showPengesahModal, setShowPengesahModal] = useState(false);
 
   // Build the corresponding OfficialDocument representation
@@ -116,38 +120,47 @@ export const KomCintaManagerView: React.FC<KomCintaManagerViewProps> = ({
   }, [formData]);
 
   const handleSaveData = () => {
-    try {
-      localStorage.setItem('kom_cinta_custom_data', JSON.stringify(formData));
+    setSaveStatus('SAVING');
+    setTimeout(() => {
+      try {
+        localStorage.setItem('kom_cinta_custom_data', JSON.stringify(formData));
 
-      // Persist recorded map coordinates to general app profile as well
-      const currentProfileStr = localStorage.getItem('automadrasah_profile_v1');
-      if (currentProfileStr) {
-        try {
-          const p = JSON.parse(currentProfileStr);
-          const updatedProfile = {
-            ...p,
-            mapsLatitude: formData.mapsLatitude,
-            mapsLongitude: formData.mapsLongitude,
-            mapsZoom: formData.mapsZoom,
-            denahLokasiUrl: formData.denahGambarUrl,
-          };
-          localStorage.setItem('automadrasah_profile_v1', JSON.stringify(updatedProfile));
-        } catch (err) {
-          console.error('Error saving updated profile coords', err);
+        // Persist recorded map coordinates to general app profile as well
+        const currentProfileStr = localStorage.getItem('automadrasah_profile_v1');
+        if (currentProfileStr) {
+          try {
+            const p = JSON.parse(currentProfileStr);
+            const updatedProfile = {
+              ...p,
+              mapsLatitude: formData.mapsLatitude,
+              mapsLongitude: formData.mapsLongitude,
+              mapsZoom: formData.mapsZoom,
+              denahLokasiUrl: formData.denahGambarUrl,
+            };
+            localStorage.setItem('automadrasah_profile_v1', JSON.stringify(updatedProfile));
+          } catch (err) {
+            console.error('Error saving updated profile coords', err);
+          }
         }
-      }
 
-      if (onSaveToArchive) {
-        onSaveToArchive(officialDocRepresentation);
+        if (onSaveToArchive) {
+          onSaveToArchive(officialDocRepresentation);
+        }
+        if (onAddLog) {
+          onAddLog(`Menyimpan kustomisasi naskah Kurikulum Berbasis Cinta (KOM CINTA) T.A ${formData.tahunAjaran} dengan koordinat peta ${formData.mapsLatitude || '-7.517606'}, ${formData.mapsLongitude || '109.132984'}`);
+        }
+        setSaveStatus('SAVED');
+        setSaveSuccessMsg(true);
+        notifySuccess('Penyimpanan Berhasil!', `Naskah Dokumen 1 KOM CINTA T.A ${formData.tahunAjaran} berhasil disimpan ke sistem & arsip.`);
+        setTimeout(() => {
+          setSaveStatus('IDLE');
+          setSaveSuccessMsg(false);
+        }, 3500);
+      } catch (e) {
+        console.error('Error saving kom cinta data', e);
+        setSaveStatus('IDLE');
       }
-      if (onAddLog) {
-        onAddLog(`Menyimpan kustomisasi naskah Kurikulum Berbasis Cinta (KOM CINTA) T.A ${formData.tahunAjaran} dengan koordinat peta ${formData.mapsLatitude || '-7.517606'}, ${formData.mapsLongitude || '109.132984'}`);
-      }
-      setSaveSuccessMsg(true);
-      setTimeout(() => setSaveSuccessMsg(false), 3000);
-    } catch (e) {
-      console.error('Error saving kom cinta data', e);
-    }
+    }, 300);
   };
 
   const handleResetToDefault = () => {
@@ -212,11 +225,33 @@ export const KomCintaManagerView: React.FC<KomCintaManagerViewProps> = ({
 
             <button
               type="button"
+              id="save-kom-cinta-top-btn"
+              disabled={saveStatus === 'SAVING'}
               onClick={handleSaveData}
-              className="flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-xl shadow-md transition-all cursor-pointer text-xs sm:text-sm active:scale-95"
+              className={`flex items-center space-x-2 font-bold px-4 py-2.5 rounded-xl shadow-md transition-all duration-200 cursor-pointer text-xs sm:text-sm active:scale-95 ${
+                saveStatus === 'SAVED'
+                  ? 'bg-emerald-600 text-white ring-2 ring-emerald-300'
+                  : saveStatus === 'SAVING'
+                  ? 'bg-emerald-800 text-emerald-200 cursor-wait'
+                  : 'bg-emerald-600 hover:bg-emerald-500 text-white'
+              }`}
             >
-              <Save className="w-4 h-4" />
-              <span>Simpan Naskah</span>
+              {saveStatus === 'SAVING' ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin text-emerald-300" />
+                  <span>Menyimpan...</span>
+                </>
+              ) : saveStatus === 'SAVED' ? (
+                <>
+                  <Check className="w-4 h-4 text-white" />
+                  <span>✓ Tersimpan!</span>
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4" />
+                  <span>Simpan Naskah</span>
+                </>
+              )}
             </button>
 
             <button
@@ -923,11 +958,33 @@ export const KomCintaManagerView: React.FC<KomCintaManagerViewProps> = ({
                 </button>
                 <button
                   type="button"
+                  id="save-kom-cinta-bottom-btn"
+                  disabled={saveStatus === 'SAVING'}
                   onClick={handleSaveData}
-                  className="flex items-center space-x-1.5 px-5 py-2 bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold shadow-sm cursor-pointer"
+                  className={`flex items-center space-x-1.5 px-5 py-2 rounded-xl text-xs font-bold shadow-sm transition-all duration-200 cursor-pointer active:scale-95 ${
+                    saveStatus === 'SAVED'
+                      ? 'bg-emerald-600 text-white ring-2 ring-emerald-300'
+                      : saveStatus === 'SAVING'
+                      ? 'bg-emerald-900 text-emerald-200 cursor-wait'
+                      : 'bg-emerald-700 hover:bg-emerald-600 text-white'
+                  }`}
                 >
-                  <Save className="w-4 h-4" />
-                  <span>Simpan Perubahan</span>
+                  {saveStatus === 'SAVING' ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-emerald-300" />
+                      <span>Menyimpan...</span>
+                    </>
+                  ) : saveStatus === 'SAVED' ? (
+                    <>
+                      <Check className="w-4 h-4 text-white" />
+                      <span>✓ Berhasil Disimpan!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4" />
+                      <span>Simpan Perubahan</span>
+                    </>
+                  )}
                 </button>
               </div>
             </div>

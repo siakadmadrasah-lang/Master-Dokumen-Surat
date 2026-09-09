@@ -12,10 +12,15 @@ import {
   Award,
   Globe,
   ArrowLeft,
+  Loader2,
+  Check,
+  Save,
+  CheckCircle2,
 } from 'lucide-react';
 import { Student, Teacher } from '../types';
 import { exportToCSV, parseCSV } from '../utils/storage';
 import { SiakadSyncModal } from './SiakadSyncModal';
+import { notifySuccess, notifyError } from '../utils/toast';
 
 interface StudentDatabaseViewProps {
   students: Student[];
@@ -45,6 +50,7 @@ export const StudentDatabaseView: React.FC<StudentDatabaseViewProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSiakadModalOpen, setIsSiakadModalOpen] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
+  const [isSavingStudent, setIsSavingStudent] = useState(false);
 
   // Extract Unique Rombels
   const uniqueRombels = Array.from(new Set(students.map((s) => s.rombel))).sort();
@@ -110,17 +116,26 @@ export const StudentDatabaseView: React.FC<StudentDatabaseViewProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.nama || !formData.nisn) return;
-
-    if (editingStudent) {
-      onUpdateStudent(formData as Student);
-    } else {
-      onAddStudent({
-        ...formData,
-        id: `STD-${Date.now()}`,
-      } as Student);
+    if (!formData.nama || !formData.nisn) {
+      notifyError('Validasi Gagal', 'Mohon lengkapi Nama Siswa dan NISN.');
+      return;
     }
-    setIsModalOpen(false);
+
+    setIsSavingStudent(true);
+    setTimeout(() => {
+      if (editingStudent) {
+        onUpdateStudent(formData as Student);
+        notifySuccess('Penyimpanan Berhasil!', `Data peserta didik "${formData.nama}" berhasil diperbarui.`);
+      } else {
+        onAddStudent({
+          ...formData,
+          id: `STD-${Date.now()}`,
+        } as Student);
+        notifySuccess('Penyimpanan Berhasil!', `Peserta didik baru "${formData.nama}" berhasil ditambahkan ke database.`);
+      }
+      setIsSavingStudent(false);
+      setIsModalOpen(false);
+    }, 300);
   };
 
   // CSV Import handler
@@ -506,9 +521,24 @@ export const StudentDatabaseView: React.FC<StudentDatabaseViewProps> = ({
                 <button
                   id="save-student-form-btn"
                   type="submit"
-                  className="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold shadow-sm"
+                  disabled={isSavingStudent}
+                  className={`px-5 py-2 rounded-xl font-bold shadow-sm transition-all duration-200 flex items-center space-x-1.5 cursor-pointer active:scale-95 ${
+                    isSavingStudent
+                      ? 'bg-emerald-900 text-emerald-200 cursor-wait'
+                      : 'bg-emerald-700 hover:bg-emerald-800 text-white'
+                  }`}
                 >
-                  Simpan Data Siswa
+                  {isSavingStudent ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-emerald-300" />
+                      <span>Menyimpan Siswa...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4" />
+                      <span>Simpan Data Siswa</span>
+                    </>
+                  )}
                 </button>
               </div>
             </form>

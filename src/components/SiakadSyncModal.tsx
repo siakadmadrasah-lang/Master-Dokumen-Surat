@@ -24,6 +24,7 @@ import {
   mapRawToTeacher,
   mapRawToStudent,
 } from '../utils/siakadService';
+import { notifySuccess } from '../utils/toast';
 
 interface SiakadSyncModalProps {
   isOpen: boolean;
@@ -80,6 +81,7 @@ export const SiakadSyncModal: React.FC<SiakadSyncModalProps> = ({
   const handleSaveConfig = () => {
     saveSiakadConfig(config);
     setTestResult({ success: true, message: 'Konfigurasi SIAKAD berhasil disimpan!' });
+    notifySuccess('Penyimpanan Berhasil!', 'Konfigurasi Endpoint & Token SIAKAD berhasil disimpan.');
   };
 
   const handleExecuteSync = async () => {
@@ -571,9 +573,10 @@ export const SiakadSyncModal: React.FC<SiakadSyncModalProps> = ({
                 <button
                   type="button"
                   onClick={handleSaveConfig}
-                  className="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm"
+                  className="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm active:scale-95 flex items-center gap-1.5"
                 >
-                  Simpan Pengaturan
+                  <Check className="w-3.5 h-3.5" />
+                  <span>Simpan Pengaturan</span>
                 </button>
               </div>
             </div>

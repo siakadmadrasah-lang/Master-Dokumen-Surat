@@ -27,6 +27,8 @@ import {
   Trash2,
   ArrowLeft,
   Printer,
+  Loader2,
+  Check,
 } from 'lucide-react';
 import {
   MadrasahProfile,
@@ -43,6 +45,7 @@ import {
   syncDocumentWithDatabase,
 } from '../utils/documentTemplates';
 import { OfficialDocumentSheet } from './OfficialDocumentSheet';
+import { notifySuccess } from '../utils/toast';
 
 interface DocumentGeneratorViewProps {
   profile: MadrasahProfile;
@@ -76,6 +79,7 @@ export const DocumentGeneratorView: React.FC<DocumentGeneratorViewProps> = ({
   const [categoryFilter, setCategoryFilter] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [syncFeedback, setSyncFeedback] = useState<string | null>(null);
+  const [saveStatus, setSaveStatus] = useState<'IDLE' | 'SAVING' | 'SAVED'>('IDLE');
 
   const [currentDoc, setCurrentDoc] = useState<OfficialDocument>(() => {
     if (editingDoc) return editingDoc;
@@ -180,12 +184,20 @@ export const DocumentGeneratorView: React.FC<DocumentGeneratorViewProps> = ({
 
   // Save Document handler
   const handleSave = (status: 'DRAFT' | 'READY_FOR_SIGN' = 'READY_FOR_SIGN') => {
-    const updated = {
-      ...currentDoc,
-      status: currentDoc.status === 'SIGNED' ? 'SIGNED' : status,
-      updatedAt: new Date().toISOString(),
-    };
-    onSaveDocument(updated);
+    setSaveStatus('SAVING');
+    setTimeout(() => {
+      const updated = {
+        ...currentDoc,
+        status: currentDoc.status === 'SIGNED' ? 'SIGNED' : status,
+        updatedAt: new Date().toISOString(),
+      };
+      setSaveStatus('SAVED');
+      onSaveDocument(updated);
+      notifySuccess('Penyimpanan Berhasil!', `Dokumen "${updated.title}" berhasil disimpan ke arsip resmi madrasah.`);
+      setTimeout(() => {
+        setSaveStatus('IDLE');
+      }, 3000);
+    }, 350);
   };
 
   // AI Generation for KOM Berbasis Cinta
@@ -383,11 +395,32 @@ export const DocumentGeneratorView: React.FC<DocumentGeneratorViewProps> = ({
           <button
             id="save-doc-btn"
             type="button"
+            disabled={saveStatus === 'SAVING'}
             onClick={() => handleSave('READY_FOR_SIGN')}
-            className="px-3.5 py-1.5 sm:py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-xs flex items-center space-x-1.5 transition-all cursor-pointer"
+            className={`px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold shadow-xs flex items-center space-x-1.5 transition-all duration-200 cursor-pointer active:scale-95 ${
+              saveStatus === 'SAVED'
+                ? 'bg-emerald-600 text-white ring-2 ring-emerald-300 scale-102'
+                : saveStatus === 'SAVING'
+                ? 'bg-emerald-800 text-emerald-200 cursor-wait'
+                : 'bg-emerald-700 hover:bg-emerald-800 text-white'
+            }`}
           >
-            <Save className="w-3.5 h-3.5" />
-            <span>Simpan</span>
+            {saveStatus === 'SAVING' ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-300" />
+                <span>Menyimpan...</span>
+              </>
+            ) : saveStatus === 'SAVED' ? (
+              <>
+                <Check className="w-3.5 h-3.5 text-white" />
+                <span>✓ Tersimpan!</span>
+              </>
+            ) : (
+              <>
+                <Save className="w-3.5 h-3.5" />
+                <span>Simpan</span>
+              </>
+            )}
           </button>
         </div>
       </div>
@@ -1345,11 +1378,33 @@ export const DocumentGeneratorView: React.FC<DocumentGeneratorViewProps> = ({
 
               <button
                 type="button"
-                onClick={handleSave}
-                className="px-3.5 py-1.5 bg-emerald-950 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold shadow-xs transition-all flex items-center space-x-1.5 cursor-pointer"
+                id="preview-save-doc-btn"
+                disabled={saveStatus === 'SAVING'}
+                onClick={() => handleSave('READY_FOR_SIGN')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-xs transition-all duration-200 flex items-center space-x-1.5 cursor-pointer active:scale-95 ${
+                  saveStatus === 'SAVED'
+                    ? 'bg-emerald-600 text-white ring-2 ring-emerald-300 scale-102'
+                    : saveStatus === 'SAVING'
+                    ? 'bg-slate-800 text-emerald-300 cursor-wait'
+                    : 'bg-emerald-950 hover:bg-emerald-900 text-white'
+                }`}
               >
-                <Save className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Simpan Dokumen</span>
+                {saveStatus === 'SAVING' ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-300" />
+                    <span>Menyimpan...</span>
+                  </>
+                ) : saveStatus === 'SAVED' ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-white" />
+                    <span>✓ Tersimpan!</span>
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Simpan Dokumen</span>
+                  </>
+                )}
               </button>
             </div>
           </div>

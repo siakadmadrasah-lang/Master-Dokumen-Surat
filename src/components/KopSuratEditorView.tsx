@@ -21,10 +21,12 @@ import {
   Mail,
   MapPin,
   FileCheck,
+  Loader2,
 } from 'lucide-react';
 import { MadrasahProfile, KopSuratConfig } from '../types';
 import { OfficialLetterhead } from './OfficialLetterhead';
 import { KemenagLogo, MaarifNuLogo } from './OfficialLogos';
+import { notifySuccess } from '../utils/toast';
 
 interface KopSuratEditorViewProps {
   profile: MadrasahProfile;
@@ -70,6 +72,7 @@ export const KopSuratEditorView: React.FC<KopSuratEditorViewProps> = ({
 
   const [activeSubTab, setActiveSubTab] = useState<'TEKS' | 'LOGO' | 'ALAMAT' | 'GARIS' | 'TEMPLATE'>('TEKS');
   const [showSavedToast, setShowSavedToast] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'IDLE' | 'SAVING' | 'SAVED'>('IDLE');
 
   const cfg: KopSuratConfig = formData.kopSuratConfig || {};
 
@@ -85,10 +88,23 @@ export const KopSuratEditorView: React.FC<KopSuratEditorViewProps> = ({
 
   const handleSave = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    onUpdateProfile(formData);
-    onAddLog?.(`Memperbarui konfigurasi desain Kop Surat resmi untuk ${formData.namaMadrasah}`);
-    setShowSavedToast(true);
-    setTimeout(() => setShowSavedToast(false), 3500);
+    setSaveStatus('SAVING');
+
+    setTimeout(() => {
+      onUpdateProfile(formData);
+      onAddLog?.(`Memperbarui konfigurasi desain Kop Surat resmi untuk ${formData.namaMadrasah}`);
+      setSaveStatus('SAVED');
+      setShowSavedToast(true);
+      notifySuccess(
+        'Penyimpanan Berhasil!',
+        `Desain Kop Surat resmi ${formData.namaMadrasah} telah berhasil disimpan dan diterapkan ke seluruh dokumen.`
+      );
+
+      setTimeout(() => {
+        setSaveStatus('IDLE');
+        setShowSavedToast(false);
+      }, 3500);
+    }, 300);
   };
 
   const handleResetToStandard = () => {
@@ -254,19 +270,44 @@ export const KopSuratEditorView: React.FC<KopSuratEditorViewProps> = ({
           <button
             id="btn-save-kop-surat"
             type="button"
+            disabled={saveStatus === 'SAVING'}
             onClick={() => handleSave()}
-            className="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-md hover:shadow-emerald-900/20"
+            className={`px-5 py-2 rounded-xl text-xs font-bold transition-all duration-200 flex items-center space-x-1.5 cursor-pointer shadow-md active:scale-95 ${
+              saveStatus === 'SAVED'
+                ? 'bg-emerald-600 text-white ring-4 ring-emerald-200 scale-102'
+                : saveStatus === 'SAVING'
+                ? 'bg-emerald-800 text-emerald-200 cursor-wait'
+                : 'bg-emerald-700 hover:bg-emerald-800 text-white hover:shadow-emerald-900/20'
+            }`}
           >
-            <Save className="w-4 h-4" />
-            <span>Simpan Kop Surat</span>
+            {saveStatus === 'SAVING' ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin text-emerald-300" />
+                <span>Menyimpan Kop...</span>
+              </>
+            ) : saveStatus === 'SAVED' ? (
+              <>
+                <Check className="w-4 h-4 text-white" />
+                <span>✓ Berhasil Disimpan!</span>
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4" />
+                <span>Simpan Kop Surat</span>
+              </>
+            )}
           </button>
         </div>
       </div>
 
       {showSavedToast && (
-        <div className="p-4 bg-emerald-100 border border-emerald-300 text-emerald-950 text-xs font-bold rounded-2xl flex items-center gap-2.5 animate-fade-in shadow-xs">
-          <CheckCircle2 className="w-5 h-5 text-emerald-700 flex-shrink-0" />
-          <span>Kop Surat berhasil disimpan! Perubahan langsung diterapkan ke seluruh dokumen SK, surat dinas resmi, dan cetak PDF.</span>
+        <div
+          id="kop-save-success-toast"
+          role="status"
+          className="p-4 bg-emerald-100 border border-emerald-300 text-emerald-950 text-xs font-bold rounded-2xl flex items-center gap-2.5 animate-fade-in shadow-xs"
+        >
+          <CheckCircle2 className="w-5 h-5 text-emerald-700 flex-shrink-0 animate-bounce" />
+          <span>Penyimpanan Berhasil! Desain Kop Surat resmi telah diperbarui dan langsung diterapkan ke seluruh dokumen naskah dinas, SK, dan cetak PDF.</span>
         </div>
       )}
 
@@ -878,15 +919,47 @@ export const KopSuratEditorView: React.FC<KopSuratEditorViewProps> = ({
             <span>Kop surat otomatis disimpan ke database browser dan diekspor ke cPanel MySQL.</span>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3">
+            {saveStatus === 'SAVED' && (
+              <div
+                id="footer-kop-saved-badge"
+                role="status"
+                className="flex items-center space-x-1.5 text-emerald-800 bg-emerald-100 border border-emerald-300 px-3 py-1.5 rounded-xl text-xs font-bold animate-fade-in"
+              >
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 animate-bounce" />
+                <span>Tersimpan!</span>
+              </div>
+            )}
+
             <button
               type="button"
               id="btn-save-kop-surat-footer"
+              disabled={saveStatus === 'SAVING'}
               onClick={() => handleSave()}
-              className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-sm"
+              className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 flex items-center space-x-2 cursor-pointer shadow-sm active:scale-95 ${
+                saveStatus === 'SAVED'
+                  ? 'bg-emerald-600 text-white ring-4 ring-emerald-200 scale-102'
+                  : saveStatus === 'SAVING'
+                  ? 'bg-emerald-800 text-emerald-200 cursor-wait'
+                  : 'bg-emerald-700 hover:bg-emerald-800 text-white hover:shadow-md'
+              }`}
             >
-              <Save className="w-4 h-4" />
-              <span>Simpan Perubahan Kop Surat</span>
+              {saveStatus === 'SAVING' ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin text-emerald-300" />
+                  <span>Menyimpan Perubahan...</span>
+                </>
+              ) : saveStatus === 'SAVED' ? (
+                <>
+                  <Check className="w-4 h-4 text-white" />
+                  <span>✓ Berhasil Disimpan!</span>
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4" />
+                  <span>Simpan Perubahan Kop Surat</span>
+                </>
+              )}
             </button>
           </div>
         </div>
