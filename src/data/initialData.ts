@@ -31,6 +31,25 @@ export const initialMadrasahProfile: MadrasahProfile = {
   titimangsa: 'Sanggreman',
   logoKemenagUrl: '',
   logoMadrasahUrl: '',
+  headerConfig: {
+    headerTitle: "Ruang Publik MI Ma'arif NU 2 Sanggreman",
+    headerSubtitle: "Portal Resmi Sistem Administrasi & Transparansi Dokumen Kemenag RI",
+    showLogo: true,
+    logoUrl: '',
+    adminAvatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80',
+  },
+  heroConfig: {
+    badgeText: 'Madrasah Mandiri Berprestasi • Kurikulum Berbasis Cinta (KMA 1503/2025)',
+    title: "MI Ma'arif NU 2 Sanggreman",
+    subtitle: 'Selamat datang di Portal Informasi Publik dan Transparansi Dokumen Resmi Kementerian Agama RI. Menyajikan keterbukaan naskah dinas, kurikulum operasional berbasis cinta (KMA 1503/2025), direktori pendidik, serta verifikasi keaslian dokumen berbasis Tanda Tangan Elektronik (TTE).',
+    ctaText1: 'Modul KOM CINTA (KMA 1503)',
+    ctaText2: 'Jelajahi Dokumen Resmi',
+    ctaText3: 'Verifikasi QR TTE',
+    showCta1: true,
+    showCta2: true,
+    showCta3: true,
+    bannerGradient: 'EMERALD',
+  },
 };
 
 export const initialTeachers: Teacher[] = [

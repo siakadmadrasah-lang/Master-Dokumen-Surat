@@ -7,6 +7,8 @@ import {
   OfficialDocument,
   ActivityLog,
   DocumentType,
+  HeroConfig,
+  HeaderConfig,
 } from './types';
 import {
   getStoredData,
@@ -70,7 +72,18 @@ export default function App() {
     if (!loaded || !loaded.namaMadrasah || loaded.namaMadrasah.includes('Insan Kamil')) {
       return DEFAULT_MADRASAH_PROFILE;
     }
-    return loaded;
+    return {
+      ...DEFAULT_MADRASAH_PROFILE,
+      ...loaded,
+      headerConfig: {
+        ...DEFAULT_MADRASAH_PROFILE.headerConfig,
+        ...(loaded.headerConfig || {}),
+      },
+      heroConfig: {
+        ...DEFAULT_MADRASAH_PROFILE.heroConfig,
+        ...(loaded.heroConfig || {}),
+      },
+    };
   });
 
   const [teachers, setTeachers] = useState<Teacher[]>(() => {
@@ -362,6 +375,54 @@ export default function App() {
     }
   };
 
+  const handleUpdateAvatar = (avatarUrl: string) => {
+    if (userSession) {
+      const updatedSession = { ...userSession, avatarUrl };
+      setUserSession(updatedSession);
+      saveStoredData('MADRASAH_USER_SESSION', updatedSession);
+    }
+    setProfile((prev) => {
+      const updatedProfile: MadrasahProfile = {
+        ...prev,
+        headerConfig: {
+          ...(prev.headerConfig || {}),
+          adminAvatarUrl: avatarUrl,
+        },
+      };
+      saveStoredData('MADRASAH_PROFILE', updatedProfile);
+      return updatedProfile;
+    });
+    notifySuccess('Foto profil administrator berhasil diperbarui!');
+    addLog('Memperbarui foto profil administrator', undefined, 'SYSTEM');
+  };
+
+  const handleUpdateHero = (heroConfig: HeroConfig) => {
+    setProfile((prev) => {
+      const updatedProfile: MadrasahProfile = {
+        ...prev,
+        heroConfig,
+      };
+      saveStoredData('MADRASAH_PROFILE', updatedProfile);
+      return updatedProfile;
+    });
+    notifySuccess('Konfigurasi Hero Ruang Publik berhasil disimpan!');
+    addLog('Memperbarui tampilan Hero Ruang Publik', undefined, 'SYSTEM');
+  };
+
+  const handleUpdateHeader = (headerConfig: HeaderConfig, logoUrl?: string) => {
+    setProfile((prev) => {
+      const updatedProfile: MadrasahProfile = {
+        ...prev,
+        headerConfig,
+        ...(logoUrl ? { logoMadrasahUrl: logoUrl } : {}),
+      };
+      saveStoredData('MADRASAH_PROFILE', updatedProfile);
+      return updatedProfile;
+    });
+    notifySuccess('Konfigurasi Header & Logo Madrasah berhasil disimpan!');
+    addLog('Memperbarui Header & Logo Madrasah', undefined, 'SYSTEM');
+  };
+
   // 1. Render Public Portal (Ruang Publik) Mode - Accessible by anyone
   if (appMode === 'PUBLIC') {
     return (
@@ -372,6 +433,15 @@ export default function App() {
             documents={documents}
             teachers={teachers}
             students={students}
+            userSession={userSession}
+            onUpdateAvatar={handleUpdateAvatar}
+            onUpdateHero={handleUpdateHero}
+            onOpenDashboard={() => setAppMode('ADMIN')}
+            onLogout={handleLogout}
+            onOpenSettings={() => {
+              setAppMode('ADMIN');
+              setActiveTab('SETTINGS');
+            }}
             onOpenLogin={() => {
               if (userSession) {
                 setAppMode('ADMIN');
@@ -428,6 +498,7 @@ export default function App() {
           userSession={userSession}
           onOpenPublicPortal={() => setAppMode('PUBLIC')}
           onLogout={handleLogout}
+          onUpdateAvatar={handleUpdateAvatar}
         />
 
         {/* Main Content View Container */}
@@ -444,6 +515,9 @@ export default function App() {
             onSelectDocument={(doc) => setPrintModalDoc(doc)}
             onCreateNewDocument={handleCreateNewDocument}
             onAddLog={(action) => addLog(action, undefined, 'SYSTEM')}
+            onUpdateHero={handleUpdateHero}
+            onUpdateHeader={handleUpdateHeader}
+            onOpenPublicPortal={() => setAppMode('PUBLIC')}
           />
         )}
 

@@ -33,6 +33,7 @@ import {
   Check,
   Building,
   Home,
+  User,
 } from 'lucide-react';
 import {
   MadrasahProfile,
@@ -40,9 +41,15 @@ import {
   Teacher,
   Student,
   DocumentType,
+  HeroConfig,
 } from '../types';
 import { KomCintaDocumentView } from './documents/KomCintaDocumentView';
 import { KomCintaData, defaultKomCintaData } from '../data/komCintaDefaultData';
+import { MaarifNuLogo } from './OfficialLogos';
+import { AdminProfileModal } from './AdminProfileModal';
+import { UserSession, SUPER_ADMIN_AVATAR } from './LoginPage';
+import { TypewriterTitle } from './TypewriterTitle';
+import { HeroEditorModal } from './HeroEditorModal';
 
 interface PublicPortalViewProps {
   profile: MadrasahProfile;
@@ -51,6 +58,12 @@ interface PublicPortalViewProps {
   students: Student[];
   onOpenLogin: () => void;
   onSelectDocument: (doc: OfficialDocument) => void;
+  userSession?: UserSession | null;
+  onUpdateAvatar?: (avatarUrl: string) => void;
+  onOpenDashboard?: () => void;
+  onLogout?: () => void;
+  onOpenSettings?: () => void;
+  onUpdateHero?: (updatedHero: HeroConfig) => void;
 }
 
 export const PublicPortalView: React.FC<PublicPortalViewProps> = ({
@@ -60,11 +73,24 @@ export const PublicPortalView: React.FC<PublicPortalViewProps> = ({
   students,
   onOpenLogin,
   onSelectDocument,
+  userSession,
+  onUpdateAvatar,
+  onOpenDashboard,
+  onLogout,
+  onOpenSettings,
+  onUpdateHero,
 }) => {
   const [activePublicTab, setActivePublicTab] = useState<'OVERVIEW' | 'KOM_CINTA' | 'DOCUMENTS' | 'VERIFY' | 'TEACHERS' | 'STUDENT_SERVICE'>('OVERVIEW');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [komCintaSectionFilter, setKomCintaSectionFilter] = useState<'ALL' | 'COVER' | 'PENGESAHAN' | 'BAB1' | 'BAB2' | 'BAB3' | 'BAB4' | 'BAB5' | 'LAMPIRAN'>('ALL');
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showHeroModal, setShowHeroModal] = useState(false);
+
+  const adminAvatarUrl =
+    userSession?.avatarUrl ||
+    profile.headerConfig?.adminAvatarUrl ||
+    SUPER_ADMIN_AVATAR;
 
   // Load latest custom data from localStorage if available (saved by admin) or fallback to default
   const komCintaData: KomCintaData = useMemo(() => {
@@ -260,38 +286,78 @@ export const PublicPortalView: React.FC<PublicPortalViewProps> = ({
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-emerald-500 selection:text-white pb-20 md:pb-0">
       {/* Top Floating Official Public Header */}
       <header className="bg-emerald-950 text-white border-b border-emerald-800 sticky top-0 z-40 shadow-xl backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
-          {/* Brand & Identity */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between">
+          {/* Brand & Identity with uploaded Logo support */}
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-white font-bold shadow-md shadow-emerald-900/40 border border-emerald-400/30">
-              <School className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-2xl bg-emerald-900/90 border border-emerald-700/70 flex items-center justify-center text-white font-bold shadow-md shadow-emerald-950/50 overflow-hidden p-1">
+              {profile.headerConfig?.showLogo !== false && (
+                profile.headerConfig?.logoUrl === 'MAARIF_NU' ? (
+                  <MaarifNuLogo className="w-8 h-8" />
+                ) : (profile.headerConfig?.logoUrl || profile.logoMadrasahUrl) ? (
+                  <img
+                    src={profile.headerConfig?.logoUrl || profile.logoMadrasahUrl}
+                    alt="Logo Madrasah"
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <School className="w-5 h-5 text-emerald-400" />
+                )
+              )}
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-extrabold text-sm sm:text-base tracking-tight text-white">
-                  Ruang Publik {profile.namaMadrasah}
+                <span className="font-extrabold text-sm sm:text-base tracking-tight text-white line-clamp-1">
+                  {profile.headerConfig?.headerTitle || `Ruang Publik ${profile.namaMadrasah}`}
                 </span>
-                <span className="hidden sm:inline-block px-2 py-0.5 bg-emerald-800 text-emerald-200 rounded text-[10px] font-bold border border-emerald-600/50">
+                <span className="hidden sm:inline-block px-2 py-0.5 bg-emerald-800 text-emerald-200 rounded text-[10px] font-bold border border-emerald-600/50 whitespace-nowrap">
                   Portal Resmi
                 </span>
               </div>
-              <p className="text-[11px] text-emerald-300 font-mono">
-                NSM: {profile.nsm} | NPSN: {profile.npsn} • Akreditasi {profile.akreditasi || 'A'}
+              <p className="text-[11px] text-emerald-300 font-mono line-clamp-1">
+                {profile.headerConfig?.headerSubtitle ||
+                  `NSM: ${profile.nsm} | NPSN: ${profile.npsn} • Akreditasi ${profile.akreditasi || 'A'}`}
               </p>
             </div>
           </div>
 
-          {/* Right Action: Admin Login */}
-          <button
-            id="public-portal-login-btn"
-            type="button"
-            onClick={onOpenLogin}
-            className="flex items-center space-x-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 active:scale-95 text-slate-950 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold shadow-md transition-all cursor-pointer"
-          >
-            <LogIn className="w-4 h-4 text-slate-950" />
-            <span className="hidden sm:inline">Masuk Dashboard Admin</span>
-            <span className="sm:hidden">Login Admin</span>
-          </button>
+          {/* Right Action: Admin Profile Picture Button (replaces text login button) */}
+          <div className="flex items-center space-x-2">
+            <button
+              id="public-portal-profile-avatar-btn"
+              type="button"
+              onClick={() => setShowProfileModal(true)}
+              className="group flex items-center space-x-2.5 bg-emerald-900/90 hover:bg-emerald-800/90 active:scale-95 pl-1.5 pr-3 py-1 rounded-full border border-emerald-700/80 hover:border-amber-400 transition-all cursor-pointer shadow-md"
+              title={userSession ? `Profil Admin: ${userSession.name}` : "Profil Administrator Madrasah"}
+            >
+              <div className="relative">
+                <div className="w-8 h-8 rounded-full ring-2 ring-amber-400 group-hover:ring-amber-300 overflow-hidden bg-emerald-950 flex items-center justify-center shadow-xs transition-transform group-hover:scale-105">
+                  {adminAvatarUrl ? (
+                    <img
+                      src={adminAvatarUrl}
+                      alt="Profil Admin"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <User className="w-4 h-4 text-amber-300" />
+                  )}
+                </div>
+                <span
+                  className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full ring-2 ring-emerald-950 ${
+                    userSession ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'
+                  }`}
+                />
+              </div>
+
+              <div className="text-left leading-tight hidden sm:block">
+                <span className="block text-[11px] font-bold text-white group-hover:text-amber-200 transition-colors truncate max-w-[120px]">
+                  {userSession ? userSession.name.split(' ')[0] : 'Profil Admin'}
+                </span>
+                <span className="block text-[9px] font-medium text-emerald-300">
+                  {userSession ? 'Dashboard' : 'Masuk / Login'}
+                </span>
+              </div>
+            </button>
+          </div>
         </div>
 
         {/* Public Navigation Tabs */}
@@ -337,80 +403,144 @@ export const PublicPortalView: React.FC<PublicPortalViewProps> = ({
       {/* Main Body Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
         {/* VIEW 1: OVERVIEW & PROFILE */}
-        {activePublicTab === 'OVERVIEW' && (
-          <div className="space-y-6 animate-fade-in">
-            {/* Grand Hero Section */}
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-950 via-teal-950 to-emerald-900 text-white p-6 sm:p-10 shadow-2xl border border-emerald-700/60">
-              <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-                <div className="lg:col-span-8 space-y-3">
-                  <div className="inline-flex items-center space-x-2 bg-emerald-800/80 text-emerald-200 px-3 py-1 rounded-full text-xs font-semibold border border-emerald-600/40">
-                    <Heart className="w-3.5 h-3.5 text-rose-400 fill-rose-400" />
-                    <span>Madrasah Mandiri Berprestasi • Kurikulum Berbasis Cinta (KMA 1503/2025)</span>
+        {activePublicTab === 'OVERVIEW' && (() => {
+          const heroCfg = profile.heroConfig || {};
+          const heroBadge = heroCfg.badgeText || 'Madrasah Mandiri Berprestasi • Kurikulum Berbasis Cinta (KMA 1503/2025)';
+          const heroTitle = heroCfg.title || profile.namaMadrasah;
+          const heroSubtitle = heroCfg.subtitle || 'Selamat datang di Portal Informasi Publik dan Transparansi Dokumen Resmi Kementerian Agama RI. Menyajikan keterbukaan naskah dinas, kurikulum operasional berbasis cinta (KMA 1503/2025), direktori pendidik, serta verifikasi keaslian dokumen berbasis Tanda Tangan Elektronik (TTE).';
+          const cta1 = heroCfg.ctaText1 || 'Modul KOM CINTA (KMA 1503)';
+          const cta2 = heroCfg.ctaText2 || 'Jelajahi Dokumen Resmi';
+          const cta3 = heroCfg.ctaText3 || 'Verifikasi QR TTE';
+          const showCta1 = heroCfg.showCta1 !== false;
+          const showCta2 = heroCfg.showCta2 !== false;
+          const showCta3 = heroCfg.showCta3 !== false;
+
+          const gradientClass =
+            heroCfg.bannerGradient === 'NAVY'
+              ? 'from-slate-950 via-blue-950 to-indigo-950 border-blue-700/60'
+              : heroCfg.bannerGradient === 'ROSE'
+              ? 'from-rose-950 via-slate-950 to-teal-950 border-rose-700/60'
+              : heroCfg.bannerGradient === 'PURPLE'
+              ? 'from-purple-950 via-indigo-950 to-slate-950 border-purple-700/60'
+              : heroCfg.bannerGradient === 'AMBER'
+              ? 'from-amber-950 via-emerald-950 to-slate-950 border-amber-700/60'
+              : 'from-emerald-950 via-teal-950 to-emerald-900 border-emerald-700/60';
+
+          return (
+            <div className="space-y-6 animate-fade-in">
+              {/* Grand Hero Section (Clean Read-Only for Public) */}
+              <div
+                className={`relative overflow-hidden rounded-3xl bg-gradient-to-r ${gradientClass} text-white p-6 sm:p-10 shadow-2xl border`}
+                style={
+                  heroCfg.bannerImageUrl
+                    ? {
+                        backgroundImage: `linear-gradient(to right, rgba(2, 44, 34, 0.95), rgba(4, 47, 46, 0.9)), url(${heroCfg.bannerImageUrl})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      }
+                    : undefined
+                }
+              >
+                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                  <div className="lg:col-span-8 space-y-3">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="inline-flex items-center space-x-2 bg-emerald-800/80 text-emerald-200 px-3 py-1 rounded-full text-xs font-semibold border border-emerald-600/40 shadow-xs">
+                        <Heart className="w-3.5 h-3.5 text-rose-400 fill-rose-400" />
+                        <span>{heroBadge}</span>
+                      </div>
+
+                      {/* Edit Hero Button - Direct Access for Admin */}
+                      <button
+                        type="button"
+                        id="btn-edit-hero-banner"
+                        onClick={() => setShowHeroModal(true)}
+                        className="inline-flex items-center space-x-1.5 px-3 py-1 bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 rounded-full text-xs font-bold shadow-md border border-amber-300 transition-all cursor-pointer hover:shadow-amber-500/20"
+                        title="Edit Judul, Sambutan, & Warna Hero"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-slate-950" />
+                        <span>Edit Tampilan Hero</span>
+                      </button>
+                    </div>
+
+                    <div className="h-10 sm:h-14 flex items-center overflow-hidden max-w-full">
+                      <h1 className="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-none whitespace-nowrap overflow-hidden max-w-full">
+                        <TypewriterTitle
+                          titles={[
+                            heroTitle,
+                            'Kurikulum Berbasis Cinta (KMA 1503/2025)',
+                            'Madrasah Mandiri, Unggul & Berprestasi',
+                          ]}
+                          typingSpeed={65}
+                          deletingSpeed={30}
+                          pauseDuration={3200}
+                        />
+                      </h1>
+                    </div>
+
+                    <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed max-w-2xl">
+                      {heroSubtitle}
+                    </p>
+
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      {showCta1 && (
+                        <button
+                          type="button"
+                          onClick={() => setActivePublicTab('KOM_CINTA')}
+                          className="px-4 py-2.5 bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white font-bold rounded-xl text-xs shadow-lg shadow-rose-950/40 transition-all flex items-center space-x-2 cursor-pointer"
+                        >
+                          <Heart className="w-4 h-4 fill-white" />
+                          <span>{cta1}</span>
+                        </button>
+                      )}
+                      {showCta2 && (
+                        <button
+                          type="button"
+                          onClick={() => setActivePublicTab('DOCUMENTS')}
+                          className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-emerald-950/40 transition-all flex items-center space-x-2 cursor-pointer"
+                        >
+                          <FileText className="w-4 h-4" />
+                          <span>{cta2}</span>
+                        </button>
+                      )}
+                      {showCta3 && (
+                        <button
+                          type="button"
+                          onClick={() => setActivePublicTab('VERIFY')}
+                          className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl text-xs border border-white/20 transition-all flex items-center space-x-2 cursor-pointer backdrop-blur-md"
+                        >
+                          <ShieldCheck className="w-4 h-4 text-emerald-300" />
+                          <span>{cta3}</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
 
-                  <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
-                    {profile.namaMadrasah}
-                  </h1>
-
-                  <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed max-w-2xl">
-                    Selamat datang di Portal Informasi Publik dan Transparansi Dokumen Resmi Kementerian Agama RI.
-                    Menyajikan keterbukaan naskah dinas, kurikulum operasional berbasis cinta (KMA 1503/2025), direktori pendidik, serta verifikasi keaslian dokumen berbasis Tanda Tangan Elektronik (TTE).
-                  </p>
-
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    <button
-                      type="button"
-                      onClick={() => setActivePublicTab('KOM_CINTA')}
-                      className="px-4 py-2.5 bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white font-bold rounded-xl text-xs shadow-lg shadow-rose-950/40 transition-all flex items-center space-x-2 cursor-pointer"
-                    >
-                      <Heart className="w-4 h-4 fill-white" />
-                      <span>Modul KOM CINTA (KMA 1503)</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setActivePublicTab('DOCUMENTS')}
-                      className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs shadow-lg shadow-emerald-950/40 transition-all flex items-center space-x-2 cursor-pointer"
-                    >
-                      <FileText className="w-4 h-4" />
-                      <span>Jelajahi Dokumen Resmi</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setActivePublicTab('VERIFY')}
-                      className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl text-xs border border-white/20 transition-all flex items-center space-x-2 cursor-pointer backdrop-blur-md"
-                    >
-                      <ShieldCheck className="w-4 h-4 text-emerald-300" />
-                      <span>Verifikasi QR TTE</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Right Badge Summary */}
-                <div className="lg:col-span-4 bg-emerald-900/60 backdrop-blur-md p-5 rounded-2xl border border-emerald-700/60 space-y-3">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-300">
-                    Identitas Satuan Pendidikan
-                  </span>
-                  <div className="space-y-2 text-xs">
-                    <div className="flex justify-between border-b border-emerald-800/80 pb-1">
-                      <span className="text-emerald-200">Status Madrasah</span>
-                      <span className="font-bold text-white">{profile.status} ({profile.jenjang})</span>
-                    </div>
-                    <div className="flex justify-between border-b border-emerald-800/80 pb-1">
-                      <span className="text-emerald-200">Akreditasi BAN-S/M</span>
-                      <span className="font-bold text-amber-300">Peringkat {profile.akreditasi || 'A'}</span>
-                    </div>
-                    <div className="flex justify-between border-b border-emerald-800/80 pb-1">
-                      <span className="text-emerald-200">Kepala Madrasah</span>
-                      <span className="font-bold text-white">{profile.namaKepala}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-emerald-200">Tahun Pelajaran</span>
-                      <span className="font-bold text-white">{profile.tahunAjaran} ({profile.semester})</span>
+                  {/* Right Badge Summary */}
+                  <div className="lg:col-span-4 bg-emerald-900/60 backdrop-blur-md p-5 rounded-2xl border border-emerald-700/60 space-y-3">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-300">
+                      Identitas Satuan Pendidikan
+                    </span>
+                    <div className="space-y-2 text-xs">
+                      <div className="flex justify-between border-b border-emerald-800/80 pb-1">
+                        <span className="text-emerald-200">Status Madrasah</span>
+                        <span className="font-bold text-white">{profile.status} ({profile.jenjang})</span>
+                      </div>
+                      <div className="flex justify-between border-b border-emerald-800/80 pb-1">
+                        <span className="text-emerald-200">Akreditasi BAN-S/M</span>
+                        <span className="font-bold text-amber-300">Peringkat {profile.akreditasi || 'A'}</span>
+                      </div>
+                      <div className="flex justify-between border-b border-emerald-800/80 pb-1">
+                        <span className="text-emerald-200">Kepala Madrasah</span>
+                        <span className="font-bold text-white">{profile.namaKepala}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-emerald-200">Tahun Pelajaran</span>
+                        <span className="font-bold text-white">{profile.tahunAjaran} ({profile.semester})</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
             {/* Featured Showcase: KOM CINTA Banner */}
             <div className="bg-gradient-to-br from-rose-950 via-slate-900 to-emerald-950 text-white p-6 sm:p-7 rounded-3xl border border-rose-800/50 shadow-xl relative overflow-hidden">
@@ -586,7 +716,8 @@ export const PublicPortalView: React.FC<PublicPortalViewProps> = ({
               </button>
             </div>
           </div>
-        )}
+        );
+      })()}
 
         {/* VIEW: KOM CINTA PUBLIC VIEWER (READ-ONLY TRANSPARENCY MODULE) */}
         {activePublicTab === 'KOM_CINTA' && (
@@ -1235,14 +1366,45 @@ export const PublicPortalView: React.FC<PublicPortalViewProps> = ({
 
         <button
           type="button"
-          onClick={onOpenLogin}
+          onClick={() => setShowProfileModal(true)}
           className="flex flex-col items-center justify-center py-1 px-2 rounded-xl transition-all cursor-pointer text-amber-300 hover:text-amber-200"
-          title="Login Admin / GTK"
+          title="Profil Admin / Login"
         >
-          <LogIn className="w-4 h-4" />
-          <span className="text-[10px] mt-0.5 whitespace-nowrap">Login</span>
+          <div className="w-5 h-5 rounded-full ring-1 ring-amber-400 overflow-hidden bg-emerald-900 flex items-center justify-center">
+            {adminAvatarUrl ? (
+              <img src={adminAvatarUrl} alt="Profil" className="w-full h-full object-cover" />
+            ) : (
+              <User className="w-3.5 h-3.5 text-amber-300" />
+            )}
+          </div>
+          <span className="text-[10px] mt-0.5 whitespace-nowrap font-medium">Profil</span>
         </button>
       </nav>
+
+      {/* Admin Profile Modal */}
+      <AdminProfileModal
+        isOpen={showProfileModal}
+        onClose={() => setShowProfileModal(false)}
+        userSession={userSession}
+        profile={profile}
+        onOpenDashboard={onOpenDashboard}
+        onOpenLogin={onOpenLogin}
+        onLogout={onLogout}
+        onOpenSettings={onOpenSettings}
+      />
+
+      {/* Hero Editor Modal */}
+      {onUpdateHero && (
+        <HeroEditorModal
+          isOpen={showHeroModal}
+          onClose={() => setShowHeroModal(false)}
+          profile={profile}
+          onSaveHero={(updatedHero) => {
+            onUpdateHero(updatedHero);
+            setShowHeroModal(false);
+          }}
+        />
+      )}
     </div>
   );
 };

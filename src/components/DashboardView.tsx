@@ -19,6 +19,9 @@ import {
   BookOpen,
   Info,
   Server,
+  Palette,
+  Globe,
+  Building,
 } from 'lucide-react';
 import {
   MadrasahProfile,
@@ -28,10 +31,14 @@ import {
   ActivityLog,
   DocumentType,
   Rombel,
+  HeroConfig,
+  HeaderConfig,
 } from '../types';
 import { ActiveTab } from './Navbar';
 import { PleskExportCard } from './PleskExportCard';
 import { CpanelExportCard } from './CpanelExportCard';
+import { HeroEditorModal } from './HeroEditorModal';
+import { HeaderLogoEditorModal } from './HeaderLogoEditorModal';
 
 interface DashboardViewProps {
   profile: MadrasahProfile;
@@ -44,6 +51,9 @@ interface DashboardViewProps {
   onSelectDocument: (doc: OfficialDocument) => void;
   onCreateNewDocument: (type?: string) => void;
   onAddLog?: (action: string) => void;
+  onUpdateHero?: (heroConfig: HeroConfig) => void;
+  onUpdateHeader?: (headerConfig: HeaderConfig, logoUrl?: string) => void;
+  onOpenPublicPortal?: () => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -57,8 +67,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onSelectDocument,
   onCreateNewDocument,
   onAddLog,
+  onUpdateHero,
+  onUpdateHeader,
+  onOpenPublicPortal,
 }) => {
   const [showDocGuideModal, setShowDocGuideModal] = useState(false);
+  const [showHeroModal, setShowHeroModal] = useState(false);
+  const [showHeaderModal, setShowHeaderModal] = useState(false);
   const [hostingPlatform, setHostingPlatform] = useState<'CPANEL' | 'PLESK'>('CPANEL');
 
   const signedDocs = documents.filter((d) => d.status === 'SIGNED');
@@ -263,6 +278,131 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <p className="text-[11px] sm:text-xs font-semibold text-slate-500 truncate">Peserta Didik</p>
             <h3 className="text-lg sm:text-2xl font-black text-slate-900">{students.length}</h3>
             <span className="text-[10px] text-amber-700 font-medium">Siap Layanan Surat</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Pusat Kendali Tampilan Beranda & Header (Portal Publik) - Fitur Admin */}
+      <div className="bg-gradient-to-br from-emerald-950 via-teal-950 to-emerald-900 rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-white shadow-xl border border-emerald-700/60 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-emerald-800/80 pb-3">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-bold shadow-md flex-shrink-0">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center space-x-2">
+                <h3 className="font-extrabold text-sm sm:text-base text-white tracking-tight">
+                  Pusat Kendali Tampilan Portal Publik & Identitas Madrasah
+                </h3>
+                <span className="px-2 py-0.5 bg-amber-400 text-slate-950 rounded text-[10px] font-bold">
+                  Khusus Admin
+                </span>
+              </div>
+              <p className="text-[11px] text-emerald-200 leading-relaxed">
+                Fitur edit Hero dipusatkan di Dashboard Admin ini agar aman dari publik. Edit teks, slogan, gradasi tema, dan unggah logo madrasah.
+              </p>
+            </div>
+          </div>
+          {onOpenPublicPortal && (
+            <button
+              type="button"
+              onClick={onOpenPublicPortal}
+              className="inline-flex items-center space-x-1.5 px-3.5 py-2 bg-emerald-800 hover:bg-emerald-700 text-emerald-100 text-xs font-bold rounded-xl border border-emerald-600/50 transition-all cursor-pointer self-start sm:self-auto shadow-xs"
+            >
+              <Globe className="w-3.5 h-3.5 text-emerald-300" />
+              <span>Pratinjau Ruang Publik</span>
+            </button>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+          {/* Card 1: Edit Hero Ruang Publik */}
+          <div className="bg-emerald-900/60 backdrop-blur-xs border border-emerald-700/60 hover:border-amber-400/60 rounded-2xl p-4 transition-all flex flex-col justify-between space-y-3">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2 text-amber-300 font-bold text-xs sm:text-sm">
+                  <Palette className="w-4 h-4" />
+                  <span>Editor Hero Ruang Publik</span>
+                </div>
+                <span className="text-[10px] bg-emerald-800 text-emerald-200 px-2 py-0.5 rounded-full border border-emerald-600/40">
+                  Tema: {profile.heroConfig?.bannerGradient || 'EMERALD'}
+                </span>
+              </div>
+              <p className="text-xs text-emerald-100/90 leading-relaxed">
+                Sesuaikan teks badge (KMA 1503/2025), judul sambutan, deskripsi resmi, serta 3 tombol tindakan di beranda pengunjung.
+              </p>
+              <div className="p-3 bg-emerald-950/70 rounded-xl border border-emerald-800/80 text-[11px] space-y-1">
+                <p className="text-emerald-300 font-semibold truncate">
+                  Judul: {profile.heroConfig?.title || profile.namaMadrasah}
+                </p>
+                <p className="text-emerald-200/80 truncate">
+                  Badge: {profile.heroConfig?.badgeText || 'Madrasah Mandiri Berprestasi • Kurikulum Berbasis Cinta'}
+                </p>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <button
+                id="dash-edit-hero-btn"
+                type="button"
+                onClick={() => setShowHeroModal(true)}
+                className="w-full py-2.5 px-4 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-bold rounded-xl text-xs shadow-md transition-all flex items-center justify-center space-x-2 cursor-pointer"
+              >
+                <Palette className="w-4 h-4" />
+                <span>Buka Editor Hero Ruang Publik</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Card 2: Edit Header & Upload Logo */}
+          <div className="bg-emerald-900/60 backdrop-blur-xs border border-emerald-700/60 hover:border-amber-400/60 rounded-2xl p-4 transition-all flex flex-col justify-between space-y-3">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2 text-amber-300 font-bold text-xs sm:text-sm">
+                  <Building className="w-4 h-4" />
+                  <span>Edit Header & Upload Logo</span>
+                </div>
+                <span className="text-[10px] bg-emerald-800 text-emerald-200 px-2 py-0.5 rounded-full border border-emerald-600/40">
+                  Logo: {profile.headerConfig?.logoUrl ? 'Aktif' : 'Standar'}
+                </span>
+              </div>
+              <p className="text-xs text-emerald-100/90 leading-relaxed">
+                Unggah file gambar logo madrasah (PNG/JPG), pilih logo LP Ma'arif NU, serta atur teks nama sekolah di header.
+              </p>
+              <div className="p-3 bg-emerald-950/70 rounded-xl border border-emerald-800/80 text-[11px] flex items-center space-x-3">
+                <div className="w-9 h-9 rounded-lg bg-emerald-900 border border-emerald-700/60 flex items-center justify-center overflow-hidden flex-shrink-0 p-0.5">
+                  {(profile.headerConfig?.logoUrl || profile.logoMadrasahUrl) ? (
+                    <img
+                      src={profile.headerConfig?.logoUrl || profile.logoMadrasahUrl}
+                      alt="Logo"
+                      className="w-full h-full object-contain"
+                    />
+                  ) : (
+                    <Building className="w-4 h-4 text-emerald-400" />
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-white font-semibold truncate">
+                    {profile.headerConfig?.headerTitle || profile.namaMadrasah}
+                  </p>
+                  <p className="text-emerald-300 text-[10px] truncate">
+                    {profile.headerConfig?.headerSubtitle || `NSM: ${profile.nsm}`}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <button
+                id="dash-edit-header-logo-btn"
+                type="button"
+                onClick={() => setShowHeaderModal(true)}
+                className="w-full py-2.5 px-4 bg-emerald-700 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs shadow-md transition-all flex items-center justify-center space-x-2 cursor-pointer border border-emerald-500/50"
+              >
+                <Building className="w-4 h-4" />
+                <span>Edit Header & Upload Logo</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -541,6 +681,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
         </div>
       )}
+
+      {/* Hero Editor Modal */}
+      <HeroEditorModal
+        isOpen={showHeroModal}
+        onClose={() => setShowHeroModal(false)}
+        profile={profile}
+        onSave={(heroConfig) => {
+          if (onUpdateHero) onUpdateHero(heroConfig);
+          if (onAddLog) onAddLog('Memperbarui konfigurasi Hero Ruang Publik');
+        }}
+      />
+
+      {/* Header & Logo Editor Modal */}
+      <HeaderLogoEditorModal
+        isOpen={showHeaderModal}
+        onClose={() => setShowHeaderModal(false)}
+        profile={profile}
+        onSave={(headerConfig, logoUrl) => {
+          if (onUpdateHeader) onUpdateHeader(headerConfig, logoUrl);
+          if (onAddLog) onAddLog('Memperbarui konfigurasi Header dan Logo Madrasah');
+        }}
+      />
     </div>
   );
 };

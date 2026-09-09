@@ -16,7 +16,9 @@ import {
   Building,
 } from 'lucide-react';
 import { MadrasahProfile } from '../types';
-import { UserSession } from './LoginPage';
+import { UserSession, SUPER_ADMIN_AVATAR } from './LoginPage';
+import { MaarifNuLogo } from './OfficialLogos';
+import { AdminProfileModal } from './AdminProfileModal';
 
 export type ActiveTab =
   | 'DASHBOARD'
@@ -37,6 +39,7 @@ interface NavbarProps {
   userSession?: UserSession | null;
   onOpenPublicPortal?: () => void;
   onLogout?: () => void;
+  onUpdateAvatar?: (avatarUrl: string) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -47,7 +50,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   userSession,
   onOpenPublicPortal,
   onLogout,
+  onUpdateAvatar,
 }) => {
+  const [showProfileModal, setShowProfileModal] = React.useState(false);
+
+  const adminAvatarUrl =
+    userSession?.avatarUrl ||
+    profile.headerConfig?.adminAvatarUrl ||
+    SUPER_ADMIN_AVATAR;
   const navItems = [
     { id: 'DASHBOARD' as ActiveTab, label: 'Dashboard', icon: LayoutDashboard },
     { id: 'KOM_CINTA' as ActiveTab, label: 'KOM CINTA', icon: Heart, highlightBadge: 'KMA 1503' },
@@ -65,8 +75,20 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Top Banner with Public Link & Session */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between border-b border-emerald-900/60 text-xs">
         <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-2 bg-emerald-900/80 px-2.5 py-1 rounded-md border border-emerald-700/50">
-            <School className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="flex items-center space-x-2 bg-emerald-900/80 px-2.5 py-1 rounded-lg border border-emerald-700/50">
+            {profile.headerConfig?.showLogo !== false && (
+              profile.headerConfig?.logoUrl === 'MAARIF_NU' ? (
+                <MaarifNuLogo className="w-4 h-4" />
+              ) : (profile.headerConfig?.logoUrl || profile.logoMadrasahUrl) ? (
+                <img
+                  src={profile.headerConfig?.logoUrl || profile.logoMadrasahUrl}
+                  alt="Logo"
+                  className="w-4 h-4 object-contain rounded-xs"
+                />
+              ) : (
+                <School className="w-3.5 h-3.5 text-emerald-400" />
+              )
+            )}
             <span className="font-semibold text-emerald-100">{profile.namaMadrasah}</span>
           </div>
           <span className="hidden md:inline-block text-emerald-300/80 font-mono">
@@ -89,16 +111,37 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
-          {/* User Session Capsule */}
-          {userSession && (
-            <div className="hidden lg:flex items-center space-x-2 bg-emerald-900/60 px-2.5 py-1 rounded-lg border border-emerald-700/40 text-[11px]">
-              <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
-              <span className="font-bold text-white max-w-[120px] truncate">{userSession.name}</span>
-              <span className="text-emerald-300 text-[10px] bg-emerald-800 px-1.5 py-0.2 rounded font-semibold">
-                {userSession.role === 'SUPER_ADMIN' ? 'Super Admin' : userSession.role === 'KEPALA_MADRASAH' ? 'Kamad' : userSession.role === 'OPERATOR_KURIKULUM' ? 'Admin' : 'Staf'}
-              </span>
+          {/* User Profile Avatar Capsule Button */}
+          <button
+            id="nav-profile-avatar-btn"
+            type="button"
+            onClick={() => setShowProfileModal(true)}
+            className="group flex items-center space-x-2 bg-emerald-900/80 hover:bg-emerald-800 active:scale-95 pl-1.5 pr-2.5 py-1 rounded-full border border-emerald-700/60 hover:border-amber-400 transition-all cursor-pointer shadow-sm"
+            title="Kelola Profil Administrator & Foto"
+          >
+            <div className="relative">
+              <div className="w-6 h-6 rounded-full ring-2 ring-amber-400 overflow-hidden bg-emerald-950 flex items-center justify-center text-white">
+                {adminAvatarUrl ? (
+                  <img
+                    src={adminAvatarUrl}
+                    alt="Foto Profil"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <User className="w-3.5 h-3.5 text-amber-300" />
+                )}
+              </div>
+              <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-1 ring-emerald-950" />
             </div>
-          )}
+
+            <span className="text-[11px] font-bold text-white group-hover:text-amber-200 transition-colors max-w-[120px] truncate hidden sm:inline">
+              {userSession ? userSession.name.split(' ')[0] : 'Admin'}
+            </span>
+
+            <span className="text-emerald-300 text-[9px] bg-emerald-800 px-1.5 py-0.2 rounded font-semibold hidden md:inline">
+              {userSession?.role === 'SUPER_ADMIN' ? 'Super Admin' : userSession?.role === 'KEPALA_MADRASAH' ? 'Kamad' : 'Admin'}
+            </span>
+          </button>
 
           {/* Logout button */}
           {onLogout && (
@@ -160,6 +203,16 @@ export const Navbar: React.FC<NavbarProps> = ({
           })}
         </div>
       </div>
+
+      {/* Admin Profile Modal */}
+      <AdminProfileModal
+        isOpen={showProfileModal}
+        onClose={() => setShowProfileModal(false)}
+        userSession={userSession}
+        profile={profile}
+        onOpenSettings={() => setActiveTab('SETTINGS')}
+        onLogout={onLogout}
+      />
     </header>
   );
 };

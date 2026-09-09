@@ -21,6 +21,31 @@ export interface KopSuratConfig {
   customKontakText?: string; // Override phone / email / website line
 }
 
+export interface HeaderConfig {
+  headerTitle?: string; // e.g. "Ruang Publik MI Ma'arif NU 2 Sanggreman"
+  headerSubtitle?: string; // e.g. "Portal Resmi Sistem Administrasi & Transparansi Dokumen Kemenag RI"
+  showLogo?: boolean;
+  logoUrl?: string; // Custom uploaded madrasah logo for header
+  logoKemenagUrl?: string;
+  adminAvatarUrl?: string; // Foto profil avatar admin
+}
+
+export interface HeroConfig {
+  badgeText?: string;
+  title?: string;
+  subtitle?: string;
+  ctaText1?: string;
+  ctaText2?: string;
+  ctaText3?: string;
+  showCta1?: boolean;
+  showCta2?: boolean;
+  showCta3?: boolean;
+  bannerGradient?: 'EMERALD' | 'NAVY' | 'ROSE' | 'PURPLE' | 'AMBER';
+  bannerImageUrl?: string;
+  announcementTitle?: string;
+  announcementText?: string;
+}
+
 export interface MadrasahProfile {
   namaMadrasah: string;
   nsm: string; // Nomor Statistik Madrasah
@@ -60,6 +85,8 @@ export interface MadrasahProfile {
   petaLokasiUrl?: string;
   denahLokasiUrl?: string;
   kopSuratConfig?: KopSuratConfig;
+  headerConfig?: HeaderConfig;
+  heroConfig?: HeroConfig;
 }
 
 export type StatusKepegawaian = 'PNS' | 'PPPK' | 'GTY' | 'GTT' | 'Honorer' | 'PTY';

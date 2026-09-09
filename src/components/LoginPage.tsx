@@ -30,6 +30,8 @@ export interface UserSession {
   loggedInAt: string;
 }
 
+export const SUPER_ADMIN_AVATAR = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80';
+
 interface LoginPageProps {
   profile: MadrasahProfile;
   onLoginSuccess: (session: UserSession) => void;
@@ -41,15 +43,15 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   onLoginSuccess,
   onOpenPublicPortal,
 }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('jaenalmaskun@gmail.com');
+  const [password, setPassword] = useState('masbagus');
   const [showPassword, setShowPassword] = useState(false);
   const [selectedRole, setSelectedRole] = useState<'SUPER_ADMIN' | 'KEPALA_MADRASAH' | 'OPERATOR_KURIKULUM' | 'GURU' | 'PENGAWAS'>('SUPER_ADMIN');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [showHelpModal, setShowHelpModal] = useState(false);
 
-  // Preset role accounts for quick switching
+  // Preset role accounts for quick switching with official admin profile avatars
   const rolePresets = [
     {
       role: 'SUPER_ADMIN' as const,
@@ -59,6 +61,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       defaultPass: 'masbagus',
       name: 'Jaenal Maskun',
       nip: 'SUPER ADMIN',
+      avatarUrl: SUPER_ADMIN_AVATAR,
     },
     {
       role: 'OPERATOR_KURIKULUM' as const,
@@ -68,6 +71,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       defaultPass: 'kemenag2025',
       name: 'H. Ahmad Fauzi, M.Pd.',
       nip: '198503152010011012',
+      avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&auto=format&fit=crop&q=80',
     },
     {
       role: 'KEPALA_MADRASAH' as const,
@@ -75,8 +79,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       subtitle: 'Otoritas Pengesahan TTE & Keputusan Resmi',
       defaultUser: 'kepala.madrasah',
       defaultPass: 'kepala123',
-      name: profile.namaKepala || 'H. Mochammad Syarifudin, M.Pd.I',
+      name: profile.namaKepala || 'Siti Rochimah, S.Pd.I',
       nip: profile.nipKepala || '197605142002121002',
+      avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&auto=format&fit=crop&q=80',
     },
     {
       role: 'GURU' as const,
@@ -86,6 +91,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       defaultPass: 'guru123',
       name: 'Siti Nurhaliza, S.Pd.',
       nip: '199208242019032015',
+      avatarUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&auto=format&fit=crop&q=80',
     },
     {
       role: 'PENGAWAS' as const,
@@ -93,10 +99,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       subtitle: 'Supervisi & Verifikasi Dokumen KMA 450',
       defaultUser: 'pengawas.kemenag',
       defaultPass: 'pengawas123',
-      name: profile.namaPengawas || 'Drs. H. Mulyono, M.Pd.I',
+      name: profile.namaPengawas || 'H. Amin Purnomo, S.Ag.',
       nip: profile.nipPengawas || '196803121994032001',
+      avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&auto=format&fit=crop&q=80',
     },
   ];
+
+  const activePreset = rolePresets.find((r) => r.role === selectedRole) || rolePresets[0];
 
   const handleSelectPreset = (preset: typeof rolePresets[0]) => {
     setSelectedRole(preset.role);
@@ -130,6 +139,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           role: 'SUPER_ADMIN',
           roleLabel: 'Super Administrator',
           nip: 'Super Admin',
+          avatarUrl: SUPER_ADMIN_AVATAR,
           loggedInAt: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB',
         };
         onLoginSuccess(session);
@@ -148,6 +158,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           role: matchedAccount.role,
           roleLabel: matchedAccount.title,
           nip: matchedAccount.nip,
+          avatarUrl: matchedAccount.avatarUrl,
           loggedInAt: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB',
         };
         onLoginSuccess(session);
@@ -289,9 +300,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               {/* Role Presets Switcher */}
               <div className="space-y-1.5">
                 <label className="text-[11px] font-bold text-emerald-300 uppercase tracking-wider block">
-                  Pilih Peran Pengguna (Akses Cepat):
+                  Pilih Akun & Profil Admin:
                 </label>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {rolePresets.map((preset) => {
                     const isSelected = selectedRole === preset.role;
                     return (
@@ -299,20 +310,54 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                         key={preset.role}
                         type="button"
                         onClick={() => handleSelectPreset(preset)}
-                        className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                        className={`p-2 rounded-xl border text-left transition-all cursor-pointer flex items-center space-x-2.5 ${
                           isSelected
-                            ? 'bg-emerald-800/70 border-emerald-400 text-white shadow-md shadow-emerald-950/50'
+                            ? 'bg-emerald-800/80 border-emerald-400 text-white shadow-md shadow-emerald-950/50 ring-1 ring-emerald-400'
                             : 'bg-slate-800/60 border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white'
                         }`}
                       >
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold truncate">{preset.title}</span>
-                          {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300 flex-shrink-0" />}
+                        <div className="relative flex-shrink-0">
+                          <img
+                            src={preset.avatarUrl}
+                            alt={preset.name}
+                            className="w-8 h-8 rounded-full object-cover ring-2 ring-emerald-500/40"
+                          />
+                          {isSelected && (
+                            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-400 border border-slate-900 rounded-full" />
+                          )}
                         </div>
-                        <p className="text-[10px] text-slate-400 truncate mt-0.5">{preset.name}</p>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold truncate">{preset.title}</span>
+                            {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300 flex-shrink-0 ml-1" />}
+                          </div>
+                          <p className="text-[10px] text-slate-300 truncate mt-0.5">{preset.name}</p>
+                        </div>
                       </button>
                     );
                   })}
+                </div>
+              </div>
+
+              {/* Active Admin Profile Card Preview */}
+              <div className="p-3 bg-gradient-to-r from-slate-800/90 via-emerald-950/60 to-slate-800/90 rounded-2xl border border-emerald-500/40 flex items-center space-x-3.5 shadow-md">
+                <div className="relative flex-shrink-0">
+                  <img
+                    src={activePreset.avatarUrl}
+                    alt={activePreset.name}
+                    className="w-12 h-12 rounded-full object-cover ring-2 ring-amber-400 shadow-md"
+                  />
+                  <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 border-2 border-slate-900 rounded-full animate-pulse" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs font-bold text-white truncate">{activePreset.name}</span>
+                    <span className="text-[9px] px-1.5 py-0.5 bg-amber-400/20 text-amber-300 border border-amber-400/30 rounded font-semibold whitespace-nowrap">
+                      {activePreset.title}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-emerald-300 font-mono truncate mt-0.5">{activePreset.defaultUser}</p>
+                  <p className="text-[10px] text-slate-400">Foto profil ini aktif di header dan navigasi sistem</p>
                 </div>
               </div>
 
