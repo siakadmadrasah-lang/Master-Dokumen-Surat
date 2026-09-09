@@ -323,15 +323,14 @@ export interface TestConnectionResult {
 /**
  * Uji koneksi ke endpoint cPanel
  */
-export const testCpanelConnection = async (url: string): Promise<TestConnectionResult> => {
-  if (!url || !url.trim()) {
+export const testCpanelConnection = async (url: unknown): Promise<TestConnectionResult> => {
+  const cleanInput = typeof url === 'string' ? url.trim() : '';
+  if (!cleanInput) {
     return {
       success: false,
-      message: 'Silakan masukkan URL cPanel terlebih dahulu (misal: https://masbagoes.web.id/adm atau https://madrasah.sch.id).',
+      message: 'Silakan masukkan URL cPanel terlebih dahulu (misal: https://adm-madrasah.masbagoes.web.id).',
     };
   }
-
-  const cleanInput = url.trim();
 
   // 1. Coba via server proxy (menghindari hambatan CORS browser dan menyediakan diagnosa DNS mendalam)
   try {

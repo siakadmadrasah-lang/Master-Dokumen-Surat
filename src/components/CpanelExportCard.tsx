@@ -130,13 +130,39 @@ export const CpanelExportCard: React.FC<CpanelExportCardProps> = ({
   };
 
   // Test cPanel connection
-  const handleTestConnection = async (overrideUrl?: string) => {
-    const target = overrideUrl || syncConfig.cpanelUrl;
+  const handleTestConnection = async (overrideUrl?: unknown) => {
+    const rawTarget =
+      typeof overrideUrl === 'string' && overrideUrl.trim()
+        ? overrideUrl.trim()
+        : (syncConfig.cpanelUrl || '').trim();
+
+    if (!rawTarget) {
+      setTestResult({
+        success: false,
+        message: 'Silakan masukkan URL cPanel terlebih dahulu sebelum menguji koneksi.',
+      });
+      return;
+    }
+
     try {
       setIsTesting(true);
       setTestResult(null);
-      const res = await testCpanelConnection(target);
+      const res = await testCpanelConnection(rawTarget);
       setTestResult(res);
+
+      if (res.success) {
+        const updated = saveCpanelSyncConfig({
+          cpanelUrl: rawTarget,
+          lastSyncStatus: 'success',
+          lastSyncMessage: res.message || 'Koneksi MySQL cPanel aktif.',
+        });
+        setSyncConfig(updated);
+      }
+    } catch (err: any) {
+      setTestResult({
+        success: false,
+        message: `Terjadi kendala saat menguji koneksi: ${err?.message || 'Gagal memproses pengujian'}`,
+      });
     } finally {
       setIsTesting(false);
     }
@@ -359,7 +385,8 @@ export const CpanelExportCard: React.FC<CpanelExportCardProps> = ({
           <div className="flex items-center space-x-2">
             <input
               type="text"
-              placeholder="https://madrasah.sch.id (atau kosongkan untuk sync lokal/proxy)"
+              id="input-cpanel-url"
+              placeholder="https://adm-madrasah.masbagoes.web.id"
               value={syncConfig.cpanelUrl}
               onChange={(e) => {
                 const updated = saveCpanelSyncConfig({ cpanelUrl: e.target.value });
@@ -367,16 +394,26 @@ export const CpanelExportCard: React.FC<CpanelExportCardProps> = ({
               }}
               className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-hidden font-mono"
             />
-            {syncConfig.cpanelUrl && (
-              <button
-                type="button"
-                onClick={handleTestConnection}
-                disabled={isTesting}
-                className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-emerald-300 rounded-xl text-xs font-bold border border-slate-600 transition-colors whitespace-nowrap cursor-pointer disabled:opacity-50"
-              >
-                {isTesting ? 'Menguji...' : 'Uji'}
-              </button>
-            )}
+            <button
+              type="button"
+              id="btn-uji-koneksi-cpanel"
+              onClick={() => handleTestConnection()}
+              disabled={isTesting || !syncConfig.cpanelUrl.trim()}
+              className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-95 text-white rounded-xl text-xs font-bold border border-emerald-500/60 shadow-md transition-all whitespace-nowrap cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed flex items-center space-x-1.5"
+              title="Uji Koneksi ke MySQL cPanel"
+            >
+              {isTesting ? (
+                <>
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin text-white" />
+                  <span>Menguji...</span>
+                </>
+              ) : (
+                <>
+                  <Zap className="w-3.5 h-3.5 text-amber-300" />
+                  <span>Uji Koneksi</span>
+                </>
+              )}
+            </button>
           </div>
 
           {testResult && (
@@ -395,6 +432,27 @@ export const CpanelExportCard: React.FC<CpanelExportCardProps> = ({
                 )}
                 <div className="min-w-0 flex-1 leading-relaxed">
                   <p className="font-semibold">{testResult.message}</p>
+                  {testResult.success && testResult.details?.table_counts && (
+                    <div className="mt-2 pt-2 border-t border-emerald-800/60 flex flex-wrap gap-2 text-[11px] text-emerald-300">
+                      <span className="bg-emerald-900/80 px-2 py-0.5 rounded-md border border-emerald-700/50">
+                        DB: {testResult.details.database || 'masbagoes_adm'}
+                      </span>
+                      <span className="bg-emerald-900/80 px-2 py-0.5 rounded-md border border-emerald-700/50">
+                        {testResult.details.table_counts.guru_gtk || 0} GTK
+                      </span>
+                      <span className="bg-emerald-900/80 px-2 py-0.5 rounded-md border border-emerald-700/50">
+                        {testResult.details.table_counts.siswa || 0} Siswa
+                      </span>
+                      <span className="bg-emerald-900/80 px-2 py-0.5 rounded-md border border-emerald-700/50">
+                        {testResult.details.table_counts.dokumen_resmi || 0} Dokumen
+                      </span>
+                      {testResult.details.php_version && (
+                        <span className="bg-emerald-900/80 px-2 py-0.5 rounded-md border border-emerald-700/50">
+                          PHP {testResult.details.php_version}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
 
