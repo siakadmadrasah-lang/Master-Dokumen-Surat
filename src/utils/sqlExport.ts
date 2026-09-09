@@ -15,6 +15,7 @@ export interface SqlExportOptions {
   documents: OfficialDocument[];
   logs: ActivityLog[];
   dbDialect?: 'MYSQL' | 'POSTGRES' | 'SQLITE';
+  dbName?: string;
 }
 
 /**
@@ -53,6 +54,7 @@ export const generateMadrasahSqlDump = (options: SqlExportOptions): string => {
     rombels = [],
     documents = [],
     logs = [],
+    dbName = 'masbagoes_dokmadrasah',
   } = options;
 
   const now = new Date();
@@ -60,11 +62,15 @@ export const generateMadrasahSqlDump = (options: SqlExportOptions): string => {
 
   return `-- ====================================================================
 -- SISTEM MANAJEMEN DOKUMEN RESMI MADRASAH & KOM (KMA 450/2024)
--- Basis Data SQL Dump untuk MySQL / MariaDB (Plesk & phpMyAdmin Ready)
+-- Basis Data SQL Dump untuk MySQL / MariaDB (cPanel, Plesk & phpMyAdmin Ready)
+-- Database Name: ${dbName}
 -- Dihasilkan pada: ${timestamp} WIB
 -- Lembaga: ${profile.namaMadrasah} (NSM: ${profile.nsm} / NPSN: ${profile.npsn})
 -- Website: ${profile.website || '-'} | Email: ${profile.email || '-'}
 -- ====================================================================
+
+CREATE DATABASE IF NOT EXISTS \`${dbName}\` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE \`${dbName}\`;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;

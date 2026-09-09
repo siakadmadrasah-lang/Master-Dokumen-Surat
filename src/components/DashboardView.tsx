@@ -31,6 +31,7 @@ import {
 } from '../types';
 import { ActiveTab } from './Navbar';
 import { PleskExportCard } from './PleskExportCard';
+import { CpanelExportCard } from './CpanelExportCard';
 
 interface DashboardViewProps {
   profile: MadrasahProfile;
@@ -58,6 +59,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onAddLog,
 }) => {
   const [showDocGuideModal, setShowDocGuideModal] = useState(false);
+  const [hostingPlatform, setHostingPlatform] = useState<'CPANEL' | 'PLESK'>('CPANEL');
 
   const signedDocs = documents.filter((d) => d.status === 'SIGNED');
   const pendingDocs = documents.filter((d) => d.status === 'READY_FOR_SIGN' || d.status === 'DRAFT');
@@ -265,16 +267,63 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
       </div>
 
-      {/* Plesk Web Hosting ZIP Exporter Card - Exclusively on Admin Dashboard */}
-      <PleskExportCard
-        profile={profile}
-        documents={documents}
-        teachers={teachers}
-        students={students}
-        rombels={rombels}
-        logs={logs}
-        onAddLog={onAddLog}
-      />
+      {/* Hosting Platform Switcher & Exporter Card */}
+      <div className="space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-2 bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-xs">
+          <div className="flex items-center space-x-2">
+            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Target Hosting:</span>
+            <div className="inline-flex rounded-lg bg-slate-100 p-0.5">
+              <button
+                type="button"
+                onClick={() => setHostingPlatform('CPANEL')}
+                className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${
+                  hostingPlatform === 'CPANEL'
+                    ? 'bg-emerald-800 text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                cPanel & MySQL Sync
+              </button>
+              <button
+                type="button"
+                onClick={() => setHostingPlatform('PLESK')}
+                className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${
+                  hostingPlatform === 'PLESK'
+                    ? 'bg-emerald-800 text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                Plesk Obsidian
+              </button>
+            </div>
+          </div>
+          <span className="text-[11px] font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
+            DB: masbagoes_dokmadrasah
+          </span>
+        </div>
+
+        {hostingPlatform === 'CPANEL' ? (
+          <CpanelExportCard
+            profile={profile}
+            documents={documents}
+            teachers={teachers}
+            students={students}
+            rombels={rombels}
+            logs={logs}
+            onAddLog={onAddLog}
+          />
+        ) : (
+          <PleskExportCard
+            profile={profile}
+            documents={documents}
+            teachers={teachers}
+            students={students}
+            rombels={rombels}
+            logs={logs}
+            onAddLog={onAddLog}
+          />
+        )}
+      </div>
 
       {/* Main Grid: Checklist SK & Progress (Left) + Activity Log (Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
