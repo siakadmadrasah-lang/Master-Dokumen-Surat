@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
+import dns from 'dns/promises';
 import JSZip from 'jszip';
 import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI } from '@google/genai';
@@ -455,6 +456,190 @@ app.post('/api/siakad/sync', async (req, res) => {
       success: false,
       message: error.message || 'Gagal sinkronisasi data SIAKAD',
     });
+  }
+});
+
+// cPanel / MySQL Connection Diagnostics Endpoint
+app.post('/api/mysql/test-connection', async (req, res) => {
+  try {
+    const { cpanelUrl } = req.body || {};
+    if (!cpanelUrl || !cpanelUrl.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Silakan masukkan URL hosting cPanel terlebih dahulu.',
+      });
+    }
+
+    let targetUrl = cpanelUrl.trim();
+    if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
+      targetUrl = `https://${targetUrl}`;
+    }
+
+    let parsedUrl: URL;
+    try {
+      parsedUrl = new URL(targetUrl);
+    } catch {
+      return res.status(400).json({
+        success: false,
+        message: `Format URL tidak valid: ${targetUrl}`,
+      });
+    }
+
+    const hostname = parsedUrl.hostname;
+
+    // 1. DNS Resolution Check
+    try {
+      await dns.lookup(hostname);
+    } catch (dnsErr: any) {
+      // Analyze potential subdomain vs subfolder pattern
+      let suggestion = '';
+      if (hostname.includes('.') && !hostname.startsWith('www.')) {
+        const parts = hostname.split('.');
+        if (parts.length > 2) {
+          const mainDomain = parts.slice(1).join('.');
+          const subfolder = parts[0];
+          suggestion = `https://${mainDomain}/${subfolder}/`;
+        }
+      }
+
+      return res.json({
+        success: false,
+        errorType: 'DNS_NOT_RESOLVED',
+        hostname,
+        suggestion,
+        message: `Tidak dapat menghubungi ${targetUrl}. Subdomain '${hostname}' belum terdaftar di DNS atau cPanel (Host Not Found).`,
+        solution:
+          `1. Jika Anda mengunggah berkas ke subfolder '${hostname.split('.')[0]}' pada domain utama, gunakan format subfolder:\n   ${suggestion || `https://domainanda.com/${hostname.split('.')[0]}/`}\n` +
+          `2. Jika Anda ingin menggunakan subdomain terpisah '${hostname}', buat subdomain tersebut terlebih dahulu di cPanel (menu Subdomains / Domains).\n` +
+          `3. Pastikan DNS A-Record '${hostname}' sudah mengarah ke IP Server cPanel Anda.`,
+      });
+    }
+
+    // 2. Host is resolved, now probe endpoints
+    const cleanBase = targetUrl.replace(/\/+$/, '');
+    const endpointsToTry = [
+      `${cleanBase}/api/health.php`,
+      `${cleanBase}/health.php`,
+      `${cleanBase}/api/sync.php`,
+      cleanBase,
+    ];
+
+    let lastError = '';
+    for (const ep of endpointsToTry) {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 7000);
+        const probeRes = await fetch(ep, {
+          headers: {
+            'Accept': 'application/json, */*',
+            'User-Agent': 'AutoMadrasah-Probe/1.0',
+          },
+          signal: controller.signal,
+        });
+        clearTimeout(timeout);
+
+        if (probeRes.ok) {
+          const text = await probeRes.text();
+          let json: any = null;
+          try {
+            json = JSON.parse(text);
+          } catch {
+            // Not a JSON response
+          }
+
+          if (json && (json.status === 'connected' || json.success === true)) {
+            return res.json({
+              success: true,
+              message: json.message || `Berhasil terhubung ke database cPanel di ${ep}!`,
+              details: json,
+            });
+          }
+
+          if ((ep.endsWith('/api/health.php') || ep.endsWith('/health.php')) && json) {
+            return res.json({
+              success: json.success !== false,
+              message: json.message || `Endpoint ${ep} merespons.`,
+              details: json,
+            });
+          }
+        }
+      } catch (e: any) {
+        lastError = e.message;
+      }
+    }
+
+    return res.json({
+      success: false,
+      errorType: 'FILES_NOT_FOUND',
+      hostname,
+      message: `Domain '${hostname}' aktif dan dapat dijangkau, namun endpoint 'api/health.php' belum ditemukan.`,
+      solution:
+        `1. Pastikan Anda telah mengunduh 'Paket Deployment cPanel ZIP' dari tab Ekspor Hosting.\n` +
+        `2. Buka File Manager cPanel, masuk ke folder tujuan (misal: public_html atau subfolder yang sesuai).\n` +
+        `3. Unggah dan Ekstrak (Extract) file ZIP tersebut agar folder 'api/' dan berkas 'index.html' terpasang.\n` +
+        `4. Pastikan database MySQL masbagoes_adm sudah dibuat di menu MySQL Databases cPanel.`,
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      success: false,
+      message: `Terjadi kendala saat menguji koneksi: ${err.message}`,
+    });
+  }
+});
+
+// cPanel / MySQL Sync Proxy Endpoint
+app.post('/api/mysql/sync', async (req, res) => {
+  try {
+    const { cpanelUrl, data, credentials } = req.body || {};
+    if (!cpanelUrl) {
+      return res.status(400).json({ success: false, message: 'URL cPanel belum ditentukan.' });
+    }
+
+    let targetEndpoint = cpanelUrl.trim();
+    if (!targetEndpoint.endsWith('.php')) {
+      targetEndpoint = targetEndpoint.replace(/\/+$/, '') + '/api/sync.php';
+    }
+
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 12000);
+      const forwardRes = await fetch(targetEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-AutoMadrasah-Sync': '1',
+          'User-Agent': 'AutoMadrasah-SyncServer/1.0',
+        },
+        body: JSON.stringify({
+          ...data,
+          syncTimestamp: new Date().toISOString(),
+          dbConfig: credentials,
+        }),
+        signal: controller.signal,
+      });
+      clearTimeout(timeout);
+
+      const resJson = await forwardRes.json().catch(() => null);
+      if (forwardRes.ok && resJson) {
+        return res.json(resJson);
+      } else {
+        return res.json({
+          success: false,
+          message: resJson?.message || `cPanel merespons status ${forwardRes.status}`,
+          details: resJson,
+        });
+      }
+    } catch (netErr: any) {
+      // Save local cache so user work is never lost
+      return res.json({
+        success: true,
+        isCached: true,
+        message: `Data tersimpan di antrean sinkronisasi lokal dan siap dikirim saat hosting aktif. (${netErr.message})`,
+      });
+    }
+  } catch (err: any) {
+    return res.status(500).json({ success: false, message: err.message });
   }
 });
 

@@ -310,18 +310,46 @@ export const syncDataToCpanel = async (
   }
 };
 
+export interface TestConnectionResult {
+  success: boolean;
+  message: string;
+  details?: any;
+  errorType?: 'DNS_NOT_RESOLVED' | 'FILES_NOT_FOUND' | 'INVALID_URL' | 'GENERAL_ERROR';
+  hostname?: string;
+  suggestion?: string;
+  solution?: string;
+}
+
 /**
  * Uji koneksi ke endpoint cPanel
  */
-export const testCpanelConnection = async (url: string): Promise<{ success: boolean; message: string; details?: any }> => {
+export const testCpanelConnection = async (url: string): Promise<TestConnectionResult> => {
   if (!url || !url.trim()) {
     return {
       success: false,
-      message: 'Silakan masukkan URL cPanel terlebih dahulu (misal: https://namadomain.sch.id).',
+      message: 'Silakan masukkan URL cPanel terlebih dahulu (misal: https://masbagoes.web.id/adm atau https://madrasah.sch.id).',
     };
   }
 
-  let testUrl = url.trim();
+  const cleanInput = url.trim();
+
+  // 1. Coba via server proxy (menghindari hambatan CORS browser dan menyediakan diagnosa DNS mendalam)
+  try {
+    const proxyRes = await fetch('/api/mysql/test-connection', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cpanelUrl: cleanInput }),
+    });
+    if (proxyRes.ok) {
+      const proxyJson = await proxyRes.json();
+      return proxyJson;
+    }
+  } catch (proxyErr) {
+    console.warn('Proxy test-connection error, fallback to direct fetch:', proxyErr);
+  }
+
+  // 2. Direct fetch fallback (jika offline dev)
+  let testUrl = cleanInput;
   if (!testUrl.endsWith('.php') && !testUrl.endsWith('/')) {
     testUrl += '/api/health.php';
   } else if (testUrl.endsWith('/') && !testUrl.includes('.php')) {
@@ -339,21 +367,13 @@ export const testCpanelConnection = async (url: string): Promise<{ success: bool
       };
     }
   } catch {
-    // Coba via server proxy
+    // Direct fetch gagal (biasanya CORS atau domain belum aktif)
   }
 
-  try {
-    const proxyRes = await fetch('/api/mysql/test-connection', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cpanelUrl: testUrl }),
-    });
-    const proxyJson = await proxyRes.json();
-    return proxyJson;
-  } catch (err: any) {
-    return {
-      success: false,
-      message: `Tidak dapat menghubungi ${testUrl}. Pastikan domain aktif dan file ZIP cPanel telah diunggah ke folder public_html.`,
-    };
-  }
+  return {
+    success: false,
+    message: `Tidak dapat menghubungi ${cleanInput}. Pastikan domain aktif dan file ZIP cPanel telah diunggah ke folder hosting.`,
+    solution:
+      'Jika Anda mengunggah ke subfolder di domain utama, gunakan format: https://domainanda.com/folder_anda/',
+  };
 };

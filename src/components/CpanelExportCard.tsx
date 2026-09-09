@@ -19,6 +19,8 @@ import {
   FolderArchive,
   ArrowRight,
   Settings,
+  Info,
+  HelpCircle,
 } from 'lucide-react';
 import { MadrasahProfile, OfficialDocument, Teacher, Student, Rombel, ActivityLog } from '../types';
 import { downloadCpanelZip } from '../utils/cpanelExport';
@@ -29,6 +31,7 @@ import {
   syncDataToCpanel,
   testCpanelConnection,
   CpanelSyncConfig,
+  TestConnectionResult,
 } from '../utils/cpanelSyncService';
 
 interface CpanelExportCardProps {
@@ -69,7 +72,7 @@ export const CpanelExportCard: React.FC<CpanelExportCardProps> = ({
 
   // Testing Connection State
   const [isTesting, setIsTesting] = useState(false);
-  const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [testResult, setTestResult] = useState<TestConnectionResult | null>(null);
 
   // Guide Modal
   const [showGuideModal, setShowGuideModal] = useState(false);
@@ -127,11 +130,12 @@ export const CpanelExportCard: React.FC<CpanelExportCardProps> = ({
   };
 
   // Test cPanel connection
-  const handleTestConnection = async () => {
+  const handleTestConnection = async (overrideUrl?: string) => {
+    const target = overrideUrl || syncConfig.cpanelUrl;
     try {
       setIsTesting(true);
       setTestResult(null);
-      const res = await testCpanelConnection(syncConfig.cpanelUrl);
+      const res = await testCpanelConnection(target);
       setTestResult(res);
     } finally {
       setIsTesting(false);
@@ -376,9 +380,58 @@ export const CpanelExportCard: React.FC<CpanelExportCardProps> = ({
           </div>
 
           {testResult && (
-            <div className={`p-2.5 rounded-lg text-xs flex items-center gap-2 ${testResult.success ? 'bg-emerald-950/80 border border-emerald-600 text-emerald-200' : 'bg-rose-950/80 border border-rose-700 text-rose-200'}`}>
-              {testResult.success ? <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" /> : <AlertCircle className="w-4 h-4 text-rose-400 flex-shrink-0" />}
-              <span className="truncate">{testResult.message}</span>
+            <div className="space-y-2">
+              <div
+                className={`p-3 rounded-xl text-xs flex items-start gap-2.5 ${
+                  testResult.success
+                    ? 'bg-emerald-950/90 border border-emerald-500/80 text-emerald-200'
+                    : 'bg-rose-950/90 border border-rose-600/80 text-rose-200'
+                }`}
+              >
+                {testResult.success ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                ) : (
+                  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                )}
+                <div className="min-w-0 flex-1 leading-relaxed">
+                  <p className="font-semibold">{testResult.message}</p>
+                </div>
+              </div>
+
+              {testResult.suggestion && (
+                <div className="p-2.5 bg-blue-950/80 border border-blue-600/60 rounded-xl text-blue-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex items-center space-x-2">
+                    <Info className="w-4 h-4 text-blue-400 shrink-0" />
+                    <span className="text-[11px]">
+                      Apakah Anda mengunggah ke subfolder? Coba:&nbsp;
+                      <code className="font-mono text-cyan-300 font-bold">{testResult.suggestion}</code>
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const updated = saveCpanelSyncConfig({ cpanelUrl: testResult.suggestion });
+                      setSyncConfig(updated);
+                      handleTestConnection(testResult.suggestion);
+                    }}
+                    className="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap self-end sm:self-auto"
+                  >
+                    Gunakan URL Ini & Uji
+                  </button>
+                </div>
+              )}
+
+              {testResult.solution && !testResult.success && (
+                <div className="p-3 bg-slate-900/90 border border-slate-700/80 rounded-xl text-slate-300 text-xs space-y-1.5">
+                  <p className="font-bold text-amber-300 flex items-center space-x-1.5 text-[11px]">
+                    <HelpCircle className="w-3.5 h-3.5" />
+                    <span>Petunjuk Penanganan:</span>
+                  </p>
+                  <pre className="whitespace-pre-wrap font-sans text-slate-300 text-[11px] leading-relaxed">
+                    {testResult.solution}
+                  </pre>
+                </div>
+              )}
             </div>
           )}
 
