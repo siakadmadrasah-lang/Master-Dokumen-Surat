@@ -14,6 +14,7 @@ import {
   Shield,
   RefreshCw,
   ArrowLeft,
+  Sparkles,
 } from 'lucide-react';
 import { MadrasahProfile, Teacher, Student, OfficialDocument, Rombel, ActivityLog } from '../types';
 import { downloadMadrasahSql } from '../utils/sqlExport';
@@ -34,6 +35,7 @@ interface SettingsSyncViewProps {
     documents?: OfficialDocument[];
   }) => void;
   onSyncAllDocuments?: () => void;
+  onOpenKopSuratEditor?: () => void;
   onBack?: () => void;
   onAddLog?: (action: string) => void;
 }
@@ -49,6 +51,7 @@ export const SettingsSyncView: React.FC<SettingsSyncViewProps> = ({
   onResetAllData,
   onRestoreData,
   onSyncAllDocuments,
+  onOpenKopSuratEditor,
   onBack,
   onAddLog,
 }) => {
@@ -231,10 +234,23 @@ export const SettingsSyncView: React.FC<SettingsSyncViewProps> = ({
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
         {/* Identitas Kelembagaan */}
         <div className="space-y-4">
-          <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center space-x-2 border-b border-slate-100 pb-2">
-            <Building className="w-4 h-4 text-emerald-700" />
-            <span>Identitas Satuan Pendidikan & Kop Surat</span>
-          </h3>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-2 gap-2">
+            <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center space-x-2">
+              <Building className="w-4 h-4 text-emerald-700" />
+              <span>Identitas Satuan Pendidikan & Kop Surat</span>
+            </h3>
+            {onOpenKopSuratEditor && (
+              <button
+                type="button"
+                id="btn-goto-kop-surat-editor"
+                onClick={onOpenKopSuratEditor}
+                className="px-3.5 py-1.5 bg-gradient-to-r from-emerald-700 to-teal-800 hover:from-emerald-600 hover:to-teal-700 text-white rounded-xl text-xs font-bold shadow-xs transition-all flex items-center space-x-1.5 cursor-pointer self-start sm:self-auto"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                <span>Buka Studio Editor Khusus Kop Surat</span>
+              </button>
+            )}
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>

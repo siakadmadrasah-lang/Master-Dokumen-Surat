@@ -5,6 +5,7 @@ import JSZip from 'jszip';
 import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI } from '@google/genai';
 import dotenv from 'dotenv';
+import { generateMadrasahSqlDump } from './src/utils/sqlExport';
 
 dotenv.config();
 
@@ -584,6 +585,893 @@ if (file_exists(__DIR__ . '/index.html')) {
     res.status(500).json({ error: error.message || 'Gagal membuat paket Plesk' });
   }
 });
+
+// Full Production cPanel & MySQL Auto-Sync ZIP Exporter (Includes Full React Web App + MySQL PHP REST API)
+app.post('/api/export/cpanel-bundle', async (req, res) => {
+  try {
+    const {
+      profile = {},
+      documents = [],
+      teachers = [],
+      students = [],
+      rombels = [],
+      logs = [],
+      dbName = 'masbagoes_dokmadrasah',
+      dbUser = 'masbagoes_dokmadrasah',
+      dbPass = 'masbagus15',
+      dbHost = 'localhost',
+      domainName = profile.website?.replace(/^https?:\/\//, '') || 'dok-madrasah.masbagoes.web.id',
+    } = req.body || {};
+
+    const zip = new JSZip();
+    const publicHtml = zip.folder('public_html') || zip;
+    const apiFolder = publicHtml.folder('api') || publicHtml;
+    const rootApiFolder = zip.folder('api') || zip;
+
+    const addUniversalFile = (filename: string, content: string | Buffer | Uint8Array) => {
+      zip.file(filename, content);
+      publicHtml.file(filename, content);
+    };
+
+    const addUniversalApiFile = (filename: string, content: string | Buffer | Uint8Array) => {
+      rootApiFolder.file(filename, content);
+      apiFolder.file(filename, content);
+    };
+
+    // 1. .htaccess for cPanel Apache / LiteSpeed (SPA routing + /api/ pass-through)
+    const htaccess = `# ====================================================================
+# AUTOMADRASAH CPANEL HOSTING & MYSQL SYNC CONFIGURATION (.htaccess)
+# Kompatibel dengan Apache 2.4+ / LiteSpeed Web Server pada cPanel
+# Satuan Pendidikan: ${profile.namaMadrasah || 'MI Ma\'arif NU 2 Sanggreman'} (NSM: ${profile.nsm || '111233020015'})
+# ====================================================================
+
+# 1. DIRECTORY INDEX PRIORITY
+DirectoryIndex index.html index.php
+
+# 2. ENFORCE HTTPS REDIRECTION (AutoSSL / Let's Encrypt)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Paksa protokol aman HTTPS
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # JANGAN rewrite request ke folder /api/ atau berkas PHP fisik
+    RewriteCond %{REQUEST_URI} ^/api/ [NC]
+    RewriteRule ^ - [L]
+
+    # Berikan akses langsung jika file atau folder fisik nyata ada
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # SINGLE PAGE APPLICATION (SPA) ROUTING: Arahkan route lain ke index.html
+    RewriteRule ^ index.html [QSA,L]
+</IfModule>
+
+# 3. CORS & SECURITY HEADERS FOR REST SYNC
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, DELETE"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, X-AutoMadrasah-Sync"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# 4. GZIP COMPRESSION
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json image/svg+xml
+</IfModule>
+
+# 5. MIME TYPES
+<IfModule mod_mime.c>
+    AddType application/javascript .js
+    AddType text/css .css
+    AddType application/json .json
+    AddType image/svg+xml .svg
+    AddType font/woff2 .woff2
+    AddDefaultCharset UTF-8
+</IfModule>
+`;
+    addUniversalFile('.htaccess', htaccess);
+
+    // 2. config.php (MySQL Credentials)
+    const configPhp = `<?php
+/**
+ * ====================================================================
+ * AUTOMADRASAH - KONFIGURASI DATABASE MYSQL CPANEL & PLESK
+ * Satuan Pendidikan: ${profile.namaMadrasah || 'MI Ma\'arif NU 2 Sanggreman'} (NSM: ${profile.nsm || '111233020015'} | NPSN: ${profile.npsn || '60710459'})
+ * Sesuai Standar KMA 450 Tahun 2024 & Kurikulum Madrasah Kemenag RI
+ * ====================================================================
+ */
+
+// Kredensial Koneksi Database MySQL cPanel
+define('DB_HOST', '${dbHost}');
+define('DB_NAME', '${dbName}');
+define('DB_USER', '${dbUser}');
+define('DB_PASS', '${dbPass}');
+define('DB_CHARSET', 'utf8mb4');
+
+// Konfigurasi Aplikasi & Keamanan Sinkronisasi
+define('APP_NAME', 'AutoMadrasah Kemenag RI');
+define('APP_VERSION', '1.0.0');
+define('MADRASAH_NSM', '${profile.nsm || '111233020015'}');
+define('TIMEZONE', 'Asia/Jakarta');
+
+date_default_timezone_set(TIMEZONE);
+?>`;
+    addUniversalFile('config.php', configPhp);
+
+    // 3. api/db.php (PDO Connection & Auto Migration)
+    const dbPhp = `<?php
+/**
+ * AutoMadrasah - Konektor Database PDO MySQL & Auto Migration
+ * Terhubung ke: ${dbName} dengan pengguna: ${dbUser}
+ */
+require_once __DIR__ . '/../config.php';
+
+function getDbConnection() {
+    static $pdo = null;
+    if ($pdo !== null) {
+        return $pdo;
+    }
+
+    $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
+    $options = [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES   => false,
+        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci"
+    ];
+
+    try {
+        $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
+        initTablesIfNotExist($pdo);
+        return $pdo;
+    } catch (PDOException $e) {
+        try {
+            $dsnRoot = "mysql:host=" . DB_HOST . ";charset=" . DB_CHARSET;
+            $pdoRoot = new PDO($dsnRoot, DB_USER, DB_PASS, $options);
+            $pdoRoot->exec("CREATE DATABASE IF NOT EXISTS \`" . DB_NAME . "\` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+            $pdoRoot->exec("USE \`" . DB_NAME . "\`;");
+            initTablesIfNotExist($pdoRoot);
+            $pdo = $pdoRoot;
+            return $pdo;
+        } catch (Exception $inner) {
+            header('Content-Type: application/json; charset=utf-8', true, 500);
+            echo json_encode([
+                'success' => false,
+                'error'   => 'Gagal terhubung ke database MySQL cPanel',
+                'message' => $e->getMessage(),
+                'target_database' => DB_NAME,
+                'target_user'     => DB_USER,
+                'petunjuk' => 'Pastikan di menu cPanel "MySQL Databases", database [' . DB_NAME . '] dan user [' . DB_USER . '] sudah dibuat dan diberi ALL PRIVILEGES.'
+            ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+    }
+}
+
+function initTablesIfNotExist(PDO $pdo) {
+    // 1. Profil Madrasah
+    $pdo->exec("CREATE TABLE IF NOT EXISTS \`madrasah_profil\` (
+        \`id\` varchar(50) NOT NULL DEFAULT 'madrasah_active',
+        \`nsm\` varchar(30) NOT NULL,
+        \`npsn\` varchar(20) NOT NULL,
+        \`nama_madrasah\` varchar(200) NOT NULL,
+        \`jenjang\` varchar(10) NOT NULL,
+        \`status\` varchar(20) NOT NULL,
+        \`akreditasi\` varchar(20) DEFAULT 'A',
+        \`alamat\` text NOT NULL,
+        \`desa_kelurahan\` varchar(100) DEFAULT NULL,
+        \`kecamatan\` varchar(100) DEFAULT NULL,
+        \`kabupaten_kota\` varchar(100) DEFAULT NULL,
+        \`provinsi\` varchar(100) DEFAULT NULL,
+        \`kode_pos\` varchar(10) DEFAULT NULL,
+        \`telepon\` varchar(50) DEFAULT NULL,
+        \`email\` varchar(100) DEFAULT NULL,
+        \`website\` varchar(150) DEFAULT NULL,
+        \`nama_kepala\` varchar(150) NOT NULL,
+        \`nip_kepala\` varchar(30) DEFAULT NULL,
+        \`pangkat_gol_kepala\` varchar(50) DEFAULT NULL,
+        \`nama_ketua_komite\` varchar(150) DEFAULT NULL,
+        \`nama_pengawas\` varchar(150) DEFAULT NULL,
+        \`nip_pengawas\` varchar(30) DEFAULT NULL,
+        \`tahun_ajaran\` varchar(20) NOT NULL,
+        \`semester\` varchar(10) NOT NULL,
+        \`titimangsa\` varchar(100) DEFAULT NULL,
+        \`raw_data\` longtext DEFAULT NULL,
+        \`updated_at\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (\`id\`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+    // 2. Guru & GTK
+    $pdo->exec("CREATE TABLE IF NOT EXISTS \`guru_gtk\` (
+        \`id\` varchar(50) NOT NULL,
+        \`nip\` varchar(30) DEFAULT NULL,
+        \`nuptk\` varchar(30) DEFAULT NULL,
+        \`peg_id\` varchar(30) DEFAULT NULL,
+        \`nama\` varchar(150) NOT NULL,
+        \`gelar_depan\` varchar(30) DEFAULT NULL,
+        \`gelar_belakang\` varchar(50) DEFAULT NULL,
+        \`jenis_kelamin\` enum('L','P') NOT NULL DEFAULT 'L',
+        \`tempat_lahir\` varchar(100) DEFAULT NULL,
+        \`tanggal_lahir\` varchar(30) DEFAULT NULL,
+        \`status_kepegawaian\` varchar(50) NOT NULL,
+        \`pangkat_gol\` varchar(50) DEFAULT NULL,
+        \`jabatan_utama\` varchar(100) NOT NULL,
+        \`tugas_tambahan\` varchar(100) DEFAULT NULL,
+        \`mapel_utama\` varchar(100) NOT NULL,
+        \`jumlah_jam\` int(11) NOT NULL DEFAULT 0,
+        \`wali_kelas_di\` varchar(50) DEFAULT NULL,
+        \`sertifikasi\` tinyint(1) NOT NULL DEFAULT 0,
+        \`email\` varchar(100) DEFAULT NULL,
+        \`telepon\` varchar(30) DEFAULT NULL,
+        \`is_active\` tinyint(1) NOT NULL DEFAULT 1,
+        \`signature_url\` text DEFAULT NULL,
+        \`raw_data\` longtext DEFAULT NULL,
+        \`updated_at\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (\`id\`),
+        KEY \`idx_nip\` (\`nip\`),
+        KEY \`idx_nuptk\` (\`nuptk\`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+    // 3. Siswa
+    $pdo->exec("CREATE TABLE IF NOT EXISTS \`siswa\` (
+        \`id\` varchar(50) NOT NULL,
+        \`nisn\` varchar(20) DEFAULT NULL,
+        \`nis\` varchar(30) NOT NULL,
+        \`nik\` varchar(30) DEFAULT NULL,
+        \`nama\` varchar(150) NOT NULL,
+        \`jenis_kelamin\` enum('L','P') NOT NULL DEFAULT 'L',
+        \`rombel\` varchar(50) NOT NULL,
+        \`tingkat\` int(11) NOT NULL DEFAULT 1,
+        \`tempat_lahir\` varchar(100) DEFAULT NULL,
+        \`tanggal_lahir\` varchar(30) DEFAULT NULL,
+        \`nama_ayah\` varchar(100) DEFAULT NULL,
+        \`nama_ibu\` varchar(100) DEFAULT NULL,
+        \`pekerjaan_ortu\` varchar(100) DEFAULT NULL,
+        \`alamat\` text DEFAULT NULL,
+        \`status_siswa\` varchar(30) DEFAULT 'Aktif',
+        \`raw_data\` longtext DEFAULT NULL,
+        \`updated_at\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (\`id\`),
+        KEY \`idx_nisn\` (\`nisn\`),
+        KEY \`idx_nis\` (\`nis\`),
+        KEY \`idx_rombel\` (\`rombel\`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+    // 4. Rombel
+    $pdo->exec("CREATE TABLE IF NOT EXISTS \`rombel\` (
+        \`id\` varchar(50) NOT NULL,
+        \`nama_rombel\` varchar(50) NOT NULL,
+        \`tingkat\` int(11) NOT NULL DEFAULT 1,
+        \`wali_kelas_id\` varchar(50) DEFAULT NULL,
+        \`jumlah_siswa\` int(11) NOT NULL DEFAULT 0,
+        PRIMARY KEY (\`id\`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+    // 5. Dokumen Resmi & SK
+    $pdo->exec("CREATE TABLE IF NOT EXISTS \`dokumen_resmi\` (
+        \`id\` varchar(50) NOT NULL,
+        \`document_type\` varchar(50) NOT NULL,
+        \`nomor_surat\` varchar(100) NOT NULL,
+        \`judul\` varchar(255) NOT NULL,
+        \`tahun_ajaran\` varchar(20) NOT NULL,
+        \`tanggal_terbit\` varchar(50) NOT NULL,
+        \`status\` varchar(30) NOT NULL DEFAULT 'DRAFT',
+        \`qr_code_hash\` varchar(150) DEFAULT NULL,
+        \`signer_name\` varchar(150) NOT NULL,
+        \`signer_nip\` varchar(50) DEFAULT NULL,
+        \`signer_role\` varchar(100) DEFAULT NULL,
+        \`content_json\` longtext NOT NULL,
+        \`created_at\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        \`updated_at\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (\`id\`),
+        KEY \`idx_doc_type\` (\`document_type\`),
+        KEY \`idx_nomor\` (\`nomor_surat\`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+    // 6. Activity Logs
+    $pdo->exec("CREATE TABLE IF NOT EXISTS \`activity_logs\` (
+        \`id\` int(11) NOT NULL AUTO_INCREMENT,
+        \`action\` text NOT NULL,
+        \`user\` varchar(100) NOT NULL DEFAULT 'Admin Madrasah',
+        \`category\` varchar(50) NOT NULL DEFAULT 'SYNC',
+        \`timestamp_str\` varchar(100) NOT NULL,
+        \`created_at\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (\`id\`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+    // 7. Status Sinkronisasi
+    $pdo->exec("CREATE TABLE IF NOT EXISTS \`sync_status\` (
+        \`id\` int(11) NOT NULL DEFAULT 1,
+        \`last_sync_at\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        \`teachers_count\` int(11) DEFAULT 0,
+        \`students_count\` int(11) DEFAULT 0,
+        \`documents_count\` int(11) DEFAULT 0,
+        \`payload_hash\` varchar(64) DEFAULT NULL,
+        \`client_ip\` varchar(50) DEFAULT NULL,
+        PRIMARY KEY (\`id\`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+}
+?>`;
+    addUniversalApiFile('db.php', dbPhp);
+
+    // 4. api/sync.php (Bidirectional Sync API with CORS)
+    const syncPhp = `<?php
+/**
+ * AutoMadrasah - Endpoint Sinkronisasi Otomatis MySQL
+ */
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT");
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, X-AutoMadrasah-Sync");
+header("Content-Type: application/json; charset=utf-8");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+require_once __DIR__ . '/db.php';
+$pdo = getDbConnection();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $rawInput = file_get_contents('php://input');
+    if (!$rawInput) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Data payload kosong.']);
+        exit;
+    }
+
+    $payload = json_decode($rawInput, true);
+    if (!is_array($payload)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Format JSON tidak valid.']);
+        exit;
+    }
+
+    $profileData   = $payload['profile'] ?? [];
+    $teachersList  = $payload['teachers'] ?? [];
+    $studentsList  = $payload['students'] ?? [];
+    $rombelsList   = $payload['rombels'] ?? [];
+    $documentsList = $payload['documents'] ?? [];
+    $logsList      = $payload['logs'] ?? [];
+
+    try {
+        $pdo->beginTransaction();
+
+        if (!empty($profileData['namaMadrasah'])) {
+            $stmt = $pdo->prepare("REPLACE INTO \`madrasah_profil\` (
+                \`id\`, \`nsm\`, \`npsn\`, \`nama_madrasah\`, \`jenjang\`, \`status\`, \`akreditasi\`,
+                \`alamat\`, \`desa_kelurahan\`, \`kecamatan\`, \`kabupaten_kota\`, \`provinsi\`, \`kode_pos\`,
+                \`telepon\`, \`email\`, \`website\`, \`nama_kepala\`, \`nip_kepala\`, \`pangkat_gol_kepala\`,
+                \`nama_ketua_komite\`, \`nama_pengawas\`, \`nip_pengawas\`, \`tahun_ajaran\`, \`semester\`, \`titimangsa\`, \`raw_data\`
+            ) VALUES (
+                'madrasah_active', :nsm, :npsn, :nama, :jenjang, :status, :akreditasi,
+                :alamat, :desa, :kecamatan, :kabupaten, :provinsi, :kode_pos,
+                :telepon, :email, :website, :nama_kepala, :nip_kepala, :pangkat_kepala,
+                :komite, :pengawas, :nip_pengawas, :tahun_ajaran, :semester, :titimangsa, :raw_data
+            )");
+            $stmt->execute([
+                ':nsm'            => $profileData['nsm'] ?? '',
+                ':npsn'           => $profileData['npsn'] ?? '',
+                ':nama'           => $profileData['namaMadrasah'] ?? '',
+                ':jenjang'        => $profileData['jenjang'] ?? 'MI',
+                ':status'         => $profileData['status'] ?? 'Swasta',
+                ':akreditasi'     => $profileData['akreditasi'] ?? 'A',
+                ':alamat'         => $profileData['alamatJalan'] ?? '',
+                ':desa'           => $profileData['desaKelurahan'] ?? '',
+                ':kecamatan'      => $profileData['kecamatan'] ?? '',
+                ':kabupaten'      => $profileData['kabupatenKota'] ?? '',
+                ':provinsi'       => $profileData['provinsi'] ?? '',
+                ':kode_pos'       => $profileData['kodePos'] ?? '',
+                ':telepon'        => $profileData['telepon'] ?? '',
+                ':email'          => $profileData['email'] ?? '',
+                ':website'        => $profileData['website'] ?? '',
+                ':nama_kepala'    => $profileData['namaKepala'] ?? '',
+                ':nip_kepala'     => $profileData['nipKepala'] ?? '',
+                ':pangkat_kepala' => $profileData['pangkatGolKepala'] ?? '',
+                ':komite'         => $profileData['namaKetuaKomite'] ?? '',
+                ':pengawas'       => $profileData['namaPengawas'] ?? '',
+                ':nip_pengawas'   => $profileData['nipPengawas'] ?? '',
+                ':tahun_ajaran'   => $profileData['tahunAjaran'] ?? '2025/2026',
+                ':semester'       => $profileData['semester'] ?? '1',
+                ':titimangsa'     => $profileData['titimangsa'] ?? 'Banyumas',
+                ':raw_data'       => json_encode($profileData, JSON_UNESCAPED_UNICODE),
+            ]);
+        }
+
+        if (is_array($teachersList) && count($teachersList) > 0) {
+            $stmtG = $pdo->prepare("REPLACE INTO \`guru_gtk\` (
+                \`id\`, \`nip\`, \`nuptk\`, \`peg_id\`, \`nama\`, \`gelar_depan\`, \`gelar_belakang\`,
+                \`jenis_kelamin\`, \`tempat_lahir\`, \`tanggal_lahir\`, \`status_kepegawaian\`, \`pangkat_gol\`,
+                \`jabatan_utama\`, \`tugas_tambahan\`, \`mapel_utama\`, \`jumlah_jam\`, \`wali_kelas_di\`,
+                \`sertifikasi\`, \`email\`, \`telepon\`, \`is_active\`, \`signature_url\`, \`raw_data\`
+            ) VALUES (
+                :id, :nip, :nuptk, :peg_id, :nama, :gelar_depan, :gelar_belakang,
+                :jk, :tempat_lahir, :tanggal_lahir, :status, :pangkat,
+                :jabatan, :tugas_tambahan, :mapel, :jam, :wali,
+                :sertifikasi, :email, :telepon, :active, :sig, :raw
+            )");
+
+            foreach ($teachersList as $g) {
+                if (empty($g['nama'])) continue;
+                $stmtG->execute([
+                    ':id'             => $g['id'] ?? ('G-' . uniqid()),
+                    ':nip'            => $g['nip'] ?? '',
+                    ':nuptk'          => $g['nuptk'] ?? '',
+                    ':peg_id'         => $g['pegId'] ?? '',
+                    ':nama'           => $g['nama'] ?? '',
+                    ':gelar_depan'    => $g['gelarDepan'] ?? '',
+                    ':gelar_belakang' => $g['gelarBelakang'] ?? '',
+                    ':jk'             => ($g['jenisKelamin'] === 'P') ? 'P' : 'L',
+                    ':tempat_lahir'   => $g['tempatLahir'] ?? '',
+                    ':tanggal_lahir'  => $g['tanggalLahir'] ?? '',
+                    ':status'         => $g['statusKepegawaian'] ?? 'GTY',
+                    ':pangkat'        => $g['pangkatGol'] ?? '',
+                    ':jabatan'        => $g['jabatanUtama'] ?? 'Guru Kelas',
+                    ':tugas_tambahan' => $g['tugasTambahan'] ?? '',
+                    ':mapel'          => $g['mapelUtama'] ?? '',
+                    ':jam'            => intval($g['jumlahJam'] ?? 24),
+                    ':wali'           => $g['waliKelasDi'] ?? '',
+                    ':sertifikasi'    => !empty($g['sertifikasi']) ? 1 : 0,
+                    ':email'          => $g['email'] ?? '',
+                    ':telepon'        => $g['telepon'] ?? '',
+                    ':active'         => isset($g['isActive']) ? ($g['isActive'] ? 1 : 0) : 1,
+                    ':sig'            => $g['signatureUrl'] ?? '',
+                    ':raw'            => json_encode($g, JSON_UNESCAPED_UNICODE),
+                ]);
+            }
+        }
+
+        if (is_array($studentsList) && count($studentsList) > 0) {
+            $stmtS = $pdo->prepare("REPLACE INTO \`siswa\` (
+                \`id\`, \`nisn\`, \`nis\`, \`nik\`, \`nama\`, \`jenis_kelamin\`, \`rombel\`, \`tingkat\`,
+                \`tempat_lahir\`, \`tanggal_lahir\`, \`nama_ayah\`, \`nama_ibu\`, \`pekerjaan_ortu\`,
+                \`alamat\`, \`status_siswa\`, \`raw_data\`
+            ) VALUES (
+                :id, :nisn, :nis, :nik, :nama, :jk, :rombel, :tingkat,
+                :tempat_lahir, :tanggal_lahir, :ayah, :ibu, :pekerjaan,
+                :alamat, :status, :raw
+            )");
+
+            foreach ($studentsList as $s) {
+                if (empty($s['nama'])) continue;
+                $stmtS->execute([
+                    ':id'            => $s['id'] ?? ('S-' . uniqid()),
+                    ':nisn'          => $s['nisn'] ?? '',
+                    ':nis'           => $s['nis'] ?? '',
+                    ':nik'           => $s['nik'] ?? '',
+                    ':nama'          => $s['nama'] ?? '',
+                    ':jk'            => ($s['jenisKelamin'] === 'P') ? 'P' : 'L',
+                    ':rombel'        => $s['rombel'] ?? 'Kelas 1',
+                    ':tingkat'       => intval($s['tingkat'] ?? 1),
+                    ':tempat_lahir'  => $s['tempatLahir'] ?? '',
+                    ':tanggal_lahir' => $s['tanggalLahir'] ?? '',
+                    ':ayah'          => $s['namaAyah'] ?? '',
+                    ':ibu'           => $s['namaIbu'] ?? '',
+                    ':pekerjaan'     => $s['pekerjaanOrtu'] ?? '',
+                    ':alamat'        => $s['alamat'] ?? '',
+                    ':status'        => $s['statusSiswa'] ?? 'Aktif',
+                    ':raw'           => json_encode($s, JSON_UNESCAPED_UNICODE),
+                ]);
+            }
+        }
+
+        if (is_array($documentsList) && count($documentsList) > 0) {
+            $stmtD = $pdo->prepare("REPLACE INTO \`dokumen_resmi\` (
+                \`id\`, \`document_type\`, \`nomor_surat\`, \`judul\`, \`tahun_ajaran\`, \`tanggal_terbit\`,
+                \`status\`, \`qr_code_hash\`, \`signer_name\`, \`signer_nip\`, \`signer_role\`, \`content_json\`
+            ) VALUES (
+                :id, :doc_type, :nomor, :judul, :tahun, :tanggal,
+                :status, :hash, :signer_name, :signer_nip, :signer_role, :content
+            )");
+
+            foreach ($documentsList as $d) {
+                if (empty($d['id'])) continue;
+                $stmtD->execute([
+                    ':id'          => $d['id'],
+                    ':doc_type'    => $d['type'] ?? 'KOM',
+                    ':nomor'       => $d['documentNumber'] ?? '-',
+                    ':judul'       => $d['title'] ?? 'Dokumen Resmi',
+                    ':tahun'       => $d['academicYear'] ?? '2025/2026',
+                    ':tanggal'     => $d['effectiveDate'] ?? date('Y-m-d'),
+                    ':status'      => $d['status'] ?? 'DRAFT',
+                    ':hash'        => $d['signatures']?.[0]?.['digitalHash'] ?? null,
+                    ':signer_name' => $d['signatures']?.[0]?.['name'] ?? 'Kepala Madrasah',
+                    ':signer_nip'  => $d['signatures']?.[0]?.['nip'] ?? '',
+                    ':signer_role' => $d['signatures']?.[0]?.['role'] ?? 'Kepala Madrasah',
+                    ':content'     => json_encode($d, JSON_UNESCAPED_UNICODE),
+                ]);
+            }
+        }
+
+        // Update sync status
+        $pdo->prepare("REPLACE INTO \`sync_status\` (\`id\`, \`last_sync_at\`, \`teachers_count\`, \`students_count\`, \`documents_count\`, \`client_ip\`)
+                       VALUES (1, NOW(), :tc, :sc, :dc, :ip)")
+            ->execute([
+                ':tc' => count($teachersList),
+                ':sc' => count($studentsList),
+                ':dc' => count($documentsList),
+                ':ip' => $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1',
+            ]);
+
+        $pdo->commit();
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Sinkronisasi berhasil! ' . count($teachersList) . ' guru, ' . count($studentsList) . ' siswa, dan ' . count($documentsList) . ' dokumen tersimpan di MySQL cPanel.',
+            'timestamp' => date('Y-m-d H:i:s T'),
+        ]);
+        exit;
+    } catch (Exception $e) {
+        if ($pdo->inTransaction()) $pdo->rollBack();
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Gagal simpan ke MySQL: ' . $e->getMessage()]);
+        exit;
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    try {
+        $stmtProfile = $pdo->query("SELECT * FROM \`madrasah_profil\` WHERE \`id\` = 'madrasah_active' LIMIT 1");
+        $dbProfile = $stmtProfile->fetch();
+
+        $stmtTeachers = $pdo->query("SELECT * FROM \`guru_gtk\` ORDER BY \`nama\` ASC");
+        $dbTeachers = [];
+        while ($row = $stmtTeachers->fetch()) {
+            $dbTeachers[] = !empty($row['raw_data']) ? json_decode($row['raw_data'], true) : $row;
+        }
+
+        $stmtStudents = $pdo->query("SELECT * FROM \`siswa\` ORDER BY \`nama\` ASC");
+        $dbStudents = [];
+        while ($row = $stmtStudents->fetch()) {
+            $dbStudents[] = !empty($row['raw_data']) ? json_decode($row['raw_data'], true) : $row;
+        }
+
+        $stmtDocs = $pdo->query("SELECT * FROM \`dokumen_resmi\` ORDER BY \`updated_at\` DESC");
+        $dbDocs = [];
+        while ($row = $stmtDocs->fetch()) {
+            $dbDocs[] = !empty($row['content_json']) ? json_decode($row['content_json'], true) : $row;
+        }
+
+        echo json_encode([
+            'success'   => true,
+            'database'  => DB_NAME,
+            'profile'   => $dbProfile ? (!empty($dbProfile['raw_data']) ? json_decode($dbProfile['raw_data'], true) : $dbProfile) : null,
+            'teachers'  => $dbTeachers,
+            'students'  => $dbStudents,
+            'documents' => $dbDocs,
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        exit;
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Gagal baca dari MySQL: ' . $e->getMessage()]);
+        exit;
+    }
+}
+?>`;
+    addUniversalApiFile('sync.php', syncPhp);
+
+    // 5. api/health.php (Diagnostic JSON)
+    const healthPhp = `<?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, OPTIONS");
+header("Content-Type: application/json; charset=utf-8");
+
+require_once __DIR__ . '/db.php';
+
+try {
+    $pdo = getDbConnection();
+    $tables = ['madrasah_profil', 'guru_gtk', 'siswa', 'rombel', 'dokumen_resmi', 'activity_logs', 'sync_status'];
+    $counts = [];
+
+    foreach ($tables as $tbl) {
+        try {
+            $stmt = $pdo->query("SELECT COUNT(*) as cnt FROM \`$tbl\`");
+            $res = $stmt->fetch();
+            $counts[$tbl] = intval($res['cnt'] ?? 0);
+        } catch (Exception $e) {
+            $counts[$tbl] = 0;
+        }
+    }
+
+    echo json_encode([
+        'status'        => 'connected',
+        'success'       => true,
+        'message'       => 'Koneksi ke database MySQL cPanel [' . DB_NAME . '] berhasil aktif!',
+        'database'      => DB_NAME,
+        'user'          => DB_USER,
+        'host'          => DB_HOST,
+        'php_version'   => phpversion(),
+        'server_time'   => date('Y-m-d H:i:s T'),
+        'table_counts'  => $counts,
+        'app_url'       => (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/",
+        'sync_endpoint' => (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]" . dirname($_SERVER['REQUEST_URI']) . "/sync.php",
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode([
+        'status'   => 'disconnected',
+        'success'  => false,
+        'message'  => 'Gagal menghubungi MySQL: ' . $e->getMessage(),
+        'database' => DB_NAME,
+        'user'     => DB_USER,
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+}
+?>`;
+    addUniversalApiFile('health.php', healthPhp);
+
+    // 6. api/test.php (Visual HTML test page)
+    const testPhp = `<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Tes Koneksi MySQL cPanel - AutoMadrasah</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 p-6 text-slate-800">
+  <div class="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+    <div class="flex items-center space-x-3 mb-4">
+      <div class="w-10 h-10 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-bold">AM</div>
+      <div>
+        <h1 class="font-bold text-lg text-slate-900">Uji Koneksi MySQL cPanel AutoMadrasah</h1>
+        <p class="text-xs text-slate-500">Database: <code class="text-emerald-700 font-bold">${dbName}</code> | User: <code class="text-emerald-700 font-bold">${dbUser}</code></p>
+      </div>
+    </div>
+    <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl mb-4 text-xs space-y-2">
+      <?php
+      require_once __DIR__ . '/db.php';
+      try {
+          $pdo = getDbConnection();
+          echo '<p class="text-emerald-700 font-bold">✓ Berhasil terhubung ke database [' . DB_NAME . '] di host [' . DB_HOST . ']!</p>';
+          $stmt = $pdo->query("SHOW TABLES");
+          $tables = $stmt->fetchAll(PDO::FETCH_COLUMN);
+          echo '<p class="text-slate-600">Tabel aktif: ' . implode(', ', $tables) . '</p>';
+      } catch (Exception $e) {
+          echo '<p class="text-rose-600 font-bold">✗ Gagal: ' . htmlspecialchars($e->getMessage()) . '</p>';
+      }
+      ?>
+    </div>
+    <div class="text-xs text-slate-500 border-t pt-3 flex justify-between items-center">
+      <span>AutoMadrasah Kemenag RI</span>
+      <a href="../" class="text-emerald-700 font-bold hover:underline">Buka Aplikasi AutoMadrasah &rarr;</a>
+    </div>
+  </div>
+</body>
+</html>`;
+    addUniversalApiFile('test.php', testPhp);
+
+    // 7. api/status.php (The diagnostic overview card)
+    const statusPhp = `<?php
+require_once __DIR__ . '/db.php';
+$connOk = false;
+$msg = '';
+$counts = ['guru' => 0, 'siswa' => 0, 'dokumen' => 0];
+try {
+    $pdo = getDbConnection();
+    $connOk = true;
+    $counts['guru'] = $pdo->query("SELECT COUNT(*) FROM \`guru_gtk\`")->fetchColumn();
+    $counts['siswa'] = $pdo->query("SELECT COUNT(*) FROM \`siswa\`")->fetchColumn();
+    $counts['dokumen'] = $pdo->query("SELECT COUNT(*) FROM \`dokumen_resmi\`")->fetchColumn();
+} catch (Exception $e) {
+    $msg = $e->getMessage();
+}
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Status API & Sinkronisasi MySQL - AutoMadrasah</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col p-4 sm:p-8">
+  <div class="max-w-4xl mx-auto w-full space-y-6">
+    <header class="bg-emerald-950 text-white p-5 rounded-2xl flex items-center justify-between shadow-lg">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-800 flex items-center justify-center font-bold text-emerald-300">AM</div>
+        <div>
+          <h1 class="font-bold text-base leading-tight">${profile.namaMadrasah || 'MI Ma\'arif NU 2 Sanggreman'}</h1>
+          <p class="text-xs text-emerald-300">Portal API & Sinkronisasi Database MySQL</p>
+        </div>
+      </div>
+      <a href="../" class="px-3.5 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl transition-all">
+        Buka Aplikasi Web &rarr;
+      </a>
+    </header>
+
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">Status Koneksi MySQL cPanel</h2>
+          <p class="text-xs text-slate-500">Database: <code class="font-bold text-emerald-700">${dbName}</code> | Host: <code class="font-bold text-emerald-700">${dbHost}</code></p>
+        </div>
+        <span class="px-3 py-1 text-xs font-bold rounded-full inline-flex items-center gap-1.5 <?= $connOk ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800' ?>">
+          <span class="w-2 h-2 rounded-full <?= $connOk ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500' ?>"></span>
+          <?= $connOk ? 'MySQL Tersambung' : 'MySQL Terputus' ?>
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-200">
+          <p class="text-xs font-medium text-emerald-700">Dokumen Resmi</p>
+          <p class="text-2xl font-black text-emerald-950 mt-1"><?= $counts['dokumen'] ?></p>
+          <p class="text-[11px] text-emerald-600 mt-0.5">Tabel \`dokumen_resmi\`</p>
+        </div>
+        <div class="p-4 bg-blue-50 rounded-xl border border-blue-200">
+          <p class="text-xs font-medium text-blue-700">Guru & GTK</p>
+          <p class="text-2xl font-black text-blue-950 mt-1"><?= $counts['guru'] ?></p>
+          <p class="text-[11px] text-blue-600 mt-0.5">Tabel \`guru_gtk\`</p>
+        </div>
+        <div class="p-4 bg-amber-50 rounded-xl border border-amber-200">
+          <p class="text-xs font-medium text-amber-700">Peserta Didik</p>
+          <p class="text-2xl font-black text-amber-950 mt-1"><?= $counts['siswa'] ?></p>
+          <p class="text-[11px] text-amber-600 mt-0.5">Tabel \`siswa\`</p>
+        </div>
+      </div>
+
+      <div class="space-y-2 text-xs">
+        <p class="font-bold text-slate-800">Endpoint REST API:</p>
+        <div class="p-3 bg-slate-50 rounded-xl font-mono text-[11px] space-y-1 text-slate-700">
+          <p><span class="text-emerald-700 font-bold">POST</span> /api/sync.php &rarr; Simpan data dari aplikasi ke MySQL</p>
+          <p><span class="text-blue-700 font-bold">GET</span> /api/sync.php &rarr; Ambil snapshot data dari MySQL</p>
+          <p><span class="text-purple-700 font-bold">GET</span> /api/health.php &rarr; Cek status koneksi JSON</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
+    addUniversalApiFile('status.php', statusPhp);
+
+    // 8. Snapshot data JSON & database.sql
+    const dataSnapshot = {
+      profile,
+      teachers,
+      students,
+      rombels,
+      documents,
+      logs,
+      exportedAt: new Date().toISOString(),
+      system: 'AutoMadrasah Full React Web Application',
+    };
+    const jsonStr = JSON.stringify(dataSnapshot, null, 2);
+    addUniversalFile('madrasah-data.json', jsonStr);
+
+    const fullSql = generateMadrasahSqlDump({
+      profile,
+      teachers,
+      students,
+      rombels,
+      documents,
+      logs,
+      dbDialect: 'MYSQL',
+      dbName,
+    });
+    addUniversalFile('database.sql', fullSql);
+
+    // 9. Initial state injector for browser localStorage bootstrap
+    const stateBootstrapScript = `
+window.__INITIAL_MADRASAH_DATA__ = ${JSON.stringify(dataSnapshot)};
+(function() {
+  try {
+    if (!localStorage.getItem('MADRASAH_PROFILE') && window.__INITIAL_MADRASAH_DATA__) {
+      localStorage.setItem('MADRASAH_PROFILE', JSON.stringify(window.__INITIAL_MADRASAH_DATA__.profile));
+      localStorage.setItem('MADRASAH_TEACHERS', JSON.stringify(window.__INITIAL_MADRASAH_DATA__.teachers));
+      localStorage.setItem('MADRASAH_STUDENTS', JSON.stringify(window.__INITIAL_MADRASAH_DATA__.students));
+      localStorage.setItem('MADRASAH_ROMBELS', JSON.stringify(window.__INITIAL_MADRASAH_DATA__.rombels));
+      localStorage.setItem('MADRASAH_DOCUMENTS', JSON.stringify(window.__INITIAL_MADRASAH_DATA__.documents));
+    }
+  } catch(e) {}
+})();
+`;
+    addUniversalFile('data-init.js', stateBootstrapScript);
+
+    // 10. Copy compiled React Single Page App files from dist/
+    const distPath = path.join(process.cwd(), 'dist');
+
+    function addDistFolderToZip(dirPath: string, relativePath = '') {
+      if (!fs.existsSync(dirPath)) return;
+      const items = fs.readdirSync(dirPath);
+      for (const item of items) {
+        if (item === 'server.cjs' || item === 'server.cjs.map') continue;
+
+        const fullPath = path.join(dirPath, item);
+        const rel = relativePath ? `${relativePath}/${item}` : item;
+        const stat = fs.statSync(fullPath);
+
+        if (stat.isDirectory()) {
+          addDistFolderToZip(fullPath, rel);
+        } else {
+          if (item === 'index.html' && !relativePath) {
+            // Inject data-init.js into index.html
+            let htmlContent = fs.readFileSync(fullPath, 'utf8');
+            if (!htmlContent.includes('data-init.js')) {
+              htmlContent = htmlContent.replace('</head>', '  <script src="/data-init.js"></script>\n  </head>');
+            }
+            addUniversalFile('index.html', htmlContent);
+          } else {
+            const content = fs.readFileSync(fullPath);
+            addUniversalFile(rel, content);
+          }
+        }
+      }
+    }
+
+    if (fs.existsSync(distPath)) {
+      addDistFolderToZip(distPath, '');
+    }
+
+    // 11. PHP index.php fallback
+    const indexPhp = `<?php
+/**
+ * AutoMadrasah cPanel Web Router
+ */
+if (file_exists(__DIR__ . '/index.html')) {
+    include __DIR__ . '/index.html';
+} elseif (file_exists(__DIR__ . '/public_html/index.html')) {
+    include __DIR__ . '/public_html/index.html';
+} else {
+    include __DIR__ . '/api/status.php';
+}
+?>`;
+    addUniversalFile('index.php', indexPhp);
+
+    // 12. Deployment Guide Markdown
+    const deployGuide = `# PANDUAN PEMASANGAN LENGKAP AUTOMADRASAH PADA CPANEL HOSTING
+
+Satuan Pendidikan: ${profile.namaMadrasah || 'MI Ma\'arif NU 2 Sanggreman'}
+Domain: ${domainName}
+Database: ${dbName} | User: ${dbUser}
+
+---
+
+## CARA PASANG (HANYA 2 LANGKAH):
+
+1. **Upload & Ekstrak Berkas ke cPanel:**
+   - Login ke cPanel hosting madrasah Anda (misal: https://${domainName}:2083).
+   - Masuk ke menu **File Manager** -> Buka folder **\`public_html\`**.
+   - Hapus atau kosongkan berkas lama jika ada.
+   - Klik **Upload** -> Pilih file ZIP ini (\`AUTOMADRASAH_CPANEL_FULL_APP.zip\`).
+   - Klik kanan file ZIP -> Pilih **Extract** ke \`public_html\`.
+
+2. **Buat Database MySQL (Jika Belum Ada):**
+   - Di cPanel, masuk ke menu **MySQL Databases**.
+   - Buat database: \`${dbName}\`.
+   - Buat user: \`${dbUser}\` (Password: \`${dbPass}\`).
+   - Masukkan user ke database tersebut dan centang **ALL PRIVILEGES**.
+   - (Opsional) Buka phpMyAdmin -> Pilih database \`${dbName}\` -> Import berkas \`database.sql\`.
+
+3. **Selesai! Buka Domain Anda:**
+   - Kunjungi \`https://${domainName}/\` di browser.
+   - Aplikasi AutoMadrasah lengkap langsung aktif secara instan!
+   - Untuk melihat status koneksi MySQL kapan saja, buka: \`https://${domainName}/api/status.php\` atau \`https://${domainName}/api/health.php\`.
+`;
+    addUniversalFile('CPANEL_DEPLOY_GUIDE.md', deployGuide);
+    addUniversalFile('BACA_PANDUAN_CPANEL.txt', `Panduan pemasangan: Upload dan ekstrak file ZIP ini langsung ke dalam folder public_html di cPanel File Manager. Kunjungi domain Anda untuk membuka aplikasi AutoMadrasah.`);
+
+    const buffer = await zip.generateAsync({
+      type: 'nodebuffer',
+      compression: 'DEFLATE',
+      compressionOptions: { level: 9 },
+    });
+
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', `attachment; filename=AUTOMADRASAH_CPANEL_FULL_APP.zip`);
+    res.send(buffer);
+  } catch (error: any) {
+    console.error('Error generating cpanel bundle:', error);
+    res.status(500).json({ error: error.message || 'Gagal membuat paket cPanel' });
+  }
+});
+
 
 // AI Document Generation Endpoint
 app.post('/api/ai/generate-kom', async (req, res) => {

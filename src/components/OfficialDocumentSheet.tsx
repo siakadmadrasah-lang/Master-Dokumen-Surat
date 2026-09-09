@@ -19,6 +19,7 @@ import { KomDocumentView } from './documents/KomDocumentView';
 import { KomCintaDocumentView } from './documents/KomCintaDocumentView';
 import { SkDocumentView } from './documents/SkDocumentView';
 import { KemenagLogo, MaarifNuLogo } from './OfficialLogos';
+import { OfficialLetterhead } from './OfficialLetterhead';
 
 interface OfficialDocumentSheetProps {
   document: OfficialDocument;
@@ -64,71 +65,7 @@ export const OfficialDocumentSheet: React.FC<OfficialDocumentSheetProps> = ({
       >
         {/* KOP SURAT RESMI KEMENAG RI (Ditampilkan untuk Dokumen SK / Surat Resmi, tidak menduplikasi Cover KOM / KOM CINTA) */}
         {type !== 'KOM' && type !== 'KOM_CINTA' && (
-          <>
-            <div className="border-b-[3px] border-double border-slate-900 pb-3 mb-5 print:mb-4">
-              <div className="flex items-center justify-between gap-3 sm:gap-4">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 flex items-center justify-center">
-                  {profile.logoKemenagUrl && !profile.logoKemenagUrl.includes('wikimedia.org') ? (
-                    <img
-                      src={profile.logoKemenagUrl}
-                      alt="Logo Kemenag"
-                      className="w-14 h-14 sm:w-18 sm:h-18 object-contain"
-                      referrerPolicy="no-referrer"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLElement).style.display = 'none';
-                      }}
-                    />
-                  ) : (
-                    <KemenagLogo className="w-14 h-14 sm:w-18 sm:h-18" />
-                  )}
-                </div>
-
-                <div className="text-center flex-1 space-y-0.5 px-1">
-                  <p className="text-[11px] sm:text-[13px] font-bold tracking-wider text-slate-800 uppercase">
-                    KEMENTERIAN AGAMA REPUBLIK INDONESIA
-                  </p>
-                  <p className="text-[10px] sm:text-[12px] font-semibold text-slate-800 uppercase">
-                    KANTOR KEMENTERIAN AGAMA {profile.kabupatenKota?.toUpperCase() || 'KABUPATEN BANYUMAS'}
-                  </p>
-                  <h1 className="text-base sm:text-xl font-extrabold text-emerald-950 uppercase tracking-wide">
-                    {profile.namaMadrasah}
-                  </h1>
-                  <p className="text-[10px] sm:text-[11px] text-slate-700 font-medium">
-                    NSM: <span className="font-mono font-bold">{profile.nsm}</span> | NPSN:{' '}
-                    <span className="font-mono font-bold">{profile.npsn}</span> | Akreditasi: {profile.akreditasi}
-                  </p>
-                  <p className="text-[9.5px] sm:text-[10px] text-slate-600 line-clamp-2">
-                    {profile.alamat}, {profile.desaKelurahan}, Kec. {profile.kecamatan},{' '}
-                    {profile.kabupatenKota}, {profile.provinsi} {profile.kodePos ? `- Kode Pos: ${profile.kodePos}` : ''}
-                  </p>
-                  <p className="text-[9.5px] sm:text-[10px] text-slate-600">
-                    Telp: {profile.telepon || '(0281) 6841234'} | Email: {profile.email} {profile.website ? `| Website: ${profile.website}` : ''}
-                  </p>
-                </div>
-
-                <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 flex items-center justify-center">
-                  {profile.logoMadrasahUrl ? (
-                    <img
-                      src={profile.logoMadrasahUrl}
-                      alt="Logo Madrasah"
-                      className="w-14 h-14 sm:w-18 sm:h-18 object-contain"
-                      referrerPolicy="no-referrer"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLElement).style.display = 'none';
-                      }}
-                    />
-                  ) : (
-                    <MaarifNuLogo className="w-14 h-14 sm:w-18 sm:h-18" />
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Bismillah for Islamic Madrasah Official Letters */}
-            <div className="text-center my-3 font-serif text-lg text-emerald-900">
-              بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
-            </div>
-          </>
+          <OfficialLetterhead profile={profile} className="mb-4" />
         )}
 
         {/* ===================== DOKUMEN TYPE: KOM (KURIKULUM OPERASIONAL MADRASAH) ===================== */}

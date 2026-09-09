@@ -404,14 +404,14 @@ export const CpanelExportCard: React.FC<CpanelExportCardProps> = ({
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
                 <FolderArchive className="w-4 h-4 text-emerald-400" />
-                <span>Paket ZIP Universal cPanel & Plesk (Aman Ditimpa)</span>
+                <span>Paket ZIP Aplikasi Web Lengkap (Full React App + MySQL REST API)</span>
               </h4>
               <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-bold border border-emerald-500/30">
-                public_html + httpdocs
+                Full Production SPA
               </span>
             </div>
             <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
-              Arsip All-in-One: menyertakan berkas cPanel (<code className="text-emerald-300 font-mono">public_html</code>) & Plesk (<code className="text-emerald-300 font-mono">httpdocs</code>, <code className="text-emerald-300 font-mono">web.config</code>, <code className="text-emerald-300 font-mono">plesk-nginx.conf</code>). Berkas Plesk yang sebelumnya diunggah ke cPanel tetap utuh dan tidak hilang saat ditimpa.
+              Paket ini berisi <strong>seluruh aplikasi web AutoMadrasah lengkap</strong> (Portal Dokumen Resmi, Login Admin, SK Pembagian Tugas, KOM 78 Halaman, Arsip & Cetak PDF, Verifikasi TTE QR Code) beserta berkas backend PHP MySQL (<code className="text-emerald-300 font-mono">api/sync.php</code>, <code className="text-emerald-300 font-mono">api/health.php</code>, <code className="text-emerald-300 font-mono">config.php</code>, <code className="text-emerald-300 font-mono">database.sql</code>). Saat diekstrak di <code className="text-emerald-300 font-mono">public_html</code>, domain Anda akan menampilkan aplikasi web secara penuh.
             </p>
           </div>
 
@@ -435,13 +435,21 @@ export const CpanelExportCard: React.FC<CpanelExportCardProps> = ({
               className="w-full py-2.5 px-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 rounded-xl text-xs font-black shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer hover:shadow-emerald-500/20"
             >
               <Download className="w-4 h-4 text-slate-950" />
-              <span>Unduh ZIP cPanel & Plesk (Dual-Stack Auto MySQL)</span>
+              <span>Unduh ZIP Aplikasi Lengkap cPanel (Full App + MySQL)</span>
             </button>
           )}
 
           <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-emerald-900/60">
-            <span>Kompatibel: cPanel, Plesk, LiteSpeed</span>
-            <span className="text-emerald-300 font-semibold">Berkas Plesk & Unggahan Lama Aman</span>
+            <span>Kompatibel: cPanel (public_html) & Plesk</span>
+            <a
+              href={`https://${syncConfig.domainName}/api/status.php`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-emerald-300 hover:text-emerald-200 underline flex items-center gap-1"
+            >
+              <span>Status API di Domain</span>
+              <ExternalLink className="w-2.5 h-2.5" />
+            </a>
           </div>
         </div>
       </div>

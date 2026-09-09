@@ -32,6 +32,7 @@ import {
   Bookmark,
   Check,
   Building,
+  Home,
 } from 'lucide-react';
 import {
   MadrasahProfile,
@@ -256,7 +257,7 @@ export const PublicPortalView: React.FC<PublicPortalViewProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-emerald-500 selection:text-white pb-20 md:pb-0">
       {/* Top Floating Official Public Header */}
       <header className="bg-emerald-950 text-white border-b border-emerald-800 sticky top-0 z-40 shadow-xl backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
@@ -1145,6 +1146,103 @@ export const PublicPortalView: React.FC<PublicPortalViewProps> = ({
           </p>
         </div>
       </footer>
+
+      {/* Sticky Bottom Navigation for Mobile / Android */}
+      <nav
+        id="mobile-android-public-sticky-footer"
+        aria-label="Navigasi Bawah Ruang Publik Android"
+        className="fixed bottom-0 left-0 right-0 z-50 bg-emerald-950/95 backdrop-blur-md border-t border-emerald-800/90 text-white shadow-[0_-4px_24px_rgba(0,0,0,0.35)] md:hidden px-2 py-1.5 flex items-center justify-around"
+      >
+        <button
+          type="button"
+          onClick={() => {
+            setActivePublicTab('OVERVIEW');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition-all cursor-pointer ${
+            activePublicTab === 'OVERVIEW'
+              ? 'text-emerald-300 font-bold bg-emerald-900/80'
+              : 'text-slate-300 hover:text-white'
+          }`}
+        >
+          <Home className="w-4 h-4" />
+          <span className="text-[10px] mt-0.5 whitespace-nowrap">Beranda</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            setActivePublicTab('KOM_CINTA');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition-all cursor-pointer ${
+            activePublicTab === 'KOM_CINTA'
+              ? 'text-rose-300 font-bold bg-emerald-900/80'
+              : 'text-slate-300 hover:text-white'
+          }`}
+        >
+          <Heart className="w-4 h-4 text-rose-400" />
+          <span className="text-[10px] mt-0.5 whitespace-nowrap">CINTA</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            setActivePublicTab('DOCUMENTS');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition-all cursor-pointer ${
+            activePublicTab === 'DOCUMENTS'
+              ? 'text-emerald-300 font-bold bg-emerald-900/80'
+              : 'text-slate-300 hover:text-white'
+          }`}
+        >
+          <FileText className="w-4 h-4" />
+          <span className="text-[10px] mt-0.5 whitespace-nowrap">Dokumen</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            setActivePublicTab('VERIFY');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition-all cursor-pointer ${
+            activePublicTab === 'VERIFY'
+              ? 'text-emerald-300 font-bold bg-emerald-900/80'
+              : 'text-slate-300 hover:text-white'
+          }`}
+        >
+          <ShieldCheck className="w-4 h-4" />
+          <span className="text-[10px] mt-0.5 whitespace-nowrap">Cek TTE</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            setActivePublicTab('STUDENT_SERVICE');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition-all cursor-pointer ${
+            activePublicTab === 'STUDENT_SERVICE'
+              ? 'text-emerald-300 font-bold bg-emerald-900/80'
+              : 'text-slate-300 hover:text-white'
+          }`}
+        >
+          <Send className="w-4 h-4" />
+          <span className="text-[10px] mt-0.5 whitespace-nowrap">Ajukan</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={onOpenLogin}
+          className="flex flex-col items-center justify-center py-1 px-2 rounded-xl transition-all cursor-pointer text-amber-300 hover:text-amber-200"
+          title="Login Admin / GTK"
+        >
+          <LogIn className="w-4 h-4" />
+          <span className="text-[10px] mt-0.5 whitespace-nowrap">Login</span>
+        </button>
+      </nav>
     </div>
   );
 };

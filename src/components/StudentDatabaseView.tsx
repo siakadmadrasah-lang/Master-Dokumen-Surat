@@ -186,6 +186,18 @@ export const StudentDatabaseView: React.FC<StudentDatabaseViewProps> = ({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          {/* SIAKAD Sync Button */}
+          <button
+            id="sync-siakad-student-btn"
+            type="button"
+            onClick={() => setIsSiakadModalOpen(true)}
+            className="px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 shadow-xs"
+            title="Tarik data siswa dari siakad-madrasah.jaenalmaskun.biz.id"
+          >
+            <Globe className="w-3.5 h-3.5 text-emerald-700" />
+            <span>Tarik dari SIAKAD</span>
+          </button>
+
           {/* CSV Import */}
           <label
             id="import-csv-student-btn"
@@ -503,6 +515,20 @@ export const StudentDatabaseView: React.FC<StudentDatabaseViewProps> = ({
           </div>
         </div>
       )}
+
+      {/* SIAKAD Sync Modal for Students */}
+      <SiakadSyncModal
+        isOpen={isSiakadModalOpen}
+        onClose={() => setIsSiakadModalOpen(false)}
+        initialTarget="students"
+        onApplySync={(result) => {
+          if (onSyncFromSiakad) {
+            onSyncFromSiakad(result);
+          } else if (result.students && result.students.length > 0) {
+            onBulkImportStudents(result.students);
+          }
+        }}
+      />
     </div>
   );
 };

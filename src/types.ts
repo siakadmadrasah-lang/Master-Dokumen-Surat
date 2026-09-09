@@ -2,6 +2,24 @@ export type JenjangMadrasah = 'RA' | 'MI' | 'MTs' | 'MA' | 'MAK';
 export type StatusMadrasah = 'Negeri' | 'Swasta';
 export type Semester = 'Ganjil' | 'Genap';
 
+export interface KopSuratConfig {
+  baris1Instansi?: string; // e.g. "KEMENTERIAN AGAMA REPUBLIK INDONESIA" / "LEMBAGA PENDIDIKAN MA'ARIF NU"
+  baris2Wilayah?: string; // e.g. "KANTOR KEMENTERIAN AGAMA KABUPATEN BANYUMAS" / "PENGURUS CABANG LP MA'ARIF NU BANYUMAS"
+  namaMadrasahKop?: string; // e.g. "MADRASAH IBTIDAIYAH MA'ARIF NU 01 SANGGREMAN"
+  showLogoKiri?: boolean;
+  showLogoKanan?: boolean;
+  logoKiriUrl?: string;
+  logoKananUrl?: string;
+  logoKiriSize?: 'SM' | 'MD' | 'LG'; // 50px | 68px | 84px
+  logoKananSize?: 'SM' | 'MD' | 'LG'; // 50px | 68px | 84px
+  showBasmalah?: boolean;
+  garisPemisahStyle?: 'DOUBLE' | 'SINGLE' | 'THICK' | 'NONE';
+  warnaGaris?: string; // e.g. "#0f172a" or "#065f46"
+  customIdentitasText?: string; // Custom text for NSM/NPSN/Akreditasi
+  customAlamatText?: string; // Override full address line
+  customKontakText?: string; // Override phone / email / website line
+}
+
 export interface MadrasahProfile {
   namaMadrasah: string;
   nsm: string; // Nomor Statistik Madrasah
@@ -40,6 +58,7 @@ export interface MadrasahProfile {
   mapsEmbedUrl?: string;
   petaLokasiUrl?: string;
   denahLokasiUrl?: string;
+  kopSuratConfig?: KopSuratConfig;
 }
 
 export type StatusKepegawaian = 'PNS' | 'PPPK' | 'GTY' | 'GTT' | 'Honorer' | 'PTY';

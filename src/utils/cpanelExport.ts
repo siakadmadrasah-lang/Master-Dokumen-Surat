@@ -1295,17 +1295,61 @@ Jika muncul status **connected** atau tanda centang hijau, maka koneksi ke datab
 
 /**
  * Trigger otomatis unduh berkas ZIP cPanel di browser
+ * Mengunduh paket aplikasi web React lengkap (Vite SPA) + backend PHP REST API & MySQL dump
  */
 export const downloadCpanelZip = async (
   options: CpanelExportOptions,
   onProgress?: (percent: number, message: string) => void
 ): Promise<void> => {
-  const blob = await generateCpanelDeploymentZip(options, onProgress);
   const safeName = options.profile.namaMadrasah
     ? options.profile.namaMadrasah.replace(/[^a-zA-Z0-9]/g, '_').toUpperCase()
     : 'MADRASAH';
-  const fileName = `AUTOMADRASAH_CPANEL_MYSQL_SYNC_${safeName}_${Date.now()}.zip`;
+  const fileName = `AUTOMADRASAH_CPANEL_FULL_APP_${safeName}_${Date.now()}.zip`;
 
+  onProgress?.(15, 'Menghubungkan ke pembuat paket aplikasi cPanel lengkap...');
+
+  // 1. Coba request paket produksi lengkap (React App dist + PHP MySQL REST API) dari server
+  try {
+    const res = await fetch('/api/export/cpanel-bundle', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        profile: options.profile,
+        documents: options.documents,
+        teachers: options.teachers,
+        students: options.students,
+        rombels: options.rombels,
+        logs: options.logs,
+        dbName: options.dbName || 'masbagoes_dokmadrasah',
+        dbUser: options.dbUser || 'masbagoes_dokmadrasah',
+        dbPass: options.dbPass || 'masbagus15',
+        dbHost: options.dbHost || 'localhost',
+        domainName: options.domainName || 'dok-madrasah.masbagoes.web.id',
+      }),
+    });
+
+    if (res.ok) {
+      onProgress?.(80, 'Mengunduh paket aplikasi cPanel lengkap (.zip)...');
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      onProgress?.(100, 'Paket aplikasi cPanel lengkap siap dipasang!');
+      return;
+    }
+  } catch (err) {
+    console.warn('Gagal memanggil API exporter server, beralih ke generator JSZip client:', err);
+  }
+
+  // 2. Fallback client-side generator jika server API tidak dapat dijangkau
+  const blob = await generateCpanelDeploymentZip(options, onProgress);
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;

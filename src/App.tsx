@@ -25,6 +25,7 @@ import { DocumentGeneratorView } from './components/DocumentGeneratorView';
 import { DocumentArchiveView } from './components/DocumentArchiveView';
 import { TeacherDatabaseView } from './components/TeacherDatabaseView';
 import { StudentDatabaseView } from './components/StudentDatabaseView';
+import { KopSuratEditorView } from './components/KopSuratEditorView';
 import { SignatureVerificationView } from './components/SignatureVerificationView';
 import { SettingsSyncView } from './components/SettingsSyncView';
 import { SignatureCanvasModal } from './components/SignatureCanvasModal';
@@ -47,11 +48,20 @@ export default function App() {
   });
 
   const [appMode, setAppMode] = useState<'ADMIN' | 'PUBLIC' | 'LOGIN'>(() => {
+    // Check URL parameters for direct view switching (e.g. ?mode=admin or ?mode=public)
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const urlMode = params.get('mode')?.toUpperCase();
+      if (urlMode === 'LOGIN') return 'LOGIN';
+      if (urlMode === 'ADMIN') return 'ADMIN';
+      if (urlMode === 'PUBLIC') return 'PUBLIC';
+    }
     const saved = getStoredData<UserSession | null>('MADRASAH_USER_SESSION', null);
     if (saved && saved.id !== 'usr_admin_1' && saved.name) {
       return getStoredData<'ADMIN' | 'PUBLIC' | 'LOGIN'>('MADRASAH_APP_MODE', 'ADMIN');
     }
-    return 'LOGIN';
+    // Default to PUBLIC portal so visitors see the official school portal & documents, with 1-click Login button
+    return 'PUBLIC';
   });
   const [profile, setProfile] = useState<MadrasahProfile>(() => {
     const loaded = getStoredData<MadrasahProfile>('MADRASAH_PROFILE', DEFAULT_MADRASAH_PROFILE);
@@ -314,6 +324,41 @@ export default function App() {
     setAppMode('LOGIN');
   };
 
+  // SIAKAD Synchronization Handler (Teachers & Students)
+  const handleSyncFromSiakad = (result: {
+    teachers?: Teacher[];
+    students?: Student[];
+    mode: 'MERGE' | 'REPLACE';
+  }) => {
+    if (result.teachers && result.teachers.length > 0) {
+      if (result.mode === 'REPLACE') {
+        setTeachers(result.teachers);
+        addLog(`Sinkronisasi SIAKAD: Mengganti seluruh database dengan ${result.teachers.length} guru`, undefined, 'SYNC');
+      } else {
+        setTeachers((prev) => {
+          const existingIds = new Set(prev.map((t) => t.id || t.nip || t.nuptk));
+          const newOnes = result.teachers!.filter((t) => !existingIds.has(t.id) && (!t.nip || !existingIds.has(t.nip)));
+          return [...prev, ...newOnes];
+        });
+        addLog(`Sinkronisasi SIAKAD: Menggabungkan ${result.teachers.length} data guru`, undefined, 'SYNC');
+      }
+    }
+
+    if (result.students && result.students.length > 0) {
+      if (result.mode === 'REPLACE') {
+        setStudents(result.students);
+        addLog(`Sinkronisasi SIAKAD: Mengganti seluruh database dengan ${result.students.length} peserta didik`, undefined, 'SYNC');
+      } else {
+        setStudents((prev) => {
+          const existingIds = new Set(prev.map((s) => s.id || s.nisn || s.nis));
+          const newOnes = result.students!.filter((s) => !existingIds.has(s.id) && (!s.nisn || !existingIds.has(s.nisn)));
+          return [...prev, ...newOnes];
+        });
+        addLog(`Sinkronisasi SIAKAD: Menggabungkan ${result.students.length} data peserta didik`, undefined, 'SYNC');
+      }
+    }
+  };
+
   // 1. Render Public Portal (Ruang Publik) Mode - Accessible by anyone
   if (appMode === 'PUBLIC') {
     return (
@@ -468,8 +513,21 @@ export default function App() {
               setTeachers((prev) => [...prev, ...imported]);
               addLog(`Mengimpor ${imported.length} data guru dari CSV EMIS`);
             }}
+            onSyncFromSiakad={handleSyncFromSiakad}
             onGenerateSuratTugas={handleGenerateSuratTugasForTeacher}
             onBack={() => setActiveTab('DASHBOARD')}
+          />
+        )}
+
+        {activeTab === 'KOP_SURAT' && (
+          <KopSuratEditorView
+            profile={profile}
+            onUpdateProfile={(newProfile) => {
+              setProfile(newProfile);
+              addLog('Memperbarui desain & tata naskah Kop Surat resmi');
+            }}
+            onBack={() => setActiveTab('DASHBOARD')}
+            onAddLog={(action) => addLog(action, undefined, 'SYSTEM')}
           />
         )}
 
@@ -495,6 +553,7 @@ export default function App() {
               setStudents((prev) => [...prev, ...imported]);
               addLog(`Mengimpor ${imported.length} data peserta didik dari CSV EMIS`);
             }}
+            onSyncFromSiakad={handleSyncFromSiakad}
             onGenerateSuratAktif={handleGenerateSuratAktifForStudent}
             onGenerateSuratMutasi={handleGenerateSuratMutasiForStudent}
             onBack={() => setActiveTab('DASHBOARD')}
@@ -529,6 +588,7 @@ export default function App() {
               setDocuments(synced);
               addLog(`Melakukan sinkronisasi massal seluruh data guru dan siswa ke ${synced.length} dokumen`, undefined, 'SYNC');
             }}
+            onOpenKopSuratEditor={() => setActiveTab('KOP_SURAT')}
             onBack={() => setActiveTab('DASHBOARD')}
             onAddLog={(action) => addLog(action, undefined, 'SYSTEM')}
           />

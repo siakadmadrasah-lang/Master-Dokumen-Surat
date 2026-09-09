@@ -12,6 +12,7 @@ import {
   GraduationCap,
   Settings,
   Heart,
+  Building,
 } from 'lucide-react';
 import { ActiveTab } from './Navbar';
 import { MadrasahProfile, OfficialDocument } from '../types';
@@ -61,6 +62,7 @@ export const StickyActionFooter: React.FC<StickyActionFooterProps> = ({
     KOM_CINTA: { name: 'Modul KOM CINTA (KMA 1503)', icon: Heart },
     GENERATOR: { name: 'Generator SK & KOM (AI)', icon: Sparkles },
     DOCUMENTS: { name: 'Arsip Dokumen Resmi', icon: FileText },
+    KOP_SURAT: { name: 'Editor Kop Surat Resmi', icon: Building },
     TEACHERS: { name: 'Database Guru (GTK)', icon: Users },
     STUDENTS: { name: 'Database Peserta Didik', icon: GraduationCap },
     VERIFICATION: { name: 'Validasi QR TTE', icon: ShieldCheck },

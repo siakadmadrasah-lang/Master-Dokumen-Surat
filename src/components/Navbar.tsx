@@ -13,6 +13,7 @@ import {
   LogOut,
   User,
   Heart,
+  Building,
 } from 'lucide-react';
 import { MadrasahProfile } from '../types';
 import { UserSession } from './LoginPage';
@@ -22,6 +23,7 @@ export type ActiveTab =
   | 'KOM_CINTA'
   | 'GENERATOR'
   | 'DOCUMENTS'
+  | 'KOP_SURAT'
   | 'TEACHERS'
   | 'STUDENTS'
   | 'VERIFICATION'
@@ -51,6 +53,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'KOM_CINTA' as ActiveTab, label: 'KOM CINTA', icon: Heart, highlightBadge: 'KMA 1503' },
     { id: 'GENERATOR' as ActiveTab, label: 'Buat Dokumen (AI)', icon: Sparkles, highlight: true },
     { id: 'DOCUMENTS' as ActiveTab, label: 'Arsip Dokumen', icon: FileText, badge: pendingSignCount },
+    { id: 'KOP_SURAT' as ActiveTab, label: 'Kop Surat', icon: Building },
     { id: 'TEACHERS' as ActiveTab, label: 'Database Guru', icon: Users },
     { id: 'STUDENTS' as ActiveTab, label: 'Database Siswa', icon: GraduationCap },
     { id: 'VERIFICATION' as ActiveTab, label: 'Validasi QR TTE', icon: ShieldCheck },
