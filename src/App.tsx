@@ -435,7 +435,6 @@ export default function App() {
             students={students}
             userSession={userSession}
             onUpdateAvatar={handleUpdateAvatar}
-            onUpdateHero={handleUpdateHero}
             onOpenDashboard={() => setAppMode('ADMIN')}
             onLogout={handleLogout}
             onOpenSettings={() => {

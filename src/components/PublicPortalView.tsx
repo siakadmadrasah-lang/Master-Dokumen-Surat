@@ -49,7 +49,6 @@ import { MaarifNuLogo } from './OfficialLogos';
 import { AdminProfileModal } from './AdminProfileModal';
 import { UserSession, SUPER_ADMIN_AVATAR } from './LoginPage';
 import { TypewriterTitle } from './TypewriterTitle';
-import { HeroEditorModal } from './HeroEditorModal';
 
 interface PublicPortalViewProps {
   profile: MadrasahProfile;
@@ -63,7 +62,6 @@ interface PublicPortalViewProps {
   onOpenDashboard?: () => void;
   onLogout?: () => void;
   onOpenSettings?: () => void;
-  onUpdateHero?: (updatedHero: HeroConfig) => void;
 }
 
 export const PublicPortalView: React.FC<PublicPortalViewProps> = ({
@@ -78,14 +76,12 @@ export const PublicPortalView: React.FC<PublicPortalViewProps> = ({
   onOpenDashboard,
   onLogout,
   onOpenSettings,
-  onUpdateHero,
 }) => {
   const [activePublicTab, setActivePublicTab] = useState<'OVERVIEW' | 'KOM_CINTA' | 'DOCUMENTS' | 'VERIFY' | 'TEACHERS' | 'STUDENT_SERVICE'>('OVERVIEW');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [komCintaSectionFilter, setKomCintaSectionFilter] = useState<'ALL' | 'COVER' | 'PENGESAHAN' | 'BAB1' | 'BAB2' | 'BAB3' | 'BAB4' | 'BAB5' | 'LAMPIRAN'>('ALL');
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const [showHeroModal, setShowHeroModal] = useState(false);
 
   const adminAvatarUrl =
     userSession?.avatarUrl ||
@@ -443,23 +439,11 @@ export const PublicPortalView: React.FC<PublicPortalViewProps> = ({
               >
                 <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
                   <div className="lg:col-span-8 space-y-3">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div>
                       <div className="inline-flex items-center space-x-2 bg-emerald-800/80 text-emerald-200 px-3 py-1 rounded-full text-xs font-semibold border border-emerald-600/40 shadow-xs">
                         <Heart className="w-3.5 h-3.5 text-rose-400 fill-rose-400" />
                         <span>{heroBadge}</span>
                       </div>
-
-                      {/* Edit Hero Button - Direct Access for Admin */}
-                      <button
-                        type="button"
-                        id="btn-edit-hero-banner"
-                        onClick={() => setShowHeroModal(true)}
-                        className="inline-flex items-center space-x-1.5 px-3 py-1 bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 rounded-full text-xs font-bold shadow-md border border-amber-300 transition-all cursor-pointer hover:shadow-amber-500/20"
-                        title="Edit Judul, Sambutan, & Warna Hero"
-                      >
-                        <Sparkles className="w-3.5 h-3.5 text-slate-950" />
-                        <span>Edit Tampilan Hero</span>
-                      </button>
                     </div>
 
                     <div className="h-10 sm:h-14 flex items-center overflow-hidden max-w-full">
@@ -1392,19 +1376,6 @@ export const PublicPortalView: React.FC<PublicPortalViewProps> = ({
         onLogout={onLogout}
         onOpenSettings={onOpenSettings}
       />
-
-      {/* Hero Editor Modal */}
-      {onUpdateHero && (
-        <HeroEditorModal
-          isOpen={showHeroModal}
-          onClose={() => setShowHeroModal(false)}
-          profile={profile}
-          onSaveHero={(updatedHero) => {
-            onUpdateHero(updatedHero);
-            setShowHeroModal(false);
-          }}
-        />
-      )}
     </div>
   );
 };
