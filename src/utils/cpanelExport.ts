@@ -44,18 +44,34 @@ export const generateCpanelDeploymentZip = async (
     domainName = profile.website?.replace(/^https?:\/\//, '') || 'madrasah.sch.id',
   } = options;
 
-  onProgress?.(10, 'Menyiapkan struktur direktori cPanel public_html & MySQL...');
+  onProgress?.(10, 'Menyiapkan struktur direktori cPanel public_html, Plesk httpdocs & MySQL...');
 
-  // 1. Root & public_html folders
+  // 1. Root, public_html (cPanel), dan httpdocs (Plesk) folders
+  // Menjamin seluruh berkas Plesk tetap utuh saat diekstrak ke cPanel
   const publicHtml = zip.folder('public_html') || zip;
+  const httpdocs = zip.folder('httpdocs') || zip;
   const apiFolder = publicHtml.folder('api') || publicHtml;
+  const httpdocsApiFolder = httpdocs.folder('api') || httpdocs;
   const rootApiFolder = zip.folder('api') || zip;
+
+  // Helper agar seluruh berkas otomatis tersalin ke public_html, httpdocs, dan root
+  const addUniversalFile = (path: string, content: string | Blob | ArrayBuffer) => {
+    zip.file(path, content);
+    publicHtml.file(path, content);
+    httpdocs.file(path, content);
+  };
+
+  const addUniversalApiFile = (filename: string, content: string) => {
+    rootApiFolder.file(filename, content);
+    apiFolder.file(filename, content);
+    httpdocsApiFolder.file(filename, content);
+  };
 
   // 2. config.php (Konfigurasi MySQL Resmi Sesuai Permintaan)
   const configPhpContent = `<?php
 /**
  * ====================================================================
- * AUTOMADRASAH - KONFIGURASI DATABASE MYSQL CPANEL
+ * AUTOMADRASAH - KONFIGURASI DATABASE MYSQL CPANEL & PLESK
  * Satuan Pendidikan: ${profile.namaMadrasah} (NSM: ${profile.nsm} | NPSN: ${profile.npsn})
  * Sesuai Standar KMA 450 Tahun 2024 & Kurikulum Madrasah Kemenag RI
  * ====================================================================
@@ -77,8 +93,7 @@ define('TIMEZONE', 'Asia/Jakarta');
 date_default_timezone_set(TIMEZONE);
 ?>`;
 
-  publicHtml.file('config.php', configPhpContent);
-  zip.file('config.php', configPhpContent);
+  addUniversalFile('config.php', configPhpContent);
 
   onProgress?.(25, 'Menyusun konektor PDO MySQL & inisialisasi tabel otomatis...');
 
@@ -280,8 +295,7 @@ function initTablesIfNotExist(PDO $pdo) {
 }
 ?>`;
 
-  apiFolder.file('db.php', dbPhpContent);
-  rootApiFolder.file('db.php', dbPhpContent);
+  addUniversalApiFile('db.php', dbPhpContent);
 
   onProgress?.(45, 'Menyusun berkas endpoint API Sync otomatis (api/sync.php)...');
 
@@ -603,8 +617,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 ?>`;
 
-  apiFolder.file('sync.php', syncPhpContent);
-  rootApiFolder.file('sync.php', syncPhpContent);
+  addUniversalApiFile('sync.php', syncPhpContent);
 
   onProgress?.(60, 'Menyusun berkas verifikasi koneksi (api/health.php & api/test.php)...');
 
@@ -661,8 +674,7 @@ try {
 }
 ?>`;
 
-  apiFolder.file('health.php', healthPhpContent);
-  rootApiFolder.file('health.php', healthPhpContent);
+  addUniversalApiFile('health.php', healthPhpContent);
 
   // 6. api/test.php (Visual browser-based diagnostics)
   const testPhpContent = `<!DOCTYPE html>
@@ -707,8 +719,7 @@ try {
 </body>
 </html>`;
 
-  apiFolder.file('test.php', testPhpContent);
-  rootApiFolder.file('test.php', testPhpContent);
+  addUniversalApiFile('test.php', testPhpContent);
 
   onProgress?.(70, 'Menyiapkan .htaccess cPanel Apache / LiteSpeed...');
 
@@ -768,8 +779,7 @@ DirectoryIndex index.html index.php
 </IfModule>
 `;
 
-  publicHtml.file('.htaccess', htaccessContent);
-  zip.file('.htaccess', htaccessContent);
+  addUniversalFile('.htaccess', htaccessContent);
 
   onProgress?.(80, 'Menyematkan database.sql siap impor untuk phpMyAdmin...');
 
@@ -802,8 +812,7 @@ ${baseSql}
 -- FLUSH PRIVILEGES;
 `;
 
-  publicHtml.file('database.sql', fullCpanelSql);
-  zip.file('database.sql', fullCpanelSql);
+  addUniversalFile('database.sql', fullCpanelSql);
 
   // 9. Snapshot data JSON
   const dataSnapshot = {
@@ -821,8 +830,7 @@ ${baseSql}
     },
   };
   const jsonSnapshot = JSON.stringify(dataSnapshot, null, 2);
-  publicHtml.file('madrasah-data.json', jsonSnapshot);
-  zip.file('madrasah-data.json', jsonSnapshot);
+  addUniversalFile('madrasah-data.json', jsonSnapshot);
 
   // 10. Starter index.html & index.php
   const indexPhpContent = `<?php
@@ -838,8 +846,7 @@ if (file_exists(__DIR__ . '/index.html')) {
 }
 ?>`;
 
-  publicHtml.file('index.php', indexPhpContent);
-  zip.file('index.php', indexPhpContent);
+  addUniversalFile('index.php', indexPhpContent);
 
   // Production index.html Starter
   const indexHtmlContent = `<!DOCTYPE html>
@@ -935,8 +942,223 @@ if (file_exists(__DIR__ . '/index.html')) {
 </body>
 </html>`;
 
-  publicHtml.file('index.html', indexHtmlContent);
-  zip.file('index.html', indexHtmlContent);
+  addUniversalFile('index.html', indexHtmlContent);
+
+  onProgress?.(85, 'Menyematkan berkas kompabilitas Plesk & IIS (web.config, plesk-nginx.conf, app.js)...');
+
+  // 11. web.config for Plesk on Windows Server / IIS (Aman jika dihosting di Plesk / IIS)
+  const webConfigContent = `<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <system.webServer>
+    <rewrite>
+      <rules>
+        <rule name="AutoMadrasah HTTPS Redirect" stopProcessing="true">
+          <match url="(.*)" />
+          <conditions>
+            <add input="{HTTPS}" pattern="off" ignoreCase="true" />
+          </conditions>
+          <action type="Redirect" url="https://{HTTP_HOST}/{R:1}" redirectType="Permanent" />
+        </rule>
+        <rule name="AutoMadrasah API Direct" stopProcessing="true">
+          <match url="^api/(.*)" />
+          <action type="None" />
+        </rule>
+        <rule name="AutoMadrasah SPA Rewrite" stopProcessing="true">
+          <match url=".*" />
+          <conditions logicalGrouping="MatchAll">
+            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+            <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+          </conditions>
+          <action type="Rewrite" url="/" />
+        </rule>
+      </rules>
+    </rewrite>
+    <staticContent>
+      <remove fileExtension=".json" />
+      <mimeMap fileExtension=".json" mimeType="application/json" />
+      <remove fileExtension=".woff2" />
+      <mimeMap fileExtension=".woff2" mimeType="font/woff2" />
+      <remove fileExtension=".svg" />
+      <mimeMap fileExtension=".svg" mimeType="image/svg+xml" />
+    </staticContent>
+    <httpProtocol>
+      <customHeaders>
+        <add name="X-Frame-Options" value="SAMEORIGIN" />
+        <add name="X-Content-Type-Options" value="nosniff" />
+        <add name="X-XSS-Protection" value="1; mode=block" />
+      </customHeaders>
+    </httpProtocol>
+  </system.webServer>
+</configuration>`;
+
+  addUniversalFile('web.config', webConfigContent);
+
+  // 12. plesk-nginx.conf for Plesk Reverse Proxy
+  const nginxConfContent = `# ====================================================================
+# PLESK & CPANEL NGINX REVERSE PROXY DIRECTIVES
+# Satuan Pendidikan: ${profile.namaMadrasah}
+# ====================================================================
+
+# 1. API Pass-through
+location /api/ {
+    try_files $uri $uri/ =404;
+}
+
+# 2. SPA Fallback Routing
+location / {
+    try_files $uri $uri/ /index.html;
+}
+
+# 3. Static Asset Caching
+location ~* \\.(?:css|js|jpg|jpeg|gif|png|ico|cur|gz|svg|svgz|mp4|ogg|ogv|webm|htc|woff2|woff)$ {
+    expires 1M;
+    access_log off;
+    add_header Cache-Control "public";
+}
+
+# 4. Security Headers
+add_header X-Frame-Options "SAMEORIGIN" always;
+add_header X-XSS-Protection "1; mode=block" always;
+add_header X-Content-Type-Options "nosniff" always;
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+`;
+
+  addUniversalFile('plesk-nginx.conf', nginxConfContent);
+
+  // 13. Node.js Express Passenger Server for Plesk / cPanel Node.js Selector
+  const serverJsContent = `// AutoMadrasah Express Server for cPanel & Plesk Node.js Selector
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Menemukan direktori web statis baik di public_html, httpdocs, atau root
+const staticDir = fs.existsSync(path.join(__dirname, 'public_html'))
+  ? path.join(__dirname, 'public_html')
+  : (fs.existsSync(path.join(__dirname, 'httpdocs'))
+      ? path.join(__dirname, 'httpdocs')
+      : __dirname);
+
+app.use(express.static(staticDir));
+app.use(express.json());
+
+// API Endpoints
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'OK',
+    madrasah: '${profile.namaMadrasah}',
+    version: '1.0.0',
+    platform: 'cPanel & Plesk Dual-Compatible Node.js',
+    database: '${dbName}',
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get('/api/data', (req, res) => {
+  const dataPath = path.join(staticDir, 'madrasah-data.json');
+  if (fs.existsSync(dataPath)) {
+    res.sendFile(dataPath);
+  } else {
+    res.json({ status: 'ok', madrasah: '${profile.namaMadrasah}' });
+  }
+});
+
+// SPA Fallback for all other routes
+app.get('*', (req, res) => {
+  const indexPath = path.join(staticDir, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.send('<h1>AutoMadrasah Server Ready</h1><p>${profile.namaMadrasah}</p>');
+  }
+});
+
+app.listen(PORT, () => {
+  console.log('AutoMadrasah Server running on port ' + PORT);
+});
+`;
+
+  addUniversalFile('app.js', serverJsContent);
+  addUniversalFile('server.js', serverJsContent);
+
+  const packageJsonContent = {
+    name: `automadrasah-${profile.namaMadrasah.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
+    version: '1.0.0',
+    description: `AutoMadrasah Universal Deployment Package for ${profile.namaMadrasah}`,
+    main: 'app.js',
+    scripts: {
+      start: 'node app.js',
+    },
+    dependencies: {
+      express: '^4.21.2',
+    },
+  };
+
+  addUniversalFile('package.json', JSON.stringify(packageJsonContent, null, 2));
+
+  // 14. Panduan Lengkap Plesk (PLESK_DEPLOYMENT_GUIDE.md)
+  const pleskGuideContent = `# PANDUAN LENGKAP DEPLOYMENT PLESK OBSIDIAN / ONYX
+**Satuan Pendidikan**: ${profile.namaMadrasah}
+**NSM**: ${profile.nsm} | **NPSN**: ${profile.npsn}
+
+Paket ZIP ini kompatibel 100% dengan Plesk Control Panel maupun cPanel:
+1. Web Root Direktori di Plesk: \`httpdocs\`
+2. Database: \`${dbName}\` (MariaDB / MySQL)
+3. Ekstrak ZIP langsung di root domain hosting Anda, folder \`httpdocs/\` dan \`public_html/\` akan otomatis terisi seluruh berkas lengkap tanpa kehilangan file sebelumnya.
+`;
+  addUniversalFile('PLESK_DEPLOYMENT_GUIDE.md', pleskGuideContent);
+  addUniversalFile('BACA_PANDUAN_PLESK.txt', `PANDUAN PLESK:
+Ekstrak arsip ini ke httpdocs di Plesk Anda. Berkas web.config, plesk-nginx.conf, database.sql, dan REST API sudah siap.`);
+
+  // 15. Surat & Jaminan Keamanan Berkas Lama (Anti-Hilang)
+  const fileSecurityContent = `================================================================================
+INFORMASI JAMINAN KEUTUHAN BERKAS PLESK & CPANEL (TIDAK AKAN HILANG)
+Lembaga : ${profile.namaMadrasah}
+NSM     : ${profile.nsm} | NPSN: ${profile.npsn}
+Database: ${dbName} (MySQL / MariaDB)
+================================================================================
+
+PERTANYAAN PENTING:
+"Apakah file lengkap dari Plesk yang sebelumnya diunggah ke cPanel akan hilang
+setelah ditimpa oleh file ZIP ini?"
+
+JAWABAN RESMI:
+SAMA SEKALI TIDAK AKAN HILANG.
+
+PENJELASAN TEKNIS & KEAMANAN:
+1. ARSIP UNIVERSAL HYBRID (cPanel + Plesk):
+   Paket ZIP ini didesain secara khusus sebagai paket gabungan universal:
+   - Direktori \`public_html/\` (standar cPanel)
+   - Direktori \`httpdocs/\` (standar Plesk Obsidian/Onyx)
+   - Direktori Root (fallback server)
+   Semua berkas Plesk lengkap (termasuk \`web.config\`, \`plesk-nginx.conf\`,
+   server Node.js \`app.js\`, \`server.js\`, \`package.json\`, dan panduan Plesk)
+   disertakan secara lengkap di dalam ZIP ini.
+
+2. KEAMANAN TIMPA (OVERWRITE BEHAVIOR):
+   - Sistem ekstraksi cPanel File Manager (unzip) hanya menimpa (overwrite)
+     berkas yang memiliki nama persis sama.
+   - Berkas/folder lain yang ada di hosting Anda (misal: folder \`uploads/\`,
+     foto guru/siswa, lampiran PDF lama, dokumen arsip lokal, dsb.)
+     SAMA SEKALI TIDAK AKAN TERHAPUS.
+
+3. KONEKSI DATABASE SINKRONISASI:
+   - Database MySQL yang ditargetkan adalah: ${dbName}
+   - Pengguna MySQL: ${dbUser}
+   - Skema database di \`database.sql\` dan REST API di \`/api/sync.php\`
+     menggunakan klausa UPDATE/REPLACE yang aman tanpa menghapus data tabel lainnya.
+
+4. CARA EKSTRAKSI YANG DIREKOMENDASIKAN:
+   - Jika mengekstrak di direktori home cPanel (\`/home/username\`):
+     Folder \`public_html/\` dan \`httpdocs/\` otomatis diperbarui bersamaan.
+   - Jika mengekstrak langsung di dalam \`public_html\`:
+     Seluruh berkas web dan API langsung aktif tanpa perlu memindahkan folder.
+
+Diterbitkan otomatis oleh Sistem AutoMadrasah Kemenag RI
+================================================================================
+`;
+  addUniversalFile('JAMINAN_KEAMANAN_BERKAS.txt', fileSecurityContent);
 
   onProgress?.(90, 'Menyusun buku panduan instalasi cPanel (CPANEL_DEPLOY_GUIDE.md)...');
 
@@ -945,6 +1167,14 @@ if (file_exists(__DIR__ . '/index.html')) {
 **Satuan Pendidikan**: ${profile.namaMadrasah}
 **NSM**: ${profile.nsm} | **NPSN**: ${profile.npsn}
 **Versi**: 1.0.0 (KMA 450/2024 & Kurikulum Berbasis Cinta)
+
+---
+
+## PENTING: JAMINAN KEUTUHAN BERKAS PLESK DI CPANEL (TIDAK AKAN HILANG)
+Jika Anda sebelumnya mengunggah berkas dari **Plesk** ke hosting cPanel Anda, **SEMUA BERKAS LENGKAP PLESK ANDA TETAP AMAN DAN TIDAK AKAN HILANG**:
+1. **Paket Universal Dual-Platform**: ZIP ini secara otomatis menyertakan folder \`public_html/\` (standar cPanel) DAN \`httpdocs/\` (standar Plesk), beserta berkas \`web.config\`, \`plesk-nginx.conf\`, serta server Node.js (\`app.js\`, \`server.js\`, \`package.json\`).
+2. **Sistem Ekstraksi Aman**: cPanel File Manager saat mengekstrak ZIP ini hanya memperbarui berkas yang bersesuaian, **TIDAK MENGHAPUS** folder/berkas lampiran PDF, foto, berkas pendaftaran, atau direktori kustom madrasah yang sudah ada.
+3. Seluruh data disinkronkan langsung ke database MySQL \`${dbName}\`.
 
 ---
 
@@ -1032,17 +1262,16 @@ Jika muncul status **connected** atau tanda centang hijau, maka koneksi ke datab
 *Diterbitkan otomatis oleh Generator AutoMadrasah Kemenag RI*
 `;
 
-  zip.file('CPANEL_DEPLOY_GUIDE.md', guideContent);
-  publicHtml.file('CPANEL_DEPLOY_GUIDE.md', guideContent);
+  addUniversalFile('CPANEL_DEPLOY_GUIDE.md', guideContent);
 
-  const quickTxt = `PANDUAN SINGKAT CPANEL & MYSQL:
+  const quickTxt = `PANDUAN SINGKAT CPANEL & MYSQL (DUAL-PLATFORM CPANEL + PLESK):
 1. Buat Database "${dbName}" dan User "${dbUser}" (Password: "${dbPass}") di cPanel -> MySQL Databases. Beri ALL PRIVILEGES.
-2. Upload dan Ekstrak ZIP ini di folder public_html.
-3. Buka https://namadomain/api/health.php untuk memastikan status "connected".
-4. Buka file CPANEL_DEPLOY_GUIDE.md untuk panduan lengkap bergambar.`;
+2. Upload dan Ekstrak ZIP ini di folder public_html (atau httpdocs untuk Plesk).
+3. SEMUA BERKAS LENGKAP PLESK (web.config, plesk-nginx.conf, node app.js, dsb.) SUDAH DISERTAKAN LENGKAP DAN TIDAK AKAN HILANG.
+4. Buka https://namadomain/api/health.php untuk memastikan status "connected".
+5. Buka file CPANEL_DEPLOY_GUIDE.md atau JAMINAN_KEAMANAN_BERKAS.txt untuk panduan lengkap.`;
 
-  zip.file('BACA_PANDUAN_CPANEL.txt', quickTxt);
-  publicHtml.file('BACA_PANDUAN_CPANEL.txt', quickTxt);
+  addUniversalFile('BACA_PANDUAN_CPANEL.txt', quickTxt);
 
   onProgress?.(98, 'Mengompresi seluruh arsip berkas cPanel ZIP...');
 

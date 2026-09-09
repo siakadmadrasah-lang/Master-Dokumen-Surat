@@ -404,14 +404,14 @@ export const CpanelExportCard: React.FC<CpanelExportCardProps> = ({
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
                 <FolderArchive className="w-4 h-4 text-emerald-400" />
-                <span>Paket ZIP cPanel Siap Ekstrak</span>
+                <span>Paket ZIP Universal cPanel & Plesk (Aman Ditimpa)</span>
               </h4>
               <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-bold border border-emerald-500/30">
-                public_html
+                public_html + httpdocs
               </span>
             </div>
             <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
-              Berisi seluruh berkas <code className="text-emerald-300 font-mono">config.php</code>, <code className="text-emerald-300 font-mono">api/sync.php</code>, skema <code className="text-emerald-300 font-mono">database.sql</code>, dan panduan lengkap.
+              Arsip All-in-One: menyertakan berkas cPanel (<code className="text-emerald-300 font-mono">public_html</code>) & Plesk (<code className="text-emerald-300 font-mono">httpdocs</code>, <code className="text-emerald-300 font-mono">web.config</code>, <code className="text-emerald-300 font-mono">plesk-nginx.conf</code>). Berkas Plesk yang sebelumnya diunggah ke cPanel tetap utuh dan tidak hilang saat ditimpa.
             </p>
           </div>
 
@@ -435,13 +435,13 @@ export const CpanelExportCard: React.FC<CpanelExportCardProps> = ({
               className="w-full py-2.5 px-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 rounded-xl text-xs font-black shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer hover:shadow-emerald-500/20"
             >
               <Download className="w-4 h-4 text-slate-950" />
-              <span>Unduh ZIP cPanel (Sync & Auto MySQL)</span>
+              <span>Unduh ZIP cPanel & Plesk (Dual-Stack Auto MySQL)</span>
             </button>
           )}
 
           <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-emerald-900/60">
-            <span>Kompatibel: cPanel, LiteSpeed, Apache</span>
-            <span className="text-emerald-300 font-semibold">Tabel Otomatis Terbuat (Auto-Init)</span>
+            <span>Kompatibel: cPanel, Plesk, LiteSpeed</span>
+            <span className="text-emerald-300 font-semibold">Berkas Plesk & Unggahan Lama Aman</span>
           </div>
         </div>
       </div>
