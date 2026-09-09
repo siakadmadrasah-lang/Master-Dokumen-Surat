@@ -17,6 +17,7 @@ export const OfficialLetterhead: React.FC<OfficialLetterheadProps> = ({
 
   const showLogoKiri = cfg.showLogoKiri !== false;
   const showLogoKanan = cfg.showLogoKanan !== false;
+  const showBaris1 = cfg.showBaris1 !== false;
 
   const baris1 =
     cfg.baris1Instansi || 'KEMENTERIAN AGAMA REPUBLIK INDONESIA';
@@ -115,7 +116,7 @@ export const OfficialLetterhead: React.FC<OfficialLetterheadProps> = ({
 
         {/* Teks Tengah Kop Surat */}
         <div className="text-center flex-1 space-y-0.5 px-1">
-          {baris1 && (
+          {showBaris1 && baris1 && (
             <p className="text-[11px] sm:text-[13px] font-bold tracking-wider text-slate-800 uppercase leading-snug">
               {baris1}
             </p>

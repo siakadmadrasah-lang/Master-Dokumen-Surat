@@ -617,8 +617,8 @@
   },
   "credentials": {
     "dbHost": "localhost",
-    "dbName": "masbagoes_dokmadrasah",
-    "dbUser": "masbagoes_dokmadrasah"
+    "dbName": "masbagoes_adm",
+    "dbUser": "masbagoes_adm"
   },
   "syncedAt": "2026-09-09T12:52:21.339Z"
 }

@@ -54,7 +54,7 @@ export const generateMadrasahSqlDump = (options: SqlExportOptions): string => {
     rombels = [],
     documents = [],
     logs = [],
-    dbName = 'masbagoes_dokmadrasah',
+    dbName = 'masbagoes_adm',
   } = options;
 
   const now = new Date();

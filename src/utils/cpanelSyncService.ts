@@ -1,8 +1,8 @@
 /**
  * Layanan Sinkronisasi Otomatis Database MySQL cPanel
  * Kredensial Database:
- * - Db User: masbagoes_dokmadrasah
- * - Db Name: masbagoes_dokmadrasah
+ * - Db User: masbagoes_adm
+ * - Db Name: masbagoes_adm
  * - Db Pass: masbagus15
  */
 
@@ -30,13 +30,13 @@ export interface CpanelSyncConfig {
 export const DEFAULT_CPANEL_CONFIG: CpanelSyncConfig = {
   cpanelUrl: '',
   dbHost: 'localhost',
-  dbName: 'masbagoes_dokmadrasah',
-  dbUser: 'masbagoes_dokmadrasah',
+  dbName: 'masbagoes_adm',
+  dbUser: 'masbagoes_adm',
   dbPass: 'masbagus15',
   autoSyncEnabled: true,
   autoSyncIntervalMinutes: 5,
   lastSyncStatus: 'idle',
-  lastSyncMessage: 'Siap melakukan sinkronisasi otomatis ke MySQL masbagoes_dokmadrasah',
+  lastSyncMessage: 'Siap melakukan sinkronisasi otomatis ke MySQL masbagoes_adm',
 };
 
 const STORAGE_KEY = 'AUTOMADRASAH_CPANEL_SYNC_CONFIG';
@@ -46,13 +46,21 @@ export const getCpanelSyncConfig = (): CpanelSyncConfig => {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_CPANEL_CONFIG;
     const parsed = JSON.parse(raw);
+    const dbName =
+      !parsed.dbName || parsed.dbName === 'masbagoes_dokmadrasah'
+        ? DEFAULT_CPANEL_CONFIG.dbName
+        : parsed.dbName;
+    const dbUser =
+      !parsed.dbUser || parsed.dbUser === 'masbagoes_dokmadrasah'
+        ? DEFAULT_CPANEL_CONFIG.dbUser
+        : parsed.dbUser;
+    const dbPass = !parsed.dbPass ? DEFAULT_CPANEL_CONFIG.dbPass : parsed.dbPass;
     return {
       ...DEFAULT_CPANEL_CONFIG,
       ...parsed,
-      // Pastikan kredensial yang diminta selalu terisi default jika kosong
-      dbName: parsed.dbName || DEFAULT_CPANEL_CONFIG.dbName,
-      dbUser: parsed.dbUser || DEFAULT_CPANEL_CONFIG.dbUser,
-      dbPass: parsed.dbPass || DEFAULT_CPANEL_CONFIG.dbPass,
+      dbName,
+      dbUser,
+      dbPass,
     };
   } catch {
     return DEFAULT_CPANEL_CONFIG;
@@ -131,7 +139,7 @@ export const syncDataToCpanel = async (
         saveCpanelSyncConfig({
           lastSyncTime: nowStr,
           lastSyncStatus: 'success',
-          lastSyncMessage: json.message || 'Data berhasil disinkronkan ke cache MySQL masbagoes_dokmadrasah',
+          lastSyncMessage: json.message || 'Data berhasil disinkronkan ke cache MySQL masbagoes_adm',
           lastRecordStats: {
             teachers: payload.teachers.length,
             students: payload.students.length,
@@ -141,7 +149,7 @@ export const syncDataToCpanel = async (
         });
         return {
           success: true,
-          message: json.message || `Data siap sinkron ke MySQL masbagoes_dokmadrasah (${payload.teachers.length} Guru, ${payload.students.length} Siswa, ${payload.documents.length} Dokumen)`,
+          message: json.message || `Data siap sinkron ke MySQL masbagoes_adm (${payload.teachers.length} Guru, ${payload.students.length} Siswa, ${payload.documents.length} Dokumen)`,
           timestamp: nowStr,
           database: config.dbName,
           stats: {
@@ -326,7 +334,7 @@ export const testCpanelConnection = async (url: string): Promise<{ success: bool
       const json = await res.json();
       return {
         success: true,
-        message: json.message || `Terhubung ke MySQL masbagoes_dokmadrasah di ${testUrl}!`,
+        message: json.message || `Terhubung ke MySQL masbagoes_adm di ${testUrl}!`,
         details: json,
       };
     }

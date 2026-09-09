@@ -298,7 +298,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
           </div>
           <span className="text-[11px] font-mono font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
-            DB: masbagoes_dokmadrasah
+            DB: masbagoes_adm
           </span>
         </div>
 

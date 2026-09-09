@@ -49,6 +49,7 @@ export const KopSuratEditorView: React.FC<KopSuratEditorViewProps> = ({
       kopSuratConfig: {
         baris1Instansi:
           existing.baris1Instansi || 'KEMENTERIAN AGAMA REPUBLIK INDONESIA',
+        showBaris1: existing.showBaris1 !== false,
         baris2Wilayah:
           existing.baris2Wilayah ||
           `KANTOR KEMENTERIAN AGAMA ${profile.kabupatenKota?.toUpperCase() || 'KABUPATEN BANYUMAS'}`,
@@ -113,6 +114,7 @@ export const KopSuratEditorView: React.FC<KopSuratEditorViewProps> = ({
         ...formData,
         kopSuratConfig: {
           baris1Instansi: 'KEMENTERIAN AGAMA REPUBLIK INDONESIA',
+          showBaris1: true,
           baris2Wilayah: `KANTOR KEMENTERIAN AGAMA ${formData.kabupatenKota?.toUpperCase() || 'KABUPATEN BANYUMAS'}`,
           namaMadrasahKop: formData.namaMadrasah,
           showLogoKiri: true,
@@ -144,6 +146,7 @@ export const KopSuratEditorView: React.FC<KopSuratEditorViewProps> = ({
     if (type === 'KEMENAG_NEGERI') {
       presetCfg = {
         baris1Instansi: 'KEMENTERIAN AGAMA REPUBLIK INDONESIA',
+        showBaris1: true,
         baris2Wilayah: `KANTOR KEMENTERIAN AGAMA ${formData.kabupatenKota?.toUpperCase() || 'KABUPATEN BANYUMAS'}`,
         namaMadrasahKop: formData.namaMadrasah,
         showLogoKiri: true,
@@ -155,6 +158,7 @@ export const KopSuratEditorView: React.FC<KopSuratEditorViewProps> = ({
     } else if (type === 'MAARIF_NU') {
       presetCfg = {
         baris1Instansi: 'LEMBAGA PENDIDIKAN MA\'ARIF NU',
+        showBaris1: true,
         baris2Wilayah: `PENGURUS CABANG LP MA'ARIF NU ${formData.kabupatenKota?.toUpperCase() || 'KABUPATEN BANYUMAS'}`,
         namaMadrasahKop: formData.namaMadrasah.includes('MA\'ARIF')
           ? formData.namaMadrasah
@@ -168,6 +172,7 @@ export const KopSuratEditorView: React.FC<KopSuratEditorViewProps> = ({
     } else if (type === 'YAYASAN_ISLAM') {
       presetCfg = {
         baris1Instansi: 'YAYASAN PENDIDIKAN DAN SOSIAL ISLAM',
+        showBaris1: true,
         baris2Wilayah: `MADRASAH IBTIDAIYAH SWASTA WILAYAH ${formData.kecamatan?.toUpperCase() || 'RAWALO'}`,
         namaMadrasahKop: formData.namaMadrasah,
         showLogoKiri: true,
@@ -179,6 +184,7 @@ export const KopSuratEditorView: React.FC<KopSuratEditorViewProps> = ({
     } else if (type === 'MINIMALIS') {
       presetCfg = {
         baris1Instansi: 'KEMENTERIAN AGAMA REPUBLIK INDONESIA',
+        showBaris1: true,
         baris2Wilayah: `KANTOR KEMENTERIAN AGAMA ${formData.kabupatenKota?.toUpperCase() || 'KABUPATEN BANYUMAS'}`,
         namaMadrasahKop: formData.namaMadrasah,
         showLogoKiri: true,
@@ -428,46 +434,127 @@ export const KopSuratEditorView: React.FC<KopSuratEditorViewProps> = ({
               </p>
             </div>
 
-            <div className="space-y-3">
-              <div>
-                <label className="font-bold text-slate-800 block mb-1">
-                  Baris 1: Instansi Induk / Tertinggi (Huruf Kapital)
-                </label>
-                <input
-                  type="text"
-                  value={cfg.baris1Instansi || ''}
-                  onChange={(e) => updateCfg({ baris1Instansi: e.target.value })}
-                  placeholder="KEMENTERIAN AGAMA REPUBLIK INDONESIA"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl font-semibold text-slate-900 focus:bg-white focus:border-emerald-600 focus:outline-hidden"
-                />
-                <div className="flex gap-2 mt-1.5 flex-wrap">
-                  <span className="text-[10px] text-slate-500">Preset Cepat:</span>
-                  <button
-                    type="button"
-                    onClick={() => updateCfg({ baris1Instansi: 'KEMENTERIAN AGAMA REPUBLIK INDONESIA' })}
-                    className="text-[10px] text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-md font-medium"
-                  >
-                    Kemenag RI
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => updateCfg({ baris1Instansi: "LEMBAGA PENDIDIKAN MA'ARIF NU" })}
-                    className="text-[10px] text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-md font-medium"
-                  >
-                    LP Ma'arif NU
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => updateCfg({ baris1Instansi: 'YAYASAN PENDIDIKAN DAN SOSIAL ISLAM' })}
-                    className="text-[10px] text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-md font-medium"
-                  >
-                    Yayasan Pendidikan Islam
-                  </button>
+            <div className="space-y-4">
+              {/* Baris 1 Instansi dengan Fitur Aktifkan / Nonaktifkan */}
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3 transition-all">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-2.5 flex-wrap gap-2">
+                  <div className="flex items-center space-x-2">
+                    <Building className="w-4 h-4 text-emerald-700" />
+                    <div>
+                      <span className="font-bold text-slate-900 block text-xs">
+                        Baris 1: Instansi Induk / Tertinggi (Huruf Kapital)
+                      </span>
+                      <span className="text-[10px] text-slate-500">
+                        Tingkat pertama kementerian, yayasan, atau badan penyelenggara
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Toggle Switch Aktifkan / Nonaktifkan */}
+                  <div className="flex items-center space-x-2">
+                    <button
+                      type="button"
+                      id="btn-toggle-baris1"
+                      onClick={() => updateCfg({ showBaris1: cfg.showBaris1 === false ? true : false })}
+                      className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 ${
+                        cfg.showBaris1 !== false ? 'bg-emerald-600' : 'bg-slate-300'
+                      }`}
+                      role="switch"
+                      aria-checked={cfg.showBaris1 !== false}
+                      title={cfg.showBaris1 !== false ? 'Klik untuk menonaktifkan Baris 1' : 'Klik untuk mengaktifkan Baris 1'}
+                    >
+                      <span
+                        aria-hidden="true"
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
+                          cfg.showBaris1 !== false ? 'translate-x-5' : 'translate-x-0'
+                        }`}
+                      />
+                    </button>
+                    <span
+                      onClick={() => updateCfg({ showBaris1: cfg.showBaris1 === false ? true : false })}
+                      className={`text-[11px] font-bold cursor-pointer select-none px-2 py-0.5 rounded-md transition-colors ${
+                        cfg.showBaris1 !== false
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : 'bg-slate-200 text-slate-600'
+                      }`}
+                    >
+                      {cfg.showBaris1 !== false ? 'Aktif' : 'Nonaktif'}
+                    </span>
+                  </div>
                 </div>
+
+                {cfg.showBaris1 === false ? (
+                  <div className="p-3 bg-amber-50/90 border border-amber-200 text-amber-900 rounded-xl space-y-2 text-[11px]">
+                    <div className="flex items-start gap-2">
+                      <span className="text-amber-600 font-bold text-sm leading-none">⚠️</span>
+                      <div>
+                        <span className="font-bold">Baris 1 saat ini Dinonaktifkan</span>
+                        <p className="text-amber-800 text-[10.5px] mt-0.5 leading-relaxed">
+                          Teks instansi induk tidak akan dicetak pada kop surat naskah dinas. Kop surat akan langsung diawali dari Baris 2 (Kantor Wilayah/Kabupaten) dan Baris 3 (Nama Madrasah).
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      id="btn-aktifkan-baris1"
+                      onClick={() => updateCfg({ showBaris1: true })}
+                      className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-2xs"
+                    >
+                      <span>Aktifkan Baris 1</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <input
+                      id="input-baris1-instansi"
+                      type="text"
+                      value={cfg.baris1Instansi || ''}
+                      onChange={(e) => updateCfg({ baris1Instansi: e.target.value })}
+                      placeholder="KEMENTERIAN AGAMA REPUBLIK INDONESIA"
+                      className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl font-semibold text-slate-900 focus:border-emerald-600 focus:outline-hidden"
+                    />
+                    <div className="flex items-center justify-between gap-2 flex-wrap pt-0.5">
+                      <div className="flex gap-2 items-center flex-wrap">
+                        <span className="text-[10px] text-slate-500">Preset Cepat:</span>
+                        <button
+                          type="button"
+                          onClick={() => updateCfg({ baris1Instansi: 'KEMENTERIAN AGAMA REPUBLIK INDONESIA' })}
+                          className="text-[10px] text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-md font-medium cursor-pointer"
+                        >
+                          Kemenag RI
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => updateCfg({ baris1Instansi: "LEMBAGA PENDIDIKAN MA'ARIF NU" })}
+                          className="text-[10px] text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-md font-medium cursor-pointer"
+                        >
+                          LP Ma'arif NU
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => updateCfg({ baris1Instansi: 'YAYASAN PENDIDIKAN DAN SOSIAL ISLAM' })}
+                          className="text-[10px] text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded-md font-medium cursor-pointer"
+                        >
+                          Yayasan Pendidikan Islam
+                        </button>
+                      </div>
+
+                      <button
+                        type="button"
+                        id="btn-nonaktifkan-baris1"
+                        onClick={() => updateCfg({ showBaris1: false })}
+                        className="text-[10px] text-slate-500 hover:text-red-700 hover:underline cursor-pointer"
+                        title="Sembunyikan Baris 1 dari kop surat"
+                      >
+                        Sembunyikan / Nonaktifkan Baris 1
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              <div>
-                <label className="font-bold text-slate-800 block mb-1">
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-2">
+                <label className="font-bold text-slate-800 block text-xs">
                   Baris 2: Wilayah / Kantor Kabupaten-Kota / Pengurus Cabang
                 </label>
                 <input
@@ -475,12 +562,12 @@ export const KopSuratEditorView: React.FC<KopSuratEditorViewProps> = ({
                   value={cfg.baris2Wilayah || ''}
                   onChange={(e) => updateCfg({ baris2Wilayah: e.target.value })}
                   placeholder={`KANTOR KEMENTERIAN AGAMA ${formData.kabupatenKota?.toUpperCase() || 'KABUPATEN BANYUMAS'}`}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl font-semibold text-slate-900 focus:bg-white focus:border-emerald-600 focus:outline-hidden"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl font-semibold text-slate-900 focus:border-emerald-600 focus:outline-hidden"
                 />
               </div>
 
-              <div>
-                <label className="font-bold text-slate-800 block mb-1">
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-2">
+                <label className="font-bold text-slate-800 block text-xs">
                   Baris 3: Nama Resmi Madrasah (Judul Utama Kop - Tebal & Menonjol)*
                 </label>
                 <input
@@ -488,7 +575,7 @@ export const KopSuratEditorView: React.FC<KopSuratEditorViewProps> = ({
                   value={cfg.namaMadrasahKop || formData.namaMadrasah}
                   onChange={(e) => updateCfg({ namaMadrasahKop: e.target.value })}
                   placeholder="MADRASAH IBTIDAIYAH NEGERI 1 BANYUMAS"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl font-bold text-emerald-950 focus:bg-white focus:border-emerald-600 focus:outline-hidden text-sm"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl font-bold text-emerald-950 focus:border-emerald-600 focus:outline-hidden text-sm"
                 />
               </div>
             </div>

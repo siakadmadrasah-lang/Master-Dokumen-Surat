@@ -4,6 +4,7 @@ export type Semester = 'Ganjil' | 'Genap';
 
 export interface KopSuratConfig {
   baris1Instansi?: string; // e.g. "KEMENTERIAN AGAMA REPUBLIK INDONESIA" / "LEMBAGA PENDIDIKAN MA'ARIF NU"
+  showBaris1?: boolean; // Aktifkan atau nonaktifkan tampilan baris ke-1
   baris2Wilayah?: string; // e.g. "KANTOR KEMENTERIAN AGAMA KABUPATEN BANYUMAS" / "PENGURUS CABANG LP MA'ARIF NU BANYUMAS"
   namaMadrasahKop?: string; // e.g. "MADRASAH IBTIDAIYAH MA'ARIF NU 01 SANGGREMAN"
   showLogoKiri?: boolean;

@@ -1,8 +1,8 @@
 /**
  * Generator Paket Deployment cPanel & Sinkronisasi Otomatis MySQL
  * Kredensial Database Terkonfigurasi:
- * - Db User: masbagoes_dokmadrasah
- * - Db Name: masbagoes_dokmadrasah
+ * - Db User: masbagoes_adm
+ * - Db Name: masbagoes_adm
  * - Db Pass: masbagus15
  * - Host: localhost (Standar cPanel)
  */
@@ -37,8 +37,8 @@ export const generateCpanelDeploymentZip = async (
     students,
     rombels,
     logs,
-    dbName = 'masbagoes_dokmadrasah',
-    dbUser = 'masbagoes_dokmadrasah',
+    dbName = 'masbagoes_adm',
+    dbUser = 'masbagoes_adm',
     dbPass = 'masbagus15',
     dbHost = 'localhost',
     domainName = profile.website?.replace(/^https?:\/\//, '') || 'madrasah.sch.id',
@@ -1322,8 +1322,8 @@ export const downloadCpanelZip = async (
         students: options.students,
         rombels: options.rombels,
         logs: options.logs,
-        dbName: options.dbName || 'masbagoes_dokmadrasah',
-        dbUser: options.dbUser || 'masbagoes_dokmadrasah',
+        dbName: options.dbName || 'masbagoes_adm',
+        dbUser: options.dbUser || 'masbagoes_adm',
         dbPass: options.dbPass || 'masbagus15',
         dbHost: options.dbHost || 'localhost',
         domainName: options.domainName || 'dok-madrasah.masbagoes.web.id',
