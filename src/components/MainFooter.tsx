@@ -20,10 +20,14 @@ import {
   CheckCircle,
   Layers,
   ArrowUpRight,
+  User,
+  Camera,
 } from 'lucide-react';
 import { MadrasahProfile } from '../types';
 import { ActiveTab } from './Navbar';
 import { KemenagLogo } from './OfficialLogos';
+import { UserSession, SUPER_ADMIN_AVATAR } from './LoginPage';
+import { AdminProfileModal } from './AdminProfileModal';
 
 interface MainFooterProps {
   profile: MadrasahProfile;
@@ -33,6 +37,10 @@ interface MainFooterProps {
   documentCount?: number;
   teacherCount?: number;
   studentCount?: number;
+  userSession?: UserSession | null;
+  onUpdateAvatar?: (avatarUrl: string) => void;
+  isAdmin?: boolean;
+  onLogout?: () => void;
 }
 
 export const MainFooter: React.FC<MainFooterProps> = ({
@@ -43,10 +51,23 @@ export const MainFooter: React.FC<MainFooterProps> = ({
   documentCount = 0,
   teacherCount = 0,
   studentCount = 0,
+  userSession,
+  onUpdateAvatar,
+  isAdmin = true,
+  onLogout,
 }) => {
   // Live Clock State
   const [timeString, setTimeString] = useState<string>('');
   const [dateString, setDateString] = useState<string>('');
+  const [showProfileModal, setShowProfileModal] = useState<boolean>(false);
+
+  const adminAvatarUrl =
+    userSession?.avatarUrl ||
+    profile.headerConfig?.adminAvatarUrl ||
+    SUPER_ADMIN_AVATAR;
+
+  const adminName = userSession?.name || profile.namaKepala || 'Administrator Madrasah';
+  const adminRole = userSession?.roleLabel || (userSession?.role === 'SUPER_ADMIN' ? 'Super Administrator' : 'Kepala Madrasah');
 
   useEffect(() => {
     const updateTime = () => {
@@ -79,7 +100,7 @@ export const MainFooter: React.FC<MainFooterProps> = ({
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Top Banner: Status & Live Clock */}
+      {/* Top Banner: Status & Live Clock & Admin Profile Photo Capsule */}
       <div className="border-b border-emerald-900/60 bg-emerald-950/70 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row items-center justify-between gap-3 text-xs">
           <div className="flex items-center space-x-3 flex-wrap gap-y-1">
@@ -92,12 +113,38 @@ export const MainFooter: React.FC<MainFooterProps> = ({
             </span>
           </div>
 
-          <div className="flex items-center space-x-4 text-[11px] font-mono text-emerald-200/90">
+          <div className="flex items-center space-x-3 text-[11px] font-mono text-emerald-200/90 flex-wrap justify-end">
             <div className="flex items-center space-x-1.5 bg-slate-900/80 px-2.5 py-1 rounded-lg border border-emerald-900/60">
               <Clock className="w-3.5 h-3.5 text-amber-400" />
               <span>{dateString}</span>
               <span className="text-emerald-400 font-bold">{timeString}</span>
             </div>
+
+            {/* Admin Avatar button in footer top bar */}
+            <button
+              id="footer-top-profile-btn"
+              type="button"
+              onClick={() => setShowProfileModal(true)}
+              className="flex items-center space-x-2 bg-slate-900/90 hover:bg-emerald-900 active:scale-95 pl-1.5 pr-2.5 py-1 rounded-full border border-emerald-800/80 hover:border-amber-400 transition-all cursor-pointer text-[11px]"
+              title="Kelola / Lihat Foto Profil Administrator"
+            >
+              <div className="relative">
+                <div className="w-6 h-6 rounded-full ring-2 ring-amber-400 overflow-hidden bg-emerald-950 flex items-center justify-center">
+                  {adminAvatarUrl ? (
+                    <img src={adminAvatarUrl} alt={adminName} className="w-full h-full object-cover" />
+                  ) : (
+                    <User className="w-3.5 h-3.5 text-amber-300" />
+                  )}
+                </div>
+                <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-1 ring-emerald-950" />
+              </div>
+              <span className="text-emerald-100 font-bold max-w-[110px] truncate hidden sm:inline">
+                {adminName.split(' ')[0]}
+              </span>
+              <span className="text-[9px] bg-emerald-800 text-amber-300 px-1.5 py-0.2 rounded font-semibold">
+                {isAdmin ? 'Ubah Foto' : 'Profil'}
+              </span>
+            </button>
           </div>
         </div>
       </div>
@@ -309,27 +356,61 @@ export const MainFooter: React.FC<MainFooterProps> = ({
             </ul>
           </div>
 
-          {/* Column 4: Contact & Studio Cetak */}
+          {/* Column 4: Administrator Photo & Contact & Studio Cetak */}
           <div className="space-y-4">
             <h5 className="text-white font-bold text-xs uppercase tracking-wider text-emerald-400 flex items-center space-x-1.5">
               <Printer className="w-4 h-4 text-emerald-400" />
-              <span>Studio Cetak & Kontak</span>
+              <span>Profil Admin & Kontak</span>
             </h5>
+
+            {/* Profile Photo Card with Quick Upload Trigger */}
+            <div className="bg-emerald-950/90 p-3 rounded-2xl border border-emerald-800/80 shadow-inner flex items-center justify-between gap-2">
+              <div className="flex items-center space-x-3 min-w-0">
+                <div className="relative flex-shrink-0">
+                  <div className="w-11 h-11 rounded-full ring-2 ring-amber-400 overflow-hidden bg-emerald-900 flex items-center justify-center">
+                    {adminAvatarUrl ? (
+                      <img src={adminAvatarUrl} alt={adminName} className="w-full h-full object-cover" />
+                    ) : (
+                      <User className="w-5 h-5 text-amber-300" />
+                    )}
+                  </div>
+                  <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 ring-2 ring-emerald-950" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-white truncate">{adminName}</p>
+                  <p className="text-[10px] text-emerald-300 font-medium truncate">{adminRole}</p>
+                  <span className="text-[9px] text-slate-400 font-mono block truncate">
+                    {userSession ? 'Sesi Admin' : 'Admin Madrasah'}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                id="footer-open-profile-photo-btn"
+                type="button"
+                onClick={() => setShowProfileModal(true)}
+                className="px-2.5 py-1.5 bg-emerald-800 hover:bg-emerald-700 active:scale-95 text-white rounded-xl text-[10px] font-bold border border-emerald-600/70 shadow-xs transition-all flex items-center space-x-1 flex-shrink-0 cursor-pointer"
+                title="Kelola / Unggah Foto Profil"
+              >
+                <Camera className="w-3 h-3 text-amber-300" />
+                <span>{isAdmin ? 'Ganti' : 'Profil'}</span>
+              </button>
+            </div>
 
             {/* Quick Print CTA Box */}
             {onOpenPrintModal && (
               <button
                 id="footer-open-print-modal-btn"
                 onClick={onOpenPrintModal}
-                className="w-full bg-emerald-800/80 hover:bg-emerald-700 text-white p-3 rounded-xl border border-emerald-600/50 shadow-md transition-all flex items-center justify-between group cursor-pointer"
+                className="w-full bg-emerald-800/80 hover:bg-emerald-700 text-white p-2.5 rounded-xl border border-emerald-600/50 shadow-md transition-all flex items-center justify-between group cursor-pointer"
               >
-                <div className="flex items-center space-x-2.5">
-                  <div className="p-2 bg-emerald-950 rounded-lg group-hover:scale-105 transition-transform">
-                    <Printer className="w-4 h-4 text-emerald-300" />
+                <div className="flex items-center space-x-2">
+                  <div className="p-1.5 bg-emerald-950 rounded-lg group-hover:scale-105 transition-transform">
+                    <Printer className="w-3.5 h-3.5 text-emerald-300" />
                   </div>
                   <div className="text-left">
-                    <p className="text-xs font-bold text-white">Buka Studio Cetak</p>
-                    <p className="text-[10px] text-emerald-200">Cetak A4 / F4 & PDF Instan</p>
+                    <p className="text-xs font-bold text-white leading-tight">Studio Cetak</p>
+                    <p className="text-[10px] text-emerald-200">A4 / F4 & PDF Instan</p>
                   </div>
                 </div>
                 <ArrowUpRight className="w-4 h-4 text-emerald-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -372,6 +453,18 @@ export const MainFooter: React.FC<MainFooterProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Admin Profile Modal Triggered from Footer */}
+      <AdminProfileModal
+        isOpen={showProfileModal}
+        onClose={() => setShowProfileModal(false)}
+        userSession={userSession}
+        profile={profile}
+        onOpenSettings={() => setActiveTab('SETTINGS')}
+        onLogout={onLogout}
+        onUpdateAvatar={onUpdateAvatar}
+        isAdmin={isAdmin}
+      />
     </footer>
   );
 };

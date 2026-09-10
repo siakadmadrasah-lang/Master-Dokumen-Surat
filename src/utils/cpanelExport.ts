@@ -350,9 +350,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo->beginTransaction();
 
-        // 1. Simpan Profil Madrasah
+        // 1. Simpan Profil Madrasah (Safe Upsert)
         if (!empty($profile['namaMadrasah'])) {
-            $stmt = $pdo->prepare("REPLACE INTO \`madrasah_profil\` (
+            $stmt = $pdo->prepare("INSERT INTO \`madrasah_profil\` (
                 \`id\`, \`nsm\`, \`npsn\`, \`nama_madrasah\`, \`jenjang\`, \`status\`, \`akreditasi\`,
                 \`alamat\`, \`desa_kelurahan\`, \`kecamatan\`, \`kabupaten_kota\`, \`provinsi\`, \`kode_pos\`,
                 \`telepon\`, \`email\`, \`website\`, \`nama_kepala\`, \`nip_kepala\`, \`pangkat_gol_kepala\`,
@@ -362,7 +362,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 :alamat, :desa, :kecamatan, :kabupaten, :provinsi, :kode_pos,
                 :telepon, :email, :website, :kepala, :nip_kepala, :pangkat_kepala,
                 :komite, :pengawas, :nip_pengawas, :tahun_ajaran, :semester, :titimangsa
-            )");
+            ) ON DUPLICATE KEY UPDATE
+                \`nsm\` = VALUES(\`nsm\`),
+                \`npsn\` = VALUES(\`npsn\`),
+                \`nama_madrasah\` = VALUES(\`nama_madrasah\`),
+                \`jenjang\` = VALUES(\`jenjang\`),
+                \`status\` = VALUES(\`status\`),
+                \`akreditasi\` = VALUES(\`akreditasi\`),
+                \`alamat\` = VALUES(\`alamat\`),
+                \`desa_kelurahan\` = VALUES(\`desa_kelurahan\`),
+                \`kecamatan\` = VALUES(\`kecamatan\`),
+                \`kabupaten_kota\` = VALUES(\`kabupaten_kota\`),
+                \`provinsi\` = VALUES(\`provinsi\`),
+                \`kode_pos\` = VALUES(\`kode_pos\`),
+                \`telepon\` = VALUES(\`telepon\`),
+                \`email\` = VALUES(\`email\`),
+                \`website\` = VALUES(\`website\`),
+                \`nama_kepala\` = VALUES(\`nama_kepala\`),
+                \`nip_kepala\` = VALUES(\`nip_kepala\`),
+                \`pangkat_gol_kepala\` = VALUES(\`pangkat_gol_kepala\`),
+                \`nama_ketua_komite\` = VALUES(\`nama_ketua_komite\`),
+                \`nama_pengawas\` = VALUES(\`nama_pengawas\`),
+                \`nip_pengawas\` = VALUES(\`nip_pengawas\`),
+                \`tahun_ajaran\` = VALUES(\`tahun_ajaran\`),
+                \`semester\` = VALUES(\`semester\`),
+                \`titimangsa\` = VALUES(\`titimangsa\`)");
 
             $stmt->execute([
                 ':nsm'            => $profile['nsm'] ?? '',
@@ -392,9 +416,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
         }
 
-        // 2. Simpan Guru (Upsert batch)
+        // 2. Simpan Guru (Safe Upsert batch)
         if (is_array($teachers) && count($teachers) > 0) {
-            $stmtTeacher = $pdo->prepare("REPLACE INTO \`guru_gtk\` (
+            $stmtTeacher = $pdo->prepare("INSERT INTO \`guru_gtk\` (
                 \`id\`, \`nip\`, \`nuptk\`, \`peg_id\`, \`nama\`, \`gelar_depan\`, \`gelar_belakang\`,
                 \`jenis_kelamin\`, \`tempat_lahir\`, \`tanggal_lahir\`, \`status_kepegawaian\`,
                 \`pangkat_gol\`, \`jabatan_utama\`, \`tugas_tambahan\`, \`mapel_utama\`,
@@ -406,7 +430,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 :pangkat_gol, :jabatan, :tugas_tambahan, :mapel,
                 :jam, :wali, :sertifikasi, :email, :telepon, :active,
                 :signature, :raw
-            )");
+            ) ON DUPLICATE KEY UPDATE
+                \`nip\` = VALUES(\`nip\`),
+                \`nuptk\` = VALUES(\`nuptk\`),
+                \`peg_id\` = VALUES(\`peg_id\`),
+                \`nama\` = VALUES(\`nama\`),
+                \`gelar_depan\` = VALUES(\`gelar_depan\`),
+                \`gelar_belakang\` = VALUES(\`gelar_belakang\`),
+                \`jenis_kelamin\` = VALUES(\`jenis_kelamin\`),
+                \`tempat_lahir\` = VALUES(\`tempat_lahir\`),
+                \`tanggal_lahir\` = VALUES(\`tanggal_lahir\`),
+                \`status_kepegawaian\` = VALUES(\`status_kepegawaian\`),
+                \`pangkat_gol\` = VALUES(\`pangkat_gol\`),
+                \`jabatan_utama\` = VALUES(\`jabatan_utama\`),
+                \`tugas_tambahan\` = VALUES(\`tugas_tambahan\`),
+                \`mapel_utama\` = VALUES(\`mapel_utama\`),
+                \`jumlah_jam\` = VALUES(\`jumlah_jam\`),
+                \`wali_kelas_di\` = VALUES(\`wali_kelas_di\`),
+                \`sertifikasi\` = VALUES(\`sertifikasi\`),
+                \`email\` = VALUES(\`email\`),
+                \`telepon\` = VALUES(\`telepon\`),
+                \`is_active\` = VALUES(\`is_active\`),
+                \`signature_url\` = COALESCE(VALUES(\`signature_url\`), \`signature_url\`),
+                \`raw_data\` = VALUES(\`raw_data\`)");
 
             foreach ($teachers as $t) {
                 if (empty($t['id'])) continue;
@@ -438,9 +484,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // 3. Simpan Siswa (Upsert batch)
+        // 3. Simpan Siswa (Safe Upsert batch)
         if (is_array($students) && count($students) > 0) {
-            $stmtStudent = $pdo->prepare("REPLACE INTO \`siswa\` (
+            $stmtStudent = $pdo->prepare("INSERT INTO \`siswa\` (
                 \`id\`, \`nisn\`, \`nis\`, \`nik\`, \`nama\`, \`jenis_kelamin\`, \`rombel\`,
                 \`tingkat\`, \`tempat_lahir\`, \`tanggal_lahir\`, \`nama_ayah\`, \`nama_ibu\`,
                 \`pekerjaan_ortu\`, \`alamat\`, \`status_siswa\`, \`raw_data\`
@@ -448,7 +494,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 :id, :nisn, :nis, :nik, :nama, :jk, :rombel,
                 :tingkat, :tempat_lahir, :tanggal_lahir, :ayah, :ibu,
                 :pekerjaan, :alamat, :status, :raw
-            )");
+            ) ON DUPLICATE KEY UPDATE
+                \`nisn\` = VALUES(\`nisn\`),
+                \`nis\` = VALUES(\`nis\`),
+                \`nik\` = VALUES(\`nik\`),
+                \`nama\` = VALUES(\`nama\`),
+                \`jenis_kelamin\` = VALUES(\`jenis_kelamin\`),
+                \`rombel\` = VALUES(\`rombel\`),
+                \`tingkat\` = VALUES(\`tingkat\`),
+                \`tempat_lahir\` = VALUES(\`tempat_lahir\`),
+                \`tanggal_lahir\` = VALUES(\`tanggal_lahir\`),
+                \`nama_ayah\` = VALUES(\`nama_ayah\`),
+                \`nama_ibu\` = VALUES(\`nama_ibu\`),
+                \`pekerjaan_ortu\` = VALUES(\`pekerjaan_ortu\`),
+                \`alamat\` = VALUES(\`alamat\`),
+                \`status_siswa\` = VALUES(\`status_siswa\`),
+                \`raw_data\` = VALUES(\`raw_data\`)");
 
             foreach ($students as $s) {
                 if (empty($s['id'])) continue;
@@ -473,9 +534,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // 4. Simpan Dokumen Resmi & SK
+        // 4. Simpan Dokumen Resmi & SK (Safe Upsert batch)
         if (is_array($documents) && count($documents) > 0) {
-            $stmtDoc = $pdo->prepare("REPLACE INTO \`dokumen_resmi\` (
+            $stmtDoc = $pdo->prepare("INSERT INTO \`dokumen_resmi\` (
                 \`id\`, \`document_type\`, \`nomor_surat\`, \`judul\`, \`tahun_ajaran\`,
                 \`tanggal_terbit\`, \`status\`, \`qr_code_hash\`, \`signer_name\`,
                 \`signer_nip\`, \`signer_role\`, \`content_json\`
@@ -483,7 +544,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 :id, :doc_type, :nomor, :judul, :tahun_ajaran,
                 :tanggal, :status, :qr_hash, :signer_name,
                 :signer_nip, :signer_role, :content_json
-            )");
+            ) ON DUPLICATE KEY UPDATE
+                \`document_type\` = VALUES(\`document_type\`),
+                \`nomor_surat\` = VALUES(\`nomor_surat\`),
+                \`judul\` = VALUES(\`judul\`),
+                \`tahun_ajaran\` = VALUES(\`tahun_ajaran\`),
+                \`tanggal_terbit\` = VALUES(\`tanggal_terbit\`),
+                \`status\` = VALUES(\`status\`),
+                \`qr_code_hash\` = VALUES(\`qr_code_hash\`),
+                \`signer_name\` = VALUES(\`signer_name\`),
+                \`signer_nip\` = VALUES(\`signer_nip\`),
+                \`signer_role\` = VALUES(\`signer_role\`),
+                \`content_json\` = VALUES(\`content_json\`)");
 
             foreach ($documents as $d) {
                 if (empty($d['id'])) continue;
@@ -505,11 +577,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // 5. Update Status Sinkronisasi
-        $stmtSync = $pdo->prepare("REPLACE INTO \`sync_status\` (
+        $stmtSync = $pdo->prepare("INSERT INTO \`sync_status\` (
             \`id\`, \`last_sync_at\`, \`teachers_count\`, \`students_count\`, \`documents_count\`, \`client_ip\`
         ) VALUES (
             1, NOW(), :teachers, :students, :docs, :ip
-        )");
+        ) ON DUPLICATE KEY UPDATE
+            \`last_sync_at\` = NOW(),
+            \`teachers_count\` = VALUES(\`teachers_count\`),
+            \`students_count\` = VALUES(\`students_count\`),
+            \`documents_count\` = VALUES(\`documents_count\`),
+            \`client_ip\` = VALUES(\`client_ip\`)");
+        $stmtSync->execute([
+            ':teachers' => count($teachers),
+            ':students' => count($students),
+            ':docs'     => count($documents),
+            ':ip'       => $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1',
+        ]);
         $stmtSync->execute([
             ':teachers' => count($teachers),
             ':students' => count($students),

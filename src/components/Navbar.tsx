@@ -212,6 +212,8 @@ export const Navbar: React.FC<NavbarProps> = ({
         profile={profile}
         onOpenSettings={() => setActiveTab('SETTINGS')}
         onLogout={onLogout}
+        onUpdateAvatar={onUpdateAvatar}
+        isAdmin={true}
       />
     </header>
   );

@@ -61,12 +61,13 @@ export const generateMadrasahSqlDump = (options: SqlExportOptions): string => {
   const timestamp = now.toISOString().replace('T', ' ').substring(0, 19);
 
   return `-- ====================================================================
--- SISTEM MANAJEMEN DOKUMEN RESMI MADRASAH & KOM (KMA 450/2024)
+-- SISTEM MANAJEMEN DOKUMEN RESMI MADRASAH & KOM (KMA 450/2024 & KMA 1503/2025)
 -- Basis Data SQL Dump untuk MySQL / MariaDB (cPanel, Plesk & phpMyAdmin Ready)
 -- Database Name: ${dbName}
 -- Dihasilkan pada: ${timestamp} WIB
 -- Lembaga: ${profile.namaMadrasah} (NSM: ${profile.nsm} / NPSN: ${profile.npsn})
 -- Website: ${profile.website || '-'} | Email: ${profile.email || '-'}
+-- Fitur: MODE TIMPA AMAN (SAFE UPSERT - TANPA MENGHILANGKAN DATA SEBELUMNYA)
 -- ====================================================================
 
 CREATE DATABASE IF NOT EXISTS \`${dbName}\` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -86,8 +87,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- 1. TABEL: madrasah_profil
 -- Menyimpan identitas resmi satuan pendidikan dan KMA 450 metadata
 -- --------------------------------------------------------------------
-DROP TABLE IF EXISTS \`madrasah_profil\`;
-CREATE TABLE \`madrasah_profil\` (
+-- Mode Timpa Aman: Tabel lama tidak dihapus (NO DROP TABLE)
+CREATE TABLE IF NOT EXISTS \`madrasah_profil\` (
   \`id\` varchar(50) NOT NULL DEFAULT 'madrasah_active',
   \`nsm\` varchar(30) NOT NULL,
   \`npsn\` varchar(20) NOT NULL,
@@ -147,14 +148,38 @@ INSERT INTO \`madrasah_profil\` (
   ${escapeSql(profile.tahunAjaran)},
   ${escapeSql(profile.semester)},
   ${escapeSql(profile.titimangsa)}
-);
+) ON DUPLICATE KEY UPDATE
+  \`nsm\` = VALUES(\`nsm\`),
+  \`npsn\` = VALUES(\`npsn\`),
+  \`nama_madrasah\` = VALUES(\`nama_madrasah\`),
+  \`jenjang\` = VALUES(\`jenjang\`),
+  \`status\` = VALUES(\`status\`),
+  \`akreditasi\` = VALUES(\`akreditasi\`),
+  \`alamat\` = VALUES(\`alamat\`),
+  \`desa_kelurahan\` = VALUES(\`desa_kelurahan\`),
+  \`kecamatan\` = VALUES(\`kecamatan\`),
+  \`kabupaten_kota\` = VALUES(\`kabupaten_kota\`),
+  \`provinsi\` = VALUES(\`provinsi\`),
+  \`kode_pos\` = VALUES(\`kode_pos\`),
+  \`telepon\` = VALUES(\`telepon\`),
+  \`email\` = VALUES(\`email\`),
+  \`website\` = VALUES(\`website\`),
+  \`nama_kepala\` = VALUES(\`nama_kepala\`),
+  \`nip_kepala\` = VALUES(\`nip_kepala\`),
+  \`pangkat_gol_kepala\` = VALUES(\`pangkat_gol_kepala\`),
+  \`nama_ketua_komite\` = VALUES(\`nama_ketua_komite\`),
+  \`nama_pengawas\` = VALUES(\`nama_pengawas\`),
+  \`nip_pengawas\` = VALUES(\`nip_pengawas\`),
+  \`tahun_ajaran\` = VALUES(\`tahun_ajaran\`),
+  \`semester\` = VALUES(\`semester\`),
+  \`titimangsa\` = VALUES(\`titimangsa\`);
 
 -- --------------------------------------------------------------------
 -- 2. TABEL: guru_gtk
 -- Menyimpan database Guru & Tenaga Kependidikan (Simpatika/EMIS)
 -- --------------------------------------------------------------------
-DROP TABLE IF EXISTS \`guru_gtk\`;
-CREATE TABLE \`guru_gtk\` (
+-- Mode Timpa Aman: Tabel guru dipertahankan, data lama tidak dihapus
+CREATE TABLE IF NOT EXISTS \`guru_gtk\` (
   \`id\` varchar(50) NOT NULL,
   \`nip\` varchar(30) DEFAULT NULL,
   \`nuptk\` varchar(30) DEFAULT NULL,
@@ -215,7 +240,25 @@ ${teachers
   ${t.isActive ? 1 : 0}
 )`
   )
-  .join(',\n')};`
+  .join(',\n')}
+ON DUPLICATE KEY UPDATE
+  \`nama\` = VALUES(\`nama\`),
+  \`nip\` = VALUES(\`nip\`),
+  \`nuptk\` = VALUES(\`nuptk\`),
+  \`peg_id\` = VALUES(\`peg_id\`),
+  \`gelar_depan\` = VALUES(\`gelar_depan\`),
+  \`gelar_belakang\` = VALUES(\`gelar_belakang\`),
+  \`status_kepegawaian\` = VALUES(\`status_kepegawaian\`),
+  \`pangkat_gol\` = VALUES(\`pangkat_gol\`),
+  \`jabatan_utama\` = VALUES(\`jabatan_utama\`),
+  \`tugas_tambahan\` = VALUES(\`tugas_tambahan\`),
+  \`mapel_utama\` = VALUES(\`mapel_utama\`),
+  \`jumlah_jam\` = VALUES(\`jumlah_jam\`),
+  \`wali_kelas_di\` = VALUES(\`wali_kelas_di\`),
+  \`sertifikasi\` = VALUES(\`sertifikasi\`),
+  \`email\` = VALUES(\`email\`),
+  \`telepon\` = VALUES(\`telepon\`),
+  \`is_active\` = VALUES(\`is_active\`);`
     : '-- (Tidak ada data guru untuk diimpor)'
 }
 
@@ -223,8 +266,8 @@ ${teachers
 -- 3. TABEL: siswa
 -- Menyimpan database Peserta Didik Aktif Madrasah (EMIS 4.0)
 -- --------------------------------------------------------------------
-DROP TABLE IF EXISTS \`siswa\`;
-CREATE TABLE \`siswa\` (
+-- Mode Timpa Aman: Tabel siswa dipertahankan, data lama tidak dihapus
+CREATE TABLE IF NOT EXISTS \`siswa\` (
   \`id\` varchar(50) NOT NULL,
   \`nisn\` varchar(20) NOT NULL,
   \`nis\` varchar(20) NOT NULL,
@@ -285,7 +328,17 @@ ${students
   ${escapeSql(s.teleponOrtu)}
 )`
   )
-  .join(',\n')};`
+  .join(',\n')}
+ON DUPLICATE KEY UPDATE
+  \`nama\` = VALUES(\`nama\`),
+  \`nisn\` = VALUES(\`nisn\`),
+  \`nis\` = VALUES(\`nis\`),
+  \`nik\` = VALUES(\`nik\`),
+  \`rombel\` = VALUES(\`rombel\`),
+  \`tingkat\` = VALUES(\`tingkat\`),
+  \`status_siswa\` = VALUES(\`status_siswa\`),
+  \`telepon_ortu\` = VALUES(\`telepon_ortu\`),
+  \`alamat\` = VALUES(\`alamat\`);`
     : '-- (Tidak ada data siswa untuk diimpor)'
 }
 
@@ -293,8 +346,8 @@ ${students
 -- 4. TABEL: rombel
 -- Menyimpan daftar Rombongan Belajar dan Wali Kelas
 -- --------------------------------------------------------------------
-DROP TABLE IF EXISTS \`rombel\`;
-CREATE TABLE \`rombel\` (
+-- Mode Timpa Aman: Rombel lama tetap dipertahankan
+CREATE TABLE IF NOT EXISTS \`rombel\` (
   \`id\` varchar(50) NOT NULL,
   \`nama\` varchar(50) NOT NULL,
   \`tingkat\` int(11) NOT NULL,
@@ -316,21 +369,30 @@ ${rombels
   ${escapeSql(r.ruangan)}
 )`
   )
-  .join(',\n')};`
+  .join(',\n')}
+ON DUPLICATE KEY UPDATE
+  \`nama\` = VALUES(\`nama\`),
+  \`tingkat\` = VALUES(\`tingkat\`),
+  \`wali_kelas_id\` = VALUES(\`wali_kelas_id\`),
+  \`ruangan\` = VALUES(\`ruangan\`);`
     : `-- Dibuat otomatis
 INSERT INTO \`rombel\` (\`id\`, \`nama\`, \`tingkat\`, \`ruangan\`) VALUES
 ('RMB-4A', 'Kelas 4A', 4, 'Gedung A R.101'),
 ('RMB-4B', 'Kelas 4B', 4, 'Gedung A R.102'),
 ('RMB-5A', 'Kelas 5A', 5, 'Gedung B R.201'),
-('RMB-6A', 'Kelas 6A', 6, 'Gedung C R.301');`
+('RMB-6A', 'Kelas 6A', 6, 'Gedung C R.301')
+ON DUPLICATE KEY UPDATE
+  \`nama\` = VALUES(\`nama\`),
+  \`tingkat\` = VALUES(\`tingkat\`),
+  \`ruangan\` = VALUES(\`ruangan\`);`
 }
 
 -- --------------------------------------------------------------------
 -- 5. TABEL: dokumen_resmi
 -- Menyimpan naskah dinas, SK Pembagian Tugas, KOM KMA 450, Piagam
 -- --------------------------------------------------------------------
-DROP TABLE IF EXISTS \`dokumen_resmi\`;
-CREATE TABLE \`dokumen_resmi\` (
+-- Mode Timpa Aman: Arsip SK dan surat lama tidak dihapus
+CREATE TABLE IF NOT EXISTS \`dokumen_resmi\` (
   \`id\` varchar(50) NOT NULL,
   \`type\` varchar(50) NOT NULL,
   \`nomor_surat\` varchar(150) NOT NULL,
@@ -382,7 +444,16 @@ ${documents
   ${escapeSql(d.updatedAt)}
 )`
   )
-  .join(',\n')};`
+  .join(',\n')}
+ON DUPLICATE KEY UPDATE
+  \`title\` = VALUES(\`title\`),
+  \`status\` = VALUES(\`status\`),
+  \`content_data\` = VALUES(\`content_data\`),
+  \`signatures\` = VALUES(\`signatures\`),
+  \`creator_name\` = VALUES(\`creator_name\`),
+  \`version\` = VALUES(\`version\`),
+  \`notes\` = VALUES(\`notes\`),
+  \`updated_at\` = VALUES(\`updated_at\`);`
     : '-- (Tidak ada dokumen untuk diimpor)'
 }
 
@@ -390,8 +461,8 @@ ${documents
 -- 6. TABEL: riwayat_aktivitas
 -- Menyimpan log audit jejak digital dan pembuatan SK / TTE
 -- --------------------------------------------------------------------
-DROP TABLE IF EXISTS \`riwayat_aktivitas\`;
-CREATE TABLE \`riwayat_aktivitas\` (
+-- Mode Timpa Aman: Log audit historis tidak dihapus
+CREATE TABLE IF NOT EXISTS \`riwayat_aktivitas\` (
   \`id\` varchar(50) NOT NULL,
   \`timestamp\` varchar(50) NOT NULL,
   \`user\` varchar(100) NOT NULL,
@@ -415,9 +486,17 @@ ${logs
   ${escapeSql(l.category)}
 )`
   )
-  .join(',\n')};`
+  .join(',\n')}
+ON DUPLICATE KEY UPDATE
+  \`timestamp\` = VALUES(\`timestamp\`),
+  \`user\` = VALUES(\`user\`),
+  \`action\` = VALUES(\`action\`),
+  \`document_title\` = VALUES(\`document_title\`),
+  \`category\` = VALUES(\`category\`);`
     : `INSERT INTO \`riwayat_aktivitas\` (\`id\`, \`timestamp\`, \`user\`, \`action\`, \`document_title\`, \`category\`) VALUES
-('log_init', '${timestamp}', 'Admin Madrasah', 'Inisialisasi Basis Data AutoMadrasah KMA 450/2024', 'Sistem AutoMadrasah', 'SYSTEM');`
+('log_init', '${timestamp}', 'Admin Madrasah', 'Inisialisasi Basis Data AutoMadrasah KMA 450/2024', 'Sistem AutoMadrasah', 'SYSTEM')
+ON DUPLICATE KEY UPDATE
+  \`timestamp\` = VALUES(\`timestamp\`);`
 }
 
 SET FOREIGN_KEY_CHECKS = 1;

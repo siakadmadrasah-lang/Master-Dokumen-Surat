@@ -435,11 +435,21 @@ export default function App() {
             students={students}
             userSession={userSession}
             onUpdateAvatar={handleUpdateAvatar}
-            onOpenDashboard={() => setAppMode('ADMIN')}
+            onOpenDashboard={() => {
+              if (userSession) {
+                setAppMode('ADMIN');
+              } else {
+                setAppMode('LOGIN');
+              }
+            }}
             onLogout={handleLogout}
             onOpenSettings={() => {
-              setAppMode('ADMIN');
-              setActiveTab('SETTINGS');
+              if (userSession) {
+                setAppMode('ADMIN');
+                setActiveTab('SETTINGS');
+              } else {
+                setAppMode('LOGIN');
+              }
             }}
             onOpenLogin={() => {
               if (userSession) {
@@ -674,7 +684,7 @@ export default function App() {
         )}
       </main>
 
-        {/* Modern Iconic Footer */}
+        {/* Modern Iconic Footer with Profile Photo & Quick Settings */}
         <MainFooter
           profile={profile}
           activeTab={activeTab}
@@ -683,6 +693,10 @@ export default function App() {
           documentCount={documents.length}
           teacherCount={teachers.length}
           studentCount={students.length}
+          userSession={userSession}
+          onUpdateAvatar={handleUpdateAvatar}
+          isAdmin={appMode === 'ADMIN'}
+          onLogout={handleLogout}
         />
 
         {/* Sticky Quick Action Footer */}

@@ -1,5 +1,5 @@
 {
-  "name": "AutoMadrasah - Generator Dokumen Resmi \u0026 KOM Madrasah",
+  "name": "AutoMadrasah - Generator Dokumen Resmi & KOM Madrasah",
   "description": "Aplikasi otomatisasi dokumen madrasah resmi Kemenag RI dengan tanda tangan digital QR code, sinkronisasi database guru dan siswa EMIS/Simpatika, kurikulum operasional madrasah berbasis cinta, SK pembagian tugas, dan dashboard progres.",
   "requestFramePermissions": [
     "geolocation"

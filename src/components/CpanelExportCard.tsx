@@ -551,9 +551,12 @@ export const CpanelExportCard: React.FC<CpanelExportCardProps> = ({
           )}
 
           <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-emerald-900/60">
-            <span>Kompatibel: cPanel (public_html) & Plesk</span>
+            <span className="flex items-center gap-1 text-emerald-300 font-semibold">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              Mode Timpa Aman Aktif (Data Lama Terjaga)
+            </span>
             <a
-              href={`https://${syncConfig.domainName}/api/status.php`}
+              href={syncConfig.cpanelUrl ? `${syncConfig.cpanelUrl.replace(/\/+$/, '')}/api/health.php` : '#'}
               target="_blank"
               rel="noreferrer"
               className="text-emerald-300 hover:text-emerald-200 underline flex items-center gap-1"

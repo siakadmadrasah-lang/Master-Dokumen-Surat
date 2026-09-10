@@ -587,12 +587,195 @@ app.post('/api/mysql/test-connection', async (req, res) => {
   }
 });
 
-// cPanel / MySQL Sync Proxy Endpoint
+// Helper for Smart Non-Destructive Data Merge (Safe Overwrite without data loss)
+function smartMergeCpanelData(existing: any, incoming: any) {
+  if (!existing || typeof existing !== 'object') return incoming || {};
+  if (!incoming || typeof incoming !== 'object') return existing || {};
+
+  // 1. Merge Profile (preserve non-empty values)
+  const existingProfile = existing.profile || {};
+  const incomingProfile = incoming.profile || {};
+  const mergedProfile = {
+    ...existingProfile,
+    ...incomingProfile,
+    headerConfig: {
+      ...(existingProfile.headerConfig || {}),
+      ...(incomingProfile.headerConfig || {}),
+    },
+    heroConfig: {
+      ...(existingProfile.heroConfig || {}),
+      ...(incomingProfile.heroConfig || {}),
+    },
+    kopConfig: {
+      ...(existingProfile.kopConfig || {}),
+      ...(incomingProfile.kopConfig || {}),
+    },
+  };
+
+  // 2. Merge Teachers (by ID or NIP or pegId, keeping existing teachers not in incoming)
+  const existingTeachers = Array.isArray(existing.teachers) ? existing.teachers : [];
+  const incomingTeachers = Array.isArray(incoming.teachers) ? incoming.teachers : [];
+  const teacherMap = new Map<string, any>();
+  existingTeachers.forEach((t: any) => {
+    const key = t.id || t.nip || t.pegId || t.nama;
+    if (key) teacherMap.set(key, t);
+  });
+  incomingTeachers.forEach((t: any) => {
+    const key = t.id || t.nip || t.pegId || t.nama;
+    if (key) {
+      const prev = teacherMap.get(key) || {};
+      teacherMap.set(key, { ...prev, ...t });
+    }
+  });
+  const mergedTeachers = Array.from(teacherMap.values());
+
+  // 3. Merge Students (by ID or NISN or NIS, keeping existing students)
+  const existingStudents = Array.isArray(existing.students) ? existing.students : [];
+  const incomingStudents = Array.isArray(incoming.students) ? incoming.students : [];
+  const studentMap = new Map<string, any>();
+  existingStudents.forEach((s: any) => {
+    const key = s.id || s.nisn || s.nis || s.nama;
+    if (key) studentMap.set(key, s);
+  });
+  incomingStudents.forEach((s: any) => {
+    const key = s.id || s.nisn || s.nis || s.nama;
+    if (key) {
+      const prev = studentMap.get(key) || {};
+      studentMap.set(key, { ...prev, ...s });
+    }
+  });
+  const mergedStudents = Array.from(studentMap.values());
+
+  // 4. Merge Documents (by ID or nomorSurat, keeping existing signed docs and archive)
+  const existingDocs = Array.isArray(existing.documents) ? existing.documents : [];
+  const incomingDocs = Array.isArray(incoming.documents) ? incoming.documents : [];
+  const docMap = new Map<string, any>();
+  existingDocs.forEach((d: any) => {
+    const key = d.id || d.nomorSurat || d.title;
+    if (key) docMap.set(key, d);
+  });
+  incomingDocs.forEach((d: any) => {
+    const key = d.id || d.nomorSurat || d.title;
+    if (key) {
+      const prev = docMap.get(key) || {};
+      docMap.set(key, { ...prev, ...d });
+    }
+  });
+  const mergedDocuments = Array.from(docMap.values());
+
+  // 5. Merge Rombels (by ID or nama)
+  const existingRombels = Array.isArray(existing.rombels) ? existing.rombels : [];
+  const incomingRombels = Array.isArray(incoming.rombels) ? incoming.rombels : [];
+  const rombelMap = new Map<string, any>();
+  existingRombels.forEach((r: any) => {
+    const key = r.id || r.nama;
+    if (key) rombelMap.set(key, r);
+  });
+  incomingRombels.forEach((r: any) => {
+    const key = r.id || r.nama;
+    if (key) {
+      const prev = rombelMap.get(key) || {};
+      rombelMap.set(key, { ...prev, ...r });
+    }
+  });
+  const mergedRombels = Array.from(rombelMap.values());
+
+  // 6. Merge Logs (without duplicate id or action+timestamp)
+  const existingLogs = Array.isArray(existing.logs) ? existing.logs : [];
+  const incomingLogs = Array.isArray(incoming.logs) ? incoming.logs : [];
+  const logMap = new Map<string, any>();
+  [...existingLogs, ...incomingLogs].forEach((l: any) => {
+    const key = l.id || `${l.timestamp}_${l.action}`;
+    if (key && !logMap.has(key)) {
+      logMap.set(key, l);
+    }
+  });
+  const mergedLogs = Array.from(logMap.values());
+
+  return {
+    profile: mergedProfile,
+    teachers: mergedTeachers,
+    students: mergedStudents,
+    documents: mergedDocuments,
+    rombels: mergedRombels,
+    logs: mergedLogs,
+    lastSyncedAt: new Date().toISOString(),
+  };
+}
+
+// GET cPanel / MySQL Cache Endpoint for data pulling & merging
+app.get('/api/mysql/cache', (req, res) => {
+  try {
+    const cacheDir = path.join(process.cwd(), 'data');
+    const cachePath = path.join(cacheDir, 'cpanel_mysql_sync_cache.json');
+    if (fs.existsSync(cachePath)) {
+      const raw = fs.readFileSync(cachePath, 'utf8');
+      const parsed = JSON.parse(raw);
+      return res.json({
+        success: true,
+        message: 'Cache data cPanel & MySQL berhasil dimuat',
+        data: parsed,
+      });
+    }
+    return res.json({
+      success: false,
+      message: 'Belum ada data cache cPanel tersimpan di server',
+      data: null,
+    });
+  } catch (err: any) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// cPanel / MySQL Sync Proxy Endpoint with Smart Non-Destructive Merge
 app.post('/api/mysql/sync', async (req, res) => {
   try {
-    const { cpanelUrl, data, credentials } = req.body || {};
-    if (!cpanelUrl) {
-      return res.status(400).json({ success: false, message: 'URL cPanel belum ditentukan.' });
+    const { cpanelUrl, data, credentials, preservePreviousData = true } = req.body || {};
+    const cacheDir = path.join(process.cwd(), 'data');
+    const cachePath = path.join(cacheDir, 'cpanel_mysql_sync_cache.json');
+
+    // Ensure data directory exists
+    if (!fs.existsSync(cacheDir)) {
+      try {
+        fs.mkdirSync(cacheDir, { recursive: true });
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    // Load existing cache if available for safe merge
+    let existingData: any = {};
+    if (fs.existsSync(cachePath)) {
+      try {
+        existingData = JSON.parse(fs.readFileSync(cachePath, 'utf8'));
+      } catch (e) {
+        existingData = {};
+      }
+    }
+
+    // Perform smart non-destructive merge if preservePreviousData is active
+    const finalData = preservePreviousData ? smartMergeCpanelData(existingData, data || {}) : (data || {});
+
+    // Always update local cache so user data is never lost
+    try {
+      fs.writeFileSync(cachePath, JSON.stringify(finalData, null, 2), 'utf8');
+    } catch (writeErr) {
+      console.warn('Gagal menulis cache cPanel lokal:', writeErr);
+    }
+
+    // If no external cPanel URL is provided, return success with local cached state
+    if (!cpanelUrl || typeof cpanelUrl !== 'string' || cpanelUrl.trim() === '') {
+      return res.json({
+        success: true,
+        isCached: true,
+        message: 'Data berhasil disinkronisasi & digabungkan dengan aman ke basis data lokal (Mode Timpa Aman aktif).',
+        data: finalData,
+        mergedStats: {
+          teachers: finalData.teachers?.length || 0,
+          students: finalData.students?.length || 0,
+          documents: finalData.documents?.length || 0,
+        },
+      });
     }
 
     let targetEndpoint = cpanelUrl.trim();
@@ -612,7 +795,8 @@ app.post('/api/mysql/sync', async (req, res) => {
           'User-Agent': 'AutoMadrasah-SyncServer/1.0',
         },
         body: JSON.stringify({
-          ...data,
+          ...finalData,
+          preservePreviousData: true,
           syncTimestamp: new Date().toISOString(),
           dbConfig: credentials,
         }),
@@ -622,12 +806,21 @@ app.post('/api/mysql/sync', async (req, res) => {
 
       const resJson = await forwardRes.json().catch(() => null);
       if (forwardRes.ok && resJson) {
-        return res.json(resJson);
+        return res.json({
+          ...resJson,
+          mergedStats: {
+            teachers: finalData.teachers?.length || 0,
+            students: finalData.students?.length || 0,
+            documents: finalData.documents?.length || 0,
+          },
+        });
       } else {
         return res.json({
-          success: false,
-          message: resJson?.message || `cPanel merespons status ${forwardRes.status}`,
+          success: true,
+          isCached: true,
+          message: `Tersimpan aman di cache lokal. Host merespons: ${resJson?.message || `Status ${forwardRes.status}`}`,
           details: resJson,
+          data: finalData,
         });
       }
     } catch (netErr: any) {
@@ -635,7 +828,8 @@ app.post('/api/mysql/sync', async (req, res) => {
       return res.json({
         success: true,
         isCached: true,
-        message: `Data tersimpan di antrean sinkronisasi lokal dan siap dikirim saat hosting aktif. (${netErr.message})`,
+        message: `Data tersimpan aman di antrean sinkronisasi lokal dan siap dikirim saat hosting aktif. (${netErr.message})`,
+        data: finalData,
       });
     }
   } catch (err: any) {

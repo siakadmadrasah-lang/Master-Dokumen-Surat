@@ -88,6 +88,8 @@ export const PublicPortalView: React.FC<PublicPortalViewProps> = ({
     profile.headerConfig?.adminAvatarUrl ||
     SUPER_ADMIN_AVATAR;
 
+  const adminName = userSession?.name || profile.namaKepala || 'Administrator Madrasah';
+
   // Load latest custom data from localStorage if available (saved by admin) or fallback to default
   const komCintaData: KomCintaData = useMemo(() => {
     try {
@@ -1252,13 +1254,41 @@ export const PublicPortalView: React.FC<PublicPortalViewProps> = ({
         )}
       </main>
 
-      {/* Public Footer */}
+      {/* Public Footer with Profile Photo */}
       <footer className="bg-emerald-950 text-white border-t border-emerald-900 py-6 mt-8">
-        <div className="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400 space-y-2">
-          <p>© {new Date().getFullYear()} {profile.namaMadrasah} • Portal Ruang Publik & Transparansi Kemenag RI</p>
-          <p className="text-[11px] font-mono text-emerald-300/80">
-            KMA Nomor 450 Tahun 2024 • Standar Naskah Dinas & Tanda Tangan Elektronik Terverifikasi
-          </p>
+        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+          <div className="text-center sm:text-left space-y-1">
+            <p>© {new Date().getFullYear()} {profile.namaMadrasah} • Portal Ruang Publik & Transparansi Kemenag RI</p>
+            <p className="text-[11px] font-mono text-emerald-300/80">
+              KMA Nomor 450 Tahun 2024 • Standar Naskah Dinas & Tanda Tangan Elektronik Terverifikasi
+            </p>
+          </div>
+
+          {/* Profile Photo Capsule in Public Footer */}
+          <button
+            id="public-footer-profile-btn"
+            type="button"
+            onClick={() => setShowProfileModal(true)}
+            className="flex items-center space-x-2.5 bg-emerald-900/80 hover:bg-emerald-800/90 text-emerald-100 px-3.5 py-1.5 rounded-full border border-emerald-700/60 shadow-xs transition-all cursor-pointer"
+            title="Lihat Profil Penanggung Jawab Madrasah"
+          >
+            <div className="relative">
+              <div className="w-7 h-7 rounded-full ring-2 ring-amber-400 overflow-hidden bg-emerald-950 flex items-center justify-center">
+                {adminAvatarUrl ? (
+                  <img src={adminAvatarUrl} alt={adminName} className="w-full h-full object-cover" />
+                ) : (
+                  <User className="w-4 h-4 text-amber-300" />
+                )}
+              </div>
+              <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-1 ring-emerald-950" />
+            </div>
+            <span className="text-xs font-semibold text-white">
+              {adminName}
+            </span>
+            <span className="text-[10px] bg-emerald-950/90 text-amber-300 px-2 py-0.5 rounded-full font-mono">
+              Profil
+            </span>
+          </button>
         </div>
       </footer>
 
@@ -1375,6 +1405,8 @@ export const PublicPortalView: React.FC<PublicPortalViewProps> = ({
         onOpenLogin={onOpenLogin}
         onLogout={onLogout}
         onOpenSettings={onOpenSettings}
+        onUpdateAvatar={onUpdateAvatar}
+        isAdmin={Boolean(userSession)}
       />
     </div>
   );
